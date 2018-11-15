@@ -1,0 +1,17 @@
+{
+  "name": "bodnar1212/forms-sdk",
+  "description": "Brizy form's PHP SDK",
+  "keywords": ["brizy", "forms"],
+  "type": "library",
+  "require": {
+    "php": ">=5.4.0",
+    "ext-curl": "*",
+    "ext-json": "*",
+    "drewm/mailchimp-api": "~2.2"
+  },
+  "autoload": {
+    "psr-0": {
+      "BrizyForms": "lib/"
+    }
+  }
+}
