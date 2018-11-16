@@ -9,43 +9,14 @@ if (!file_exists($composerAutoload)) {
 require $composerAutoload;
 require __DIR__ . '/config.php';
 
-//use BrizyForms\ServiceFactory;
-//use BrizyForms\Service\MailChimpService;
-//use BrizyForms\FieldMap;
-//use BrizyForms\Model\RedirectResponse;
-//
-//$serviceFactory = new ServiceFactory();
-//
-///**
-// * @var MailChimpService $mailchimp
-// */
-//$mailchimp = $serviceFactory->getInstance('mailchimp');
-//$fields    = json_decode('[{"source":"name", "target":"FNAME1"}, {"source":"email", "target":"EMAIL"}]', true);
-//$fieldMap  = new FieldMap($fields);
-//$fields    = $fieldMap->toArray();
-//
-//$response = $mailchimp->authenticate();
-//if ($response instanceof RedirectResponse) {
-//
-//}
-//
-//$groups = $mailchimp->getGroups();
-//
-//foreach ($groups as $group) {
-//    var_dump($mailchimp->getFields($group));
-//}
-//
-//var_dump($groups);
-//
-//$mailchimp->createMember($fieldMap);
-
 //Create account
 $mailChimpAccount = new \BrizyForms\Account\MailChimpAccount();
 $response = $mailChimpAccount->authenticate();
 
 //set data from authenticate
 $mailChimp = new \BrizyForms\Model\MailChimp();
-$mailChimp->setApiKey('67392db60505618fb8d0f6f25db03ec4-us11');
+$mailChimp->setApiKey('27abb01297b7832e89cde4ef82ca0051');
+$mailChimp->setDC('us13');
 
 //create MailChimp service
 $mailChimpService = new \BrizyForms\Service\MailChimpService($mailChimp);

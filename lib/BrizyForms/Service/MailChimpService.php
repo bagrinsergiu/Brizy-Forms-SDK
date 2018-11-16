@@ -25,27 +25,16 @@ class MailChimpService extends Service
 
     /**
      * @return array
-     * @throws ServiceException
+     * @throws \Exception
      */
     public function getGroups()
     {
-        try {
-            $mailChimp = new \DrewM\MailChimp\MailChimp($this->mailChimp->getApiKey());
-            $lists     = $mailChimp->get('lists?count=30');
-        } catch (\Exception $e) {
-            throw new ServiceException($e->getMessage());
-        }
-
-        if (!isset($lists['lists'])) {
-            throw new ServiceException("Invalid request");
-        }
-
         $result = [];
-        foreach ($lists['lists'] as $i => $list) {
+        foreach ($this->_getGroups() as $i => $row) {
             $group = new Group();
             $group
-                ->setId($list['id'])
-                ->setName($list['name']);
+                ->setId($row['id'])
+                ->setName($row['name']);
 
             $result[$i] = $group;
         }
@@ -60,19 +49,8 @@ class MailChimpService extends Service
      */
     public function getFields(Group $group)
     {
-        try {
-            $mailChimp    = new \DrewM\MailChimp\MailChimp($this->mailChimp->getApiKey());
-            $customFields = $mailChimp->get("lists/{$group->getId()}/merge-fields?count=100");
-        } catch (\Exception $e) {
-            throw new ServiceException($e->getMessage());
-        }
-
-        if (!isset($customFields['merge_fields'])) {
-            throw new ServiceException("Invalid request");
-        }
-
         $result = [];
-        foreach($customFields['merge_fields'] as $i => $customField) {
+        foreach($this->_getFields($group->getId()) as $i => $customField) {
             $field = new Field();
             $field
                 ->setName($customField['name'])
@@ -98,10 +76,101 @@ class MailChimpService extends Service
 
     }
 
-    protected function mapFields(FieldMap $fieldMap)
+    /**
+     * @param FieldMap $fieldMap
+     * @param string $group_id
+     * @return FieldMap|mixed
+     * @throws \Exception
+     */
+    protected function mapFields(FieldMap $fieldMap, $group_id)
     {
-        foreach ($fieldMap->toArray() as $fieldLink) {
+        $existCustomFields = $this->_getFields($group_id);
 
+        foreach ($fieldMap->toArray() as $fieldLink) {
+            if ($fieldLink->getTarget() == self::AUTO_GENERATE_FIELD) {
+                $newCustomField = null;
+                $name           = strip_tags($fieldLink->getSourceTitle());
+                $key_exist      = array_search($name, array_column($existCustomFields, 'name'));
+                if ($key_exist === false) {
+                    $payload = [
+                        'name' => $name,
+                        'type' => 'text'
+                    ];
+                    $newCustomField = $this->_createField($group_id, $payload);
+                }
+
+                if ($newCustomField) {
+                    if (!isset($newCustomField['tag'])) {
+                        continue;
+                    }
+                    $tag = $newCustomField['tag'];
+                } else {
+                    $tag = $existCustomFields[$key_exist]['tag'];
+                }
+
+                $fieldLink->setTarget($tag);
+            }
         }
+
+        return $fieldMap;
+    }
+
+    /**
+     * @param $list
+     * @return mixed
+     * @throws \Exception
+     */
+    private function _getFields($list)
+    {
+        try {
+            $mailChimp = new \DrewM\MailChimp\MailChimp($this->mailChimp->getApiKey().'-'.$this->mailChimp->getDC());
+            $customFields = $mailChimp->get("lists/{$list}/merge-fields?count=100");
+        } catch (\Exception $e) {
+            throw new ServiceException($e->getMessage());
+        }
+
+        if (!isset($customFields['merge_fields'])) {
+            throw new ServiceException("Invalid request");
+        }
+
+        return $customFields['merge_fields'];
+    }
+
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
+    private function _getGroups()
+    {
+        try {
+            $mailChimp = new \DrewM\MailChimp\MailChimp($this->mailChimp->getApiKey().'-'.$this->mailChimp->getDC());
+            $lists = $mailChimp->get('lists?count=30');
+        } catch (\Exception $e) {
+            throw new ServiceException($e->getMessage());
+        }
+
+        if (!isset($lists['lists'])) {
+            throw new ServiceException("Invalid request");
+        }
+
+        return $lists['lists'];
+    }
+
+    /**
+     * @param $group_id
+     * @param $payload
+     * @return array|false
+     * @throws \Exception
+     */
+    private function _createField($group_id, $payload)
+    {
+        try {
+            $mailChimp = new \DrewM\MailChimp\MailChimp($this->mailChimp->getApiKey().'-'.$this->mailChimp->getDC());
+            $newCustomField = $mailChimp->post("lists/{$group_id}/merge-fields", $payload);
+        } catch (\Exception $e) {
+            throw new ServiceException($e->getMessage());
+        }
+
+        return $newCustomField;
     }
 }

@@ -10,6 +10,11 @@ class MailChimp
     protected $apiKey;
 
     /**
+     * @var string
+     */
+    protected $dc;
+
+    /**
      * @param $apiKey
      */
     public function setApiKey($apiKey)
@@ -23,5 +28,21 @@ class MailChimp
     public function getApiKey()
     {
         return $this->apiKey;
+    }
+
+    /**
+     * @param $dc
+     */
+    public function setDC($dc)
+    {
+        $this->dc = $dc;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDC()
+    {
+        return $this->dc;
     }
 }

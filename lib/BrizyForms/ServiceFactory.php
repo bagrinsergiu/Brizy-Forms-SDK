@@ -4,6 +4,11 @@ namespace BrizyForms;
 
 use BrizyForms\Exception\ServiceException;
 
+/**
+ * @todo need refactoring or remove it
+ * Class ServiceFactory
+ * @package BrizyForms
+ */
 class ServiceFactory
 {
     const MAILCHIMP = 'mailchimp';

@@ -6,13 +6,26 @@ use BrizyForms\FieldMap;
 
 abstract class Service implements ServiceInterface
 {
-    public function createMember(FieldMap $fieldMap)
+    /**
+     * @param FieldMap $fieldMap
+     * @param string $group_id
+     * @return mixed|void
+     */
+    public function createMember(FieldMap $fieldMap, $group_id)
     {
-        $this->mapFields($fieldMap);
+        $this->mapFields($fieldMap, $group_id);
         $this->internalCreateMember();
     }
 
-    abstract protected function mapFields(FieldMap $fieldMap);
+    /**
+     * @param FieldMap $fieldMap
+     * @param string $group_id
+     * @return mixed
+     */
+    abstract protected function mapFields(FieldMap $fieldMap, $group_id);
 
+    /**
+     * @return mixed
+     */
     abstract protected function internalCreateMember();
 }
