@@ -3,13 +3,13 @@
 namespace BrizyForms\Exception;
 
 /**
- * Class InvalidAccountDataException
+ * Class AuthenticationDataException
  * @package BrizyForms\Exception
  */
-class InvalidAccountDataException extends \Exception
+class AuthenticationDataException extends \Exception
 {
     /**
-     * InvalidAccountDataException constructor.
+     * AuthenticationDataException constructor.
      * @param null $message
      * @param int $code
      */

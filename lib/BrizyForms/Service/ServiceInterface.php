@@ -7,6 +7,8 @@ use BrizyForms\Model\Group;
 
 interface ServiceInterface
 {
+    public function authenticate();
+
     /**
      * @return array
      */

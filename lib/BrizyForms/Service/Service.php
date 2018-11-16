@@ -2,6 +2,7 @@
 
 namespace BrizyForms\Service;
 
+use BrizyForms\Exception\AuthenticationDataException;
 use BrizyForms\FieldMap;
 
 abstract class Service implements ServiceInterface
@@ -19,6 +20,19 @@ abstract class Service implements ServiceInterface
     }
 
     /**
+     * @return array|void
+     * @throws AuthenticationDataException
+     */
+    public function getGroups()
+    {
+        if (!$this->isAuthenticated()) {
+            throw new AuthenticationDataException();
+        }
+
+        $this->internalGetGroups();
+    }
+
+    /**
      * @param FieldMap $fieldMap
      * @param string $group_id
      * @return mixed
@@ -32,4 +46,8 @@ abstract class Service implements ServiceInterface
      * @return mixed
      */
     abstract protected function internalCreateMember(FieldMap $fieldMap, $group_id, array $data);
+
+    abstract protected function isAuthenticated();
+
+    abstract protected function internalGetGroups();
 }

@@ -4,44 +4,76 @@ namespace BrizyForms\Service;
 
 use BrizyForms\Exception\ServiceException;
 use BrizyForms\FieldMap;
+use BrizyForms\Model\AuthenticationData;
 use BrizyForms\Model\Field;
 use BrizyForms\Model\Group;
-use BrizyForms\Model\MailChimp;
+use BrizyForms\Model\RedirectResponse;
 use BrizyForms\ServiceConstant;
 
 class MailChimpService extends Service
 {
-    /**
-     * @var MailChimp
-     */
-    protected $mailChimp;
-
     /**
      * @var \DrewM\MailChimp\MailChimp
      */
     protected $mailChimpSDK;
 
     /**
-     * MailChimpService constructor.
-     * @param MailChimp $mailChimp
-     * @throws ServiceException
+     * @var AuthenticationData
      */
-    public function __construct(MailChimp $mailChimp)
+    protected $authenticationData;
+
+    /**
+     * MailChimpService constructor.
+     * @param AuthenticationData|null $authenticationData
+     */
+    public function __construct(AuthenticationData $authenticationData = null)
     {
-        $this->mailChimp = $mailChimp;
+        $this->authenticationData = $authenticationData;
+    }
+
+    public function setAuthenticationData(AuthenticationData $authenticationData)
+    {
+        $this->authenticationData = $authenticationData;
+    }
+
+    public function isAuthenticated()
+    {
+        if (!$this->authenticationData) {
+            return false;
+        }
+
+        $data = $this->authenticationData->getData();
+        if (!isset($data['apiKey']) || !isset($data['dc'])) {
+            return false;
+        }
 
         try {
-            $this->mailChimpSDK = new \DrewM\MailChimp\MailChimp($this->mailChimp->getApiKey().'-'.$this->mailChimp->getDC());
+            $this->mailChimpSDK = new \DrewM\MailChimp\MailChimp($data['apiKey'].'-'.$data['dc']);
+            return true;
         } catch (\Exception $e) {
-            throw new ServiceException($e->getMessage());
+            return false;
         }
+    }
+
+    /**
+     * @return RedirectResponse
+     */
+    public function authenticate()
+    {
+        $login_url = MAILCHIMP_AUTH_URL."?response_type=code&client_id=%s&redirect_uri=%s";
+
+        return new RedirectResponse(301, "RedirectResponse", sprintf(
+            $login_url,
+            MAILCHIMP_CLIENT_ID,
+            MAILCHIMP_REDIRECT_URI
+        ));
     }
 
     /**
      * @return array
      * @throws \Exception
      */
-    public function getGroups()
+    public function internalGetGroups()
     {
         $result = [];
         foreach ($this->_getGroups() as $i => $row) {
