@@ -9,32 +9,37 @@ if (!file_exists($composerAutoload)) {
 require $composerAutoload;
 require __DIR__ . '/config.php';
 
-use BrizyForms\ServiceFactory;
-use BrizyForms\Services\MailChimp;
-use BrizyForms\FieldMap;
-use BrizyForms\Model\RedirectResponse;
+//Create account
+$mailChimpAccount = new \BrizyForms\Account\MailChimpAccount();
+$response = $mailChimpAccount->authenticate();
 
-$serviceFactory = new ServiceFactory();
+//set data from authenticate
+$mailChimp = new \BrizyForms\Model\MailChimp();
+$mailChimp->setApiKey('27abb01297b7832e89cde4ef82ca0051');
+$mailChimp->setDC('us13');
 
-/**
- * @var MailChimp $mailchimp
- */
-$mailchimp = $serviceFactory->getInstance('mailchimp');
-$fields    = json_decode('[{"source":"name", "target":"FNAME1"}, {"source":"email", "target":"EMAIL"}]', true);
-$fieldMap  = new FieldMap($fields);
-$fields    = $fieldMap->toArray();
+//create MailChimp service
+$mailChimpService = new \BrizyForms\Service\MailChimpService($mailChimp);
 
-$response = $mailchimp->authenticate();
-if ($response instanceof RedirectResponse) {
-    //@todo redirect
-}
-
-$groups = $mailchimp->getGroups();
+$groups = $mailChimpService->getGroups();
 
 foreach ($groups as $group) {
-    var_dump($mailchimp->getFields($group));
+    var_dump($mailChimpService->getFields($group));
 }
 
-var_dump($groups);
+$fields   = '[{"source_id":"1", "source_title":"Email", "target":"email"}, {"source_id":"2", "source_title":"My Name", "target":"_auto_generate"}]';
+$fieldMap = new \BrizyForms\FieldMap(json_decode($fields, true));
 
-$mailchimp->createMember($fieldMap);
+$data = '[{"name":"2","value":"Anthony","required":false,"type":"text","slug":"name"},{"name":"1","value":"bodnar1212@gmail.com","required":false,"type":"email","slug":"email"}]';
+$data = json_decode($data, true);
+
+$dataArray = [];
+foreach ($data as $row) {
+    $data = new \BrizyForms\Model\Data();
+    $data
+        ->setName($row['name'])
+        ->setValue($row['value']);
+    $dataArray[] = $data;
+}
+
+$mailChimpService->createMember($fieldMap,"408c449297", $dataArray);

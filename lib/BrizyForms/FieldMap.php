@@ -3,7 +3,9 @@
 namespace BrizyForms;
 
 use BrizyForms\Exception\FieldMapException;
+use BrizyForms\Model\Data;
 use BrizyForms\Model\FieldLink;
+use BrizyForms\Model\TransformedData;
 
 class FieldMap
 {
@@ -31,13 +33,14 @@ class FieldMap
     {
         $result = [];
         foreach ($fields as $field) {
-            if (!isset($field['source']) || !isset($field['target'])) {
-                throw new FieldMapException('"source" and "target" are required properties');
+            if (!isset($field['source_id']) || !isset($field['source_title']) || !isset($field['target'])) {
+                throw new FieldMapException('"source_id" && "source_title" && "target" are required properties');
             }
 
             $fieldLink = new FieldLink();
             $fieldLink
-                ->setSource($field['source'])
+                ->setSourceId($field['source_id'])
+                ->setSourceTitle($field['source_title'])
                 ->setTarget($field['target']);
 
             $result[] = $fieldLink;
@@ -54,8 +57,45 @@ class FieldMap
         return $this->fields;
     }
 
-    public function transform($data)
+    /**
+     * @param array $data
+     * @return array|TransformedData
+     * @throws FieldMapException
+     */
+    public function transform(array $data)
     {
+        $mergeFields = [];
+        $email       = null;
+        foreach ($this->fields as $i => $field) {
+            if ($field->getTarget() == ServiceConstant::AUTO_GENERATE_FIELD) {
+                continue;
+            }
+
+            foreach ($data as $key => $row) {
+                if (!$row instanceof Data) {
+                    throw new FieldMapException('Not instanceof Data');
+                }
+
+                if ($row->getName() == $field->getSourceId()) {
+                    if ($field->getTarget() == ServiceConstant::EMAIL_FIELD && filter_var($row->getValue(), FILTER_VALIDATE_EMAIL) ) {
+                        $email = $row->getValue();
+                    } else {
+                        $mergeFields[$field->getTarget()] = $row->getValue();
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (!$email) {
+            throw new FieldMapException('Email was not found.');
+        }
+
+        $data = new TransformedData();
+        $data
+            ->setEmail($email)
+            ->setFields($mergeFields);
+
         return $data;
     }
 }
