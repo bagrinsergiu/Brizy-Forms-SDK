@@ -1,30 +1,26 @@
 <?php
 
-namespace BrizyForms\Services;
+namespace BrizyForms\Service;
 
 use BrizyForms\Exception\ServiceException;
 use BrizyForms\FieldMap;
 use BrizyForms\Model\Field;
 use BrizyForms\Model\Group;
-use BrizyForms\Model\RedirectResponse;
+use BrizyForms\Model\MailChimp;
 
-class MailChimp extends Service
+class MailChimpService extends Service
 {
     const AUTO_GENERATE_FIELD = '_auto_generate';
     const EMAIL_FIELD         = 'email';
 
     /**
-     * @return RedirectResponse
+     * @var MailChimp
      */
-    public function authenticate()
-    {
-        $login_url = MAILCHIMP_AUTH_URL."?response_type=code&client_id=%s&redirect_uri=%s";
+    protected $mailChimp;
 
-        return new RedirectResponse(301, "RedirectResponse", sprintf(
-            $login_url,
-            MAILCHIMP_CLIENT_ID,
-            MAILCHIMP_REDIRECT_URI
-        ));
+    public function __construct(MailChimp $mailChimp)
+    {
+        $this->mailChimp = $mailChimp;
     }
 
     /**
@@ -34,7 +30,7 @@ class MailChimp extends Service
     public function getGroups()
     {
         try {
-            $mailChimp = new \DrewM\MailChimp\MailChimp('67392db60505618fb8d0f6f25db03ec4-us11');
+            $mailChimp = new \DrewM\MailChimp\MailChimp($this->mailChimp->getApiKey());
             $lists     = $mailChimp->get('lists?count=30');
         } catch (\Exception $e) {
             throw new ServiceException($e->getMessage());
@@ -65,7 +61,7 @@ class MailChimp extends Service
     public function getFields(Group $group)
     {
         try {
-            $mailChimp    = new \DrewM\MailChimp\MailChimp('67392db60505618fb8d0f6f25db03ec4-us11');
+            $mailChimp    = new \DrewM\MailChimp\MailChimp($this->mailChimp->getApiKey());
             $customFields = $mailChimp->get("lists/{$group->getId()}/merge-fields?count=100");
         } catch (\Exception $e) {
             throw new ServiceException($e->getMessage());

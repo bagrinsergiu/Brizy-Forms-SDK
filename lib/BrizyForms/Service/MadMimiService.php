@@ -1,15 +1,21 @@
 <?php
 
-namespace BrizyForms\Services;
+namespace BrizyForms\Service;
 
 use BrizyForms\FieldMap;
 use BrizyForms\Model\Group;
+use BrizyForms\Model\MadMimi;
 
-class MadMimi extends Service
+class MadMimiService extends Service
 {
-    public function authenticate()
+    /**
+     * @var MadMimi
+     */
+    protected $madMimi;
+
+    public function __construct(MadMimi $madMimi)
     {
-        // TODO: Implement getLists() method.
+        $this->madMimi = $madMimi;
     }
 
     public function getGroups()
@@ -29,11 +35,6 @@ class MadMimi extends Service
 
     protected function mapFields(FieldMap $fieldMap)
     {
-        $fieldLinks = $fieldMap->toArray();
-
-        foreach ($fieldLinks as $fieldLink)
-        {
-
-        }
+        // TODO: Implement getLists() method.
     }
 }

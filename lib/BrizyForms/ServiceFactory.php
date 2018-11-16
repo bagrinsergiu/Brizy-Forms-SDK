@@ -16,7 +16,8 @@ class ServiceFactory
      */
     public function getInstance($service_name)
     {
-        if ($class = $this->getServiceClasses()[$service_name]) {
+        if (isset($this->getServiceClasses()[$service_name])) {
+            $class = $this->getServiceClasses()[$service_name];
             return new $class;
         }
 
@@ -26,11 +27,22 @@ class ServiceFactory
     /**
      * @return array
      */
-    public function getServiceClasses()
+    protected function getServiceClasses()
     {
         return [
-            self::MAILCHIMP => 'BrizyForms\Services\MailChimp',
-            self::MADMIMI   => 'BrizyForms\Services\Madmimi'
+            self::MAILCHIMP => 'BrizyForms\Services\MailChimpService',
+            self::MADMIMI   => 'BrizyForms\Services\MadMimiService'
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getServices()
+    {
+        return [
+            self::MAILCHIMP,
+            self::MADMIMI
         ];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace BrizyForms\Services;
+namespace BrizyForms\Service;
 
 use BrizyForms\FieldMap;
 
