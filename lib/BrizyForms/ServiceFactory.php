@@ -19,10 +19,10 @@ class ServiceFactory
      * @return mixed
      * @throws ServiceException
      */
-    public function getInstance($service_name)
+    static public function getInstance($service_name)
     {
-        if (isset($this->getServiceClasses()[$service_name])) {
-            $class = $this->getServiceClasses()[$service_name];
+        if (isset(self::getServiceClasses()[$service_name])) {
+            $class = self::getServiceClasses()[$service_name];
             return new $class;
         }
 
@@ -32,7 +32,7 @@ class ServiceFactory
     /**
      * @return array
      */
-    protected function getServiceClasses()
+    static public function getServiceClasses()
     {
         return [
             self::MAILCHIMP => 'BrizyForms\Services\MailChimpService',
