@@ -24,5 +24,5 @@ interface ServiceInterface
      * @param $data
      * @return mixed
      */
-    public function createMember(FieldMap $fieldMap, $group_id, $data);
+    public function createMember(FieldMap $fieldMap, $group_id, array $data);
 }

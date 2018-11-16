@@ -12,7 +12,7 @@ abstract class Service implements ServiceInterface
      * @param $data
      * @return mixed|void
      */
-    public function createMember(FieldMap $fieldMap, $group_id, $data)
+    public function createMember(FieldMap $fieldMap, $group_id, array $data)
     {
         $this->mapFields($fieldMap, $group_id);
         $this->internalCreateMember($fieldMap, $group_id, $data);
@@ -31,5 +31,5 @@ abstract class Service implements ServiceInterface
      * @param $data
      * @return mixed
      */
-    abstract protected function internalCreateMember(FieldMap $fieldMap, $group_id, $data);
+    abstract protected function internalCreateMember(FieldMap $fieldMap, $group_id, array $data);
 }

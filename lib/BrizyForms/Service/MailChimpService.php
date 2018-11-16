@@ -92,7 +92,7 @@ class MailChimpService extends Service
      * @return mixed|void
      * @throws \BrizyForms\Exception\FieldMapException
      */
-    protected function internalCreateMember(FieldMap $fieldMap, $group_id, $data)
+    protected function internalCreateMember(FieldMap $fieldMap, $group_id, array $data)
     {
         $data = $fieldMap->transform($data);
 
