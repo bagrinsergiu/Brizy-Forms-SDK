@@ -2,6 +2,7 @@
 
 namespace BrizyForms\Service;
 
+use BrizyForms\Exception\AuthenticationDataException;
 use BrizyForms\Exception\ServiceException;
 use BrizyForms\FieldMap;
 use BrizyForms\Model\Field;
@@ -31,12 +32,16 @@ class MailChimpService extends Service {
 		return true;
 	}
 
+    /**
+     * @return mixed|void
+     * @throws AuthenticationDataException
+     */
 	public function initializeNativeService() {
 		try {
 			$data               = $this->authenticationData->getData();
 			$this->mailChimpSDK = new \DrewM\MailChimp\MailChimp( $data['access_token'] . '-' . $data['dc'] );
 		} catch ( \Exception $e ) {
-			return false;
+			throw new AuthenticationDataException('Can\'t initialize native service');
 		}
 	}
 
