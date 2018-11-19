@@ -4,9 +4,14 @@ namespace BrizyForms\Service;
 
 use BrizyForms\FieldMap;
 use BrizyForms\Model\Group;
+use BrizyForms\Model\RedirectResponse;
+use BrizyForms\Model\Response;
 
 interface ServiceInterface
 {
+    /**
+     * @return RedirectResponse|Response|null
+     */
     public function authenticate();
 
     /**

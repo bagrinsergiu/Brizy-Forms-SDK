@@ -4,7 +4,6 @@ namespace BrizyForms\Service;
 
 use BrizyForms\Exception\ServiceException;
 use BrizyForms\FieldMap;
-use BrizyForms\Model\AuthenticationData;
 use BrizyForms\Model\Field;
 use BrizyForms\Model\Group;
 use BrizyForms\Model\RedirectResponse;
@@ -18,24 +17,8 @@ class MailChimpService extends Service
     protected $mailChimpSDK;
 
     /**
-     * @var AuthenticationData
+     * @return bool
      */
-    protected $authenticationData;
-
-    /**
-     * MailChimpService constructor.
-     * @param AuthenticationData|null $authenticationData
-     */
-    public function __construct(AuthenticationData $authenticationData = null)
-    {
-        $this->authenticationData = $authenticationData;
-    }
-
-    public function setAuthenticationData(AuthenticationData $authenticationData)
-    {
-        $this->authenticationData = $authenticationData;
-    }
-
     public function isAuthenticated()
     {
         if (!$this->authenticationData) {
@@ -43,16 +26,17 @@ class MailChimpService extends Service
         }
 
         $data = $this->authenticationData->getData();
-        if (!isset($data['apiKey']) || !isset($data['dc'])) {
+        if (!isset($data['access_token']) || !isset($data['dc'])) {
             return false;
         }
 
         try {
-            $this->mailChimpSDK = new \DrewM\MailChimp\MailChimp($data['apiKey'].'-'.$data['dc']);
-            return true;
+            $this->mailChimpSDK = new \DrewM\MailChimp\MailChimp($data['access_token'].'-'.$data['dc']);
         } catch (\Exception $e) {
             return false;
         }
+
+        return true;
     }
 
     /**
@@ -73,7 +57,7 @@ class MailChimpService extends Service
      * @return array
      * @throws \Exception
      */
-    public function internalGetGroups()
+    protected function internalGetGroups()
     {
         $result = [];
         foreach ($this->_getGroups() as $i => $row) {
@@ -93,7 +77,7 @@ class MailChimpService extends Service
      * @return array
      * @throws \Exception
      */
-    public function getFields(Group $group)
+    protected function internalGetFields(Group $group)
     {
         $result = [];
         foreach($this->_getFields($group->getId()) as $i => $customField) {

@@ -9,19 +9,19 @@ if (!file_exists($composerAutoload)) {
 require $composerAutoload;
 require __DIR__ . '/config.php';
 
-//Create account
-$mailChimpAccount = new \BrizyForms\Account\MailChimpAccount();
-$response = $mailChimpAccount->authenticate();
-
-//set data from authenticate
-$mailChimp = new \BrizyForms\Model\MailChimp();
-$mailChimp->setApiKey('27abb01297b7832e89cde4ef82ca0051');
-$mailChimp->setDC('us13');
-
 //create MailChimp service
-$mailChimpService = new \BrizyForms\Service\MailChimpService($mailChimp);
+$mailChimpService = \BrizyForms\ServiceFactory::getInstance(\BrizyForms\Service::MAILCHIMP, new \BrizyForms\Model\AuthenticationData([
+    'access_token' => '27abb01297b7832e89cde4ef82ca0051',
+    'dc' => 'us13'
+]));
 
 $groups = $mailChimpService->getGroups();
+
+$active_group = null;
+foreach ($groups as $group) {
+    var_dump($group);
+    $active_group = $group->getId();
+}
 
 foreach ($groups as $group) {
     var_dump($mailChimpService->getFields($group));
@@ -42,4 +42,4 @@ foreach ($data as $row) {
     $dataArray[] = $data;
 }
 
-$mailChimpService->createMember($fieldMap,"408c449297", $dataArray);
+$mailChimpService->createMember($fieldMap, $active_group, $dataArray);

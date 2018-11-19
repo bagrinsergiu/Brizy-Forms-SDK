@@ -3,9 +3,9 @@
 namespace BrizyForms;
 
 use BrizyForms\Exception\ServiceException;
+use BrizyForms\Model\AuthenticationData;
 
 /**
- * @todo need refactoring or remove it
  * Class ServiceFactory
  * @package BrizyForms
  */
@@ -16,14 +16,15 @@ class ServiceFactory
 
     /**
      * @param $service_name
+     * @param AuthenticationData|null $authenticationData
      * @return mixed
      * @throws ServiceException
      */
-    static public function getInstance($service_name)
+    static public function getInstance($service_name, AuthenticationData $authenticationData = null)
     {
         if (isset(self::getServiceClasses()[$service_name])) {
             $class = self::getServiceClasses()[$service_name];
-            return new $class;
+            return new $class($authenticationData);
         }
 
         throw new ServiceException('Invalid service name.');
@@ -35,15 +36,15 @@ class ServiceFactory
     static public function getServiceClasses()
     {
         return [
-            self::MAILCHIMP => 'BrizyForms\Services\MailChimpService',
-            self::MADMIMI   => 'BrizyForms\Services\MadMimiService'
+            self::MAILCHIMP => 'BrizyForms\Service\MailChimpService',
+            self::MADMIMI   => 'BrizyForms\Service\MadMimiService'
         ];
     }
 
     /**
      * @return array
      */
-    public function getServices()
+    static public function getServices()
     {
         return [
             self::MAILCHIMP,

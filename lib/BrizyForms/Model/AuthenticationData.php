@@ -9,8 +9,13 @@ class AuthenticationData
      */
     protected $data;
 
+    public function __construct(array $data)
+    {
+        $this->data = $data;
+    }
+
     /**
-     * @return string
+     * @return array
      */
     public function getData()
     {
