@@ -7,102 +7,114 @@ use BrizyForms\FieldMap;
 use BrizyForms\Model\AuthenticationData;
 use BrizyForms\Model\Group;
 
-abstract class Service implements ServiceInterface
-{
-    /**
-     * @var AuthenticationData
-     */
-    protected $authenticationData;
+abstract class Service implements ServiceInterface {
+	/**
+	 * @var AuthenticationData
+	 */
+	protected $authenticationData;
 
-    /**
-     * MailChimpService constructor.
-     * @param AuthenticationData|null $authenticationData
-     */
-    public function __construct(AuthenticationData $authenticationData = null)
-    {
-        $this->authenticationData = $authenticationData;
-    }
+	/**
+	 * MailChimpService constructor.
+	 *
+	 * @param AuthenticationData|null $authenticationData
+	 */
+	public function __construct( AuthenticationData $authenticationData = null ) {
+		if ( $authenticationData instanceof AuthenticationData ) {
+			$this->setAuthenticationData( $authenticationData );
+		}
+	}
 
-    /**
-     * @param AuthenticationData $authenticationData
-     */
-    public function setAuthenticationData(AuthenticationData $authenticationData)
-    {
-        $this->authenticationData = $authenticationData;
-    }
+	/**
+	 * @param AuthenticationData $authenticationData
+	 */
+	public function setAuthenticationData( AuthenticationData $authenticationData ) {
+		$this->authenticationData = $authenticationData;
 
-    /**
-     * @param FieldMap $fieldMap
-     * @param $group_id
-     * @param array $data
-     * @return mixed|void
-     * @throws AuthenticationDataException
-     */
-    public function createMember(FieldMap $fieldMap, $group_id, array $data)
-    {
-        if (!$this->isAuthenticated()) {
-            throw new AuthenticationDataException();
-        }
+		if ( $this->hasValidAuthenticationData() ) {
+			$this->initializeNativeService();
+		}
 
-        $this->mapFields($fieldMap, $group_id);
-        $this->internalCreateMember($fieldMap, $group_id, $data);
-    }
+	}
 
-    /**
-     * @return array
-     * @throws AuthenticationDataException
-     */
-    public function getGroups()
-    {
-        if (!$this->isAuthenticated()) {
-            throw new AuthenticationDataException();
-        }
+	/**
+	 * @param FieldMap $fieldMap
+	 * @param $group_id
+	 * @param array $data
+	 *
+	 * @return mixed|void
+	 * @throws AuthenticationDataException
+	 */
+	public function createMember( FieldMap $fieldMap, $group_id, array $data ) {
+		if ( ! $this->hasValidAuthenticationData() ) {
+			throw new AuthenticationDataException();
+		}
 
-        return $this->internalGetGroups();
-    }
+		$this->mapFields( $fieldMap, $group_id );
+		$this->internalCreateMember( $fieldMap, $group_id, $data );
+	}
 
-    /**
-     * @param Group $group
-     * @return array
-     * @throws AuthenticationDataException
-     */
-    public function getFields(Group $group)
-    {
-        if (!$this->isAuthenticated()) {
-            throw new AuthenticationDataException();
-        }
+	/**
+	 * @return array
+	 * @throws AuthenticationDataException
+	 */
+	public function getGroups() {
+		if ( ! $this->hasValidAuthenticationData() ) {
+			throw new AuthenticationDataException();
+		}
 
-        return $this->internalGetFields($group);
-    }
+		return $this->internalGetGroups();
+	}
 
-    /**
-     * @param FieldMap $fieldMap
-     * @param string $group_id
-     * @return mixed
-     */
-    abstract protected function mapFields(FieldMap $fieldMap, $group_id);
+	/**
+	 * @param Group $group
+	 *
+	 * @return array
+	 * @throws AuthenticationDataException
+	 */
+	public function getFields( Group $group ) {
+		if ( ! $this->hasValidAuthenticationData() ) {
+			throw new AuthenticationDataException();
+		}
 
-    /**
-     * @param FieldMap $fieldMap
-     * @param $group_id
-     * @param $data
-     * @return mixed
-     */
-    abstract protected function internalCreateMember(FieldMap $fieldMap, $group_id, array $data);
+		return $this->internalGetFields( $group );
+	}
 
-    /**
-     * @return mixed
-     */
-    abstract protected function internalGetGroups();
+	/**
+	 * @param FieldMap $fieldMap
+	 * @param string $group_id
+	 *
+	 * @return mixed
+	 */
+	abstract protected function mapFields( FieldMap $fieldMap, $group_id );
 
-    /**
-     * @param Group $group
-     * @return mixed
-     */
-    abstract protected function internalGetFields(Group $group);
+	/**
+	 * @param FieldMap $fieldMap
+	 * @param $group_id
+	 * @param $data
+	 *
+	 * @return mixed
+	 */
+	abstract protected function internalCreateMember( FieldMap $fieldMap, $group_id, array $data );
 
-    /**
-     * @return bool
-     */
-    abstract protected function isAuthenticated();
+	/**
+	 * @return mixed
+	 */
+	abstract protected function internalGetGroups();
+
+	/**
+	 * @param Group $group
+	 *
+	 * @return mixed
+	 */
+	abstract protected function internalGetFields( Group $group );
+
+	/**
+	 * @return bool
+	 */
+	abstract protected function hasValidAuthenticationData();
+
+	/**
+	 * @return mixed
+	 */
+	abstract protected function initializeNativeService();
 }

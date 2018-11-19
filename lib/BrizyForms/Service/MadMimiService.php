@@ -24,7 +24,7 @@ class MadMimiService extends Service
         // TODO: Implement getLists() method.
     }
 
-    protected function isAuthenticated()
+    protected function hasValidAuthenticationData()
     {
         if (!$this->authenticationData) {
             return false;
@@ -34,8 +34,6 @@ class MadMimiService extends Service
         if (!isset($data['email']) || !isset($data['api_key'])) {
             return false;
         }
-
-      //@todo validate credentials via madMimi api
 
         return true;
     }
@@ -72,4 +70,11 @@ class MadMimiService extends Service
     {
         // TODO: Implement internalGetFields() method.
     }
+
+	/**
+	 * @return mixed
+	 */
+	protected function initializeNativeService() {
+		// TODO: Implement initializeNativeService() method.
+	}
 }
