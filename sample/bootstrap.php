@@ -10,10 +10,16 @@ require $composerAutoload;
 require __DIR__ . '/config.php';
 
 //create MailChimp service
-$mailChimpService = \BrizyForms\ServiceFactory::getInstance(\BrizyForms\ServiceFactory::MAILCHIMP, new \BrizyForms\Model\AuthenticationData([
-    'access_token' => '27abb01297b7832e89cde4ef82ca0051',
-    'dc' => 'us13'
-]));
+$mailChimpService = \BrizyForms\ServiceFactory::getInstance(\BrizyForms\ServiceFactory::MAILCHIMP);
+
+$response = $mailChimpService->authenticate();
+if ($response instanceof \BrizyForms\Model\RedirectResponse) {
+    //@todo handle response
+    $mailChimpService->setAuthenticationData(new \BrizyForms\Model\AuthenticationData([
+        'access_token' => '27abb01297b7832e89cde4ef82ca0051',
+        'dc' => 'us13'
+    ]));
+}
 
 $groups = $mailChimpService->getGroups();
 
