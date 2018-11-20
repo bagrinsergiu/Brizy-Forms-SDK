@@ -33,7 +33,7 @@ class MailChimpService extends Service {
 	}
 
     /**
-     * @return mixed|void
+     * @return void
      * @throws AuthenticationDataException
      */
 	public function initializeNativeService() {

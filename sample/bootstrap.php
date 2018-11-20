@@ -9,6 +9,22 @@ if (!file_exists($composerAutoload)) {
 require $composerAutoload;
 require __DIR__ . '/config.php';
 
+
+$fields   = '[{"source_id":"1", "source_title":"Email", "target":"email"}, {"source_id":"2", "source_title":"My Name", "target":"_auto_generate"}]';
+$fieldMap = new \BrizyForms\FieldMap(json_decode($fields, true));
+
+$data = '[{"name":"2","value":"Anthony","required":false,"type":"text","slug":"name"},{"name":"1","value":"bodnar1212@gmail.com","required":false,"type":"email","slug":"email"}]';
+$data = json_decode($data, true);
+
+$dataArray = [];
+foreach ($data as $row) {
+    $data = new \BrizyForms\Model\Data();
+    $data
+        ->setName($row['name'])
+        ->setValue($row['value']);
+    $dataArray[] = $data;
+}
+
 //create MailChimp service
 
 $mailChimpService = \BrizyForms\ServiceFactory::getInstance(\BrizyForms\ServiceFactory::MAILCHIMP);
@@ -36,19 +52,27 @@ foreach ($groups as $group) {
     var_dump($mailChimpService->getFields($group));
 }
 
-$fields   = '[{"source_id":"1", "source_title":"Email", "target":"email"}, {"source_id":"2", "source_title":"My Name", "target":"_auto_generate"}]';
-$fieldMap = new \BrizyForms\FieldMap(json_decode($fields, true));
+$mailChimpService->createMember($fieldMap, $active_group, $dataArray);
 
-$data = '[{"name":"2","value":"Anthony","required":false,"type":"text","slug":"name"},{"name":"1","value":"bodnar1212@gmail.com","required":false,"type":"email","slug":"email"}]';
-$data = json_decode($data, true);
 
-$dataArray = [];
-foreach ($data as $row) {
-    $data = new \BrizyForms\Model\Data();
-    $data
-        ->setName($row['name'])
-        ->setValue($row['value']);
-    $dataArray[] = $data;
+//create SendinBlue service
+
+$sendinBlueService = \BrizyForms\ServiceFactory::getInstance(\BrizyForms\ServiceFactory::SENDINBLUE);
+
+$sendinBlueService->setAuthenticationData(new \BrizyForms\Model\AuthenticationData([
+    'api_key' => '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'
+]));
+
+$groups = $sendinBlueService->getGroups();
+
+$active_group = null;
+foreach ($groups as $group) {
+    var_dump($group);
+    $active_group = $group->getId();
 }
 
-$mailChimpService->createMember($fieldMap, $active_group, $dataArray);
+$fields = $sendinBlueService->getFields();
+
+var_dump($fields);
+
+$sendinBlueService->createMember($fieldMap, $active_group, $dataArray);

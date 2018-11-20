@@ -7,6 +7,11 @@ use BrizyForms\FieldMap;
 use BrizyForms\Model\AuthenticationData;
 use BrizyForms\Model\Group;
 
+/**
+ * @todo create logs
+ * Class Service
+ * @package BrizyForms\Service
+ */
 abstract class Service implements ServiceInterface {
 	/**
 	 * @var AuthenticationData
@@ -65,13 +70,12 @@ abstract class Service implements ServiceInterface {
 		return $this->internalGetGroups();
 	}
 
-	/**
-	 * @param Group $group
-	 *
-	 * @return array
-	 * @throws AuthenticationDataException
-	 */
-	public function getFields( Group $group ) {
+    /**
+     * @param Group|null $group
+     * @return array|mixed
+     * @throws AuthenticationDataException
+     */
+	public function getFields( Group $group = null ) {
 		if ( ! $this->hasValidAuthenticationData() ) {
 			throw new AuthenticationDataException();
 		}
@@ -114,7 +118,7 @@ abstract class Service implements ServiceInterface {
 	abstract protected function hasValidAuthenticationData();
 
 	/**
-	 * @return mixed
+	 * @return void
 	 */
 	abstract protected function initializeNativeService();
 }
