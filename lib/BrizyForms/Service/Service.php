@@ -49,7 +49,7 @@ abstract class Service implements ServiceInterface {
 	 * @return mixed|void
 	 * @throws AuthenticationDataException
 	 */
-	public function createMember( FieldMap $fieldMap, $group_id, array $data ) {
+	public function createMember( FieldMap $fieldMap, $group_id = null, array $data = [] ) {
 		if ( ! $this->hasValidAuthenticationData() ) {
 			throw new AuthenticationDataException();
 		}
@@ -89,7 +89,7 @@ abstract class Service implements ServiceInterface {
 	 *
 	 * @return mixed
 	 */
-	abstract protected function mapFields( FieldMap $fieldMap, $group_id );
+	abstract protected function mapFields( FieldMap $fieldMap, $group_id = null);
 
 	/**
 	 * @param FieldMap $fieldMap
@@ -98,7 +98,7 @@ abstract class Service implements ServiceInterface {
 	 *
 	 * @return mixed
 	 */
-	abstract protected function internalCreateMember( FieldMap $fieldMap, $group_id, array $data );
+	abstract protected function internalCreateMember( FieldMap $fieldMap, $group_id = null, array $data = []);
 
 	/**
 	 * @return mixed
@@ -110,7 +110,7 @@ abstract class Service implements ServiceInterface {
 	 *
 	 * @return mixed
 	 */
-	abstract protected function internalGetFields( Group $group );
+	abstract protected function internalGetFields( Group $group = null );
 
 	/**
 	 * @return bool

@@ -13,6 +13,7 @@ class ServiceFactory
 {
     const MAILCHIMP  = 'mailchimp';
     const SENDINBLUE = 'sendinblue';
+    const ZAPIER     = 'zapier';
 
     /**
      * @param $service_name
@@ -37,7 +38,8 @@ class ServiceFactory
     {
         return [
             self::MAILCHIMP  => 'BrizyForms\Service\MailChimpService',
-            self::SENDINBLUE => 'BrizyForms\Service\SendinBlueService'
+            self::SENDINBLUE => 'BrizyForms\Service\SendinBlueService',
+            self::ZAPIER     => 'BrizyForms\Service\ZapierService'
         ];
     }
 
@@ -48,7 +50,8 @@ class ServiceFactory
     {
         return [
             self::MAILCHIMP,
-            self::SENDINBLUE
+            self::SENDINBLUE,
+            self::ZAPIER
         ];
     }
 }

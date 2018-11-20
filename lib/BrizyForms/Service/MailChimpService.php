@@ -82,7 +82,12 @@ class MailChimpService extends Service {
 	 * @return array
 	 * @throws \Exception
 	 */
-	protected function internalGetFields( Group $group ) {
+	protected function internalGetFields( Group $group = null ) {
+
+	    if (!$group) {
+	        throw new ServiceException('Group must be defined');
+        }
+
 		$result = [];
 		foreach ( $this->_getFields( $group->getId() ) as $i => $customField ) {
 			$field = new Field();
@@ -113,7 +118,7 @@ class MailChimpService extends Service {
 	 * @return mixed|void
 	 * @throws \BrizyForms\Exception\FieldMapException
 	 */
-	protected function internalCreateMember( FieldMap $fieldMap, $group_id, array $data ) {
+	protected function internalCreateMember( FieldMap $fieldMap, $group_id = null, array $data = []) {
 		$data = $fieldMap->transform( $data );
 
 		$payload = [
@@ -135,7 +140,7 @@ class MailChimpService extends Service {
 	 * @return FieldMap|mixed
 	 * @throws \Exception
 	 */
-	protected function mapFields( FieldMap $fieldMap, $group_id ) {
+	protected function mapFields( FieldMap $fieldMap, $group_id = null) {
 		$existCustomFields = $this->_getFields( $group_id );
 
 		foreach ( $fieldMap->toArray() as $fieldLink ) {

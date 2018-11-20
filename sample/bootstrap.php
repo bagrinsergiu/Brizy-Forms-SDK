@@ -9,6 +9,7 @@ if (!file_exists($composerAutoload)) {
 require $composerAutoload;
 require __DIR__ . '/config.php';
 
+//create MailChimp service
 
 $fields   = '[{"source_id":"1", "source_title":"Email", "target":"email"}, {"source_id":"2", "source_title":"My Name", "target":"_auto_generate"}]';
 $fieldMap = new \BrizyForms\FieldMap(json_decode($fields, true));
@@ -24,8 +25,6 @@ foreach ($data as $row) {
         ->setValue($row['value']);
     $dataArray[] = $data;
 }
-
-//create MailChimp service
 
 $mailChimpService = \BrizyForms\ServiceFactory::getInstance(\BrizyForms\ServiceFactory::MAILCHIMP);
 
@@ -57,6 +56,21 @@ $mailChimpService->createMember($fieldMap, $active_group, $dataArray);
 
 //create SendinBlue service
 
+$fields   = '[{"source_id":"1", "source_title":"Email", "target":"email"}, {"source_id":"2", "source_title":"My Name", "target":"_auto_generate"}]';
+$fieldMap = new \BrizyForms\FieldMap(json_decode($fields, true));
+
+$data = '[{"name":"2","value":"Anthony","required":false,"type":"text","slug":"name"},{"name":"1","value":"bodnar1212@gmail.com","required":false,"type":"email","slug":"email"}]';
+$data = json_decode($data, true);
+
+$dataArray = [];
+foreach ($data as $row) {
+    $data = new \BrizyForms\Model\Data();
+    $data
+        ->setName($row['name'])
+        ->setValue($row['value']);
+    $dataArray[] = $data;
+}
+
 $sendinBlueService = \BrizyForms\ServiceFactory::getInstance(\BrizyForms\ServiceFactory::SENDINBLUE);
 
 $sendinBlueService->setAuthenticationData(new \BrizyForms\Model\AuthenticationData([
@@ -76,3 +90,30 @@ $fields = $sendinBlueService->getFields();
 var_dump($fields);
 
 $sendinBlueService->createMember($fieldMap, $active_group, $dataArray);
+
+
+
+//create Zapier service
+
+$fields   = '[{"source_id":"1", "source_title":"Email", "target":"email"}, {"source_id":"2", "source_title":"My Name", "target":"_auto_generate"}]';
+$fieldMap = new \BrizyForms\FieldMap(json_decode($fields, true));
+
+$data = '[{"name":"2","value":"Anthony","required":false,"type":"text","slug":"name"},{"name":"1","value":"bodnar1212@gmail.com","required":false,"type":"email","slug":"email"}]';
+$data = json_decode($data, true);
+
+$dataArray = [];
+foreach ($data as $row) {
+    $data = new \BrizyForms\Model\Data();
+    $data
+        ->setName($row['name'])
+        ->setValue($row['value']);
+    $dataArray[] = $data;
+}
+
+$sendinBlueService = \BrizyForms\ServiceFactory::getInstance(\BrizyForms\ServiceFactory::ZAPIER);
+
+$sendinBlueService->setAuthenticationData(new \BrizyForms\Model\AuthenticationData([
+    'webhook_url' => 'https://webhook.site/9a0c8a1e-cff7-4469-a305-e963aa4c515b'
+]));
+
+$sendinBlueService->createMember($fieldMap, null, $dataArray);

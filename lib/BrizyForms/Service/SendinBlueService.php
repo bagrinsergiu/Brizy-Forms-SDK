@@ -17,7 +17,7 @@ class SendinBlueService extends Service
      *
      * @return mixed
      */
-    protected function mapFields(FieldMap $fieldMap, $group_id)
+    protected function mapFields(FieldMap $fieldMap, $group_id = null)
     {
         $existCustomFields = $this->internalGetFields( );
 
@@ -40,7 +40,7 @@ class SendinBlueService extends Service
      * @return mixed|void
      * @throws \BrizyForms\Exception\FieldMapException
      */
-    protected function internalCreateMember(FieldMap $fieldMap, $group_id, array $data)
+    protected function internalCreateMember(FieldMap $fieldMap, $group_id = null, array $data = [])
     {
         $data = $fieldMap->transform( $data );
 

@@ -23,7 +23,7 @@ interface ServiceInterface
      * @param Group $group
      * @return array
      */
-    public function getFields(Group $group);
+    public function getFields(Group $group = null);
 
     /**
      * @param FieldMap $fieldMap
@@ -31,5 +31,5 @@ interface ServiceInterface
      * @param $data
      * @return mixed
      */
-    public function createMember(FieldMap $fieldMap, $group_id, array $data);
+    public function createMember(FieldMap $fieldMap, $group_id = null, array $data = []);
 }
