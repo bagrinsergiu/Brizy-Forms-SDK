@@ -20,8 +20,8 @@ class ZapierService extends Service
      */
     protected function mapFields(FieldMap $fieldMap, $group_id = null)
     {
-        foreach ( $fieldMap->toArray() as $fieldLink ) {
-            if ( $fieldLink->getTarget() == ServiceConstant::AUTO_GENERATE_FIELD ) {
+        foreach ($fieldMap->toArray() as $fieldLink) {
+            if ($fieldLink->getTarget() == ServiceConstant::AUTO_GENERATE_FIELD) {
                 $fieldLink->setTarget($fieldLink->getSourceTitle());
             }
         }
@@ -38,7 +38,7 @@ class ZapierService extends Service
      */
     protected function internalCreateMember(FieldMap $fieldMap, $group_id = null, array $data = [])
     {
-        $data = $fieldMap->transform( $data );
+        $data = $fieldMap->transform($data);
         $data_json = json_encode(array_merge(['Email' => $data->getEmail()], $data->getFields()));
 
         $auth_data = $this->authenticationData->getData();
@@ -54,7 +54,7 @@ class ZapierService extends Service
 
         $result = curl_exec($ch);
 
-        curl_close ($ch);
+        curl_close($ch);
 
         if (!$result) {
             throw new ServiceException('Can\'t send data to this webhook_url');
@@ -84,12 +84,12 @@ class ZapierService extends Service
      */
     protected function hasValidAuthenticationData()
     {
-        if ( ! $this->authenticationData ) {
+        if (!$this->authenticationData) {
             return false;
         }
 
         $data = $this->authenticationData->getData();
-        if ( ! isset( $data['webhook_url'] ) || !preg_match('/^https:\/\/hooks.zapier.com\/hooks\/catch\//', $data['webhook_url'])) {
+        if (!isset($data['webhook_url']) || !preg_match('/^https:\/\/hooks.zapier.com\/hooks\/catch\//', $data['webhook_url'])) {
             return false;
         }
 

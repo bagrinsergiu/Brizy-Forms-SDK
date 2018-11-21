@@ -38,18 +38,18 @@ class CampaignMonitorService extends Service
         if (!$group_id) {
             throw new ServiceException("Group is required");
         }
-        $campaignMonitor   = $this->_getCS_RESTLists($group_id);
+        $campaignMonitor = $this->_getCS_RESTLists($group_id);
         $existCustomFields = $this->_getFields($campaignMonitor);
-        $existCustomFields = json_decode(json_encode($existCustomFields->response),true);
+        $existCustomFields = json_decode(json_encode($existCustomFields->response), true);
 
-        foreach ( $fieldMap->toArray() as $fieldLink ) {
+        foreach ($fieldMap->toArray() as $fieldLink) {
             if ($fieldLink->getTarget() == ServiceConstant::AUTO_GENERATE_FIELD) {
                 $newCustomField = null;
-                $key_exist      = array_search($fieldLink->getSourceTitle(), array_column($existCustomFields, 'FieldName'));
+                $key_exist = array_search($fieldLink->getSourceTitle(), array_column($existCustomFields, 'FieldName'));
                 if ($key_exist === false) {
                     $newCustomField = $campaignMonitor->create_custom_field([
                         'FieldName' => $fieldLink->getSourceTitle(),
-                        'DataType'  => 'Text',
+                        'DataType' => 'Text',
                     ]);
                 }
 
@@ -78,14 +78,14 @@ class CampaignMonitorService extends Service
      */
     protected function internalCreateMember(FieldMap $fieldMap, $group_id = null, array $data = [])
     {
-        $data = $fieldMap->transform( $data );
+        $data = $fieldMap->transform($data);
 
         $campaignMonitor = $this->_getCS_REST('subscriber', $group_id);
 
         $mergeFields = [];
         foreach ($data->getFields() as $target => $value) {
             $mergeFields[] = [
-                'Key'   => $target,
+                'Key' => $target,
                 'Value' => $value
             ];
         }
@@ -96,9 +96,9 @@ class CampaignMonitorService extends Service
             unset($mergeFields[$key]);
         }
 
-        $payload['EmailAddress']   = $data->getEmail();
-        $payload['CustomFields']   = array_values($mergeFields);
-        $payload['Resubscribe']    = false;
+        $payload['EmailAddress'] = $data->getEmail();
+        $payload['CustomFields'] = array_values($mergeFields);
+        $payload['Resubscribe'] = false;
         $payload['ConsentToTrack'] = 'Yes';
 
         $result = $campaignMonitor->add($payload);
@@ -116,7 +116,7 @@ class CampaignMonitorService extends Service
         $response = [];
         foreach ($this->clients as $clientId => $clientValue) {
             $campaignMonitor = $this->_getCS_REST('lists', $clientId);
-            $lists           = $campaignMonitor->get_lists();
+            $lists = $campaignMonitor->get_lists();
 
             if (!$lists->was_successful()) {
                 throw new ServiceException('Invalid request');
@@ -125,8 +125,8 @@ class CampaignMonitorService extends Service
             foreach ($lists->response as $key => $listValue) {
                 $group = new Group();
                 $group
-                    ->setId( $listValue->ListID )
-                    ->setName( $listValue->Name.' - '.$clientValue );
+                    ->setId($listValue->ListID)
+                    ->setName($listValue->Name . ' - ' . $clientValue);
 
                 $response[] = $group;
             }
@@ -147,30 +147,30 @@ class CampaignMonitorService extends Service
         }
 
         $campaignMonitor = $this->_getCS_RESTLists($group->getId());
-        $customFields    = $this->_getFields($campaignMonitor);
+        $customFields = $this->_getFields($campaignMonitor);
 
         $response = [];
         foreach ($customFields->response as $i => $customField) {
             $field = new Field();
             $field
-                ->setName( $customField->FieldName )
-                ->setSlug( $customField->Key )
-                ->setRequired( false );
+                ->setName($customField->FieldName)
+                ->setSlug($customField->Key)
+                ->setRequired(false);
 
             $response[$i] = $field;
         }
 
         $emailField = new Field();
         $emailField
-            ->setName( 'Email' )
-            ->setSlug( ServiceConstant::EMAIL_FIELD )
-            ->setRequired( true );
+            ->setName('Email')
+            ->setSlug(ServiceConstant::EMAIL_FIELD)
+            ->setRequired(true);
 
         $nameField = new Field();
         $nameField
-            ->setName( 'Name' )
-            ->setSlug( 'Name' )
-            ->setRequired( false );
+            ->setName('Name')
+            ->setSlug('Name')
+            ->setRequired(false);
 
         $response = array_merge([$emailField, $nameField], $response);
 
@@ -182,12 +182,12 @@ class CampaignMonitorService extends Service
      */
     protected function hasValidAuthenticationData()
     {
-        if ( ! $this->authenticationData ) {
+        if (!$this->authenticationData) {
             return false;
         }
 
         $data = $this->authenticationData->getData();
-        if ( ! isset( $data['access_token'] ) || ! isset( $data['refresh_token'] ) ) {
+        if (!isset($data['access_token']) || !isset($data['refresh_token'])) {
             return false;
         }
 
@@ -202,7 +202,7 @@ class CampaignMonitorService extends Service
         $data = $this->authenticationData->getData();
 
         $this->authData = [
-            'access_token'  => $data['access_token'],
+            'access_token' => $data['access_token'],
             'refresh_token' => $data['refresh_token']
         ];
 
@@ -220,11 +220,11 @@ class CampaignMonitorService extends Service
             CAMPAIGNMONITOR_SCOPE
         );
 
-        return new RedirectResponse( 301, "RedirectResponse", sprintf(
+        return new RedirectResponse(301, "RedirectResponse", sprintf(
             $authorize_url,
             MAILCHIMP_CLIENT_ID,
             MAILCHIMP_REDIRECT_URI
-        ) );
+        ));
     }
 
     /**
@@ -233,8 +233,9 @@ class CampaignMonitorService extends Service
      * @return \CS_REST_Clients|\CS_REST_General|\CS_REST_Lists|\CS_REST_Subscribers
      * @throws ServiceException
      */
-    private function _getCS_REST($type, $id = null) {
-        switch($type) {
+    private function _getCS_REST($type, $id = null)
+    {
+        switch ($type) {
             case 'clients':
                 $wrap = new \CS_REST_General($this->authData);
                 break;
@@ -258,13 +259,14 @@ class CampaignMonitorService extends Service
      * @return array
      * @throws ServiceException
      */
-    private function _getClients() {
+    private function _getClients()
+    {
         $campaignMonitor = $this->_getCS_REST('clients');
-        $clients         = $campaignMonitor->get_clients();
+        $clients = $campaignMonitor->get_clients();
 
         if ($clients->was_successful()) {
             $response = [];
-            foreach($clients->response as $key => $value) {
+            foreach ($clients->response as $key => $value) {
                 $response[$value->ClientID] = $value->Name;
             }
 
@@ -291,7 +293,7 @@ class CampaignMonitorService extends Service
      */
     private function _getFields(\CS_REST_Lists $campaignMonitor)
     {
-        $customFields    = $campaignMonitor->get_custom_fields();
+        $customFields = $campaignMonitor->get_custom_fields();
         if (!$customFields->was_successful()) {
             throw new ServiceException('Fields not found.');
         }

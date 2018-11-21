@@ -19,10 +19,10 @@ class SendinBlueService extends Service
      */
     protected function mapFields(FieldMap $fieldMap, $group_id = null)
     {
-        $existCustomFields = $this->internalGetFields( );
+        $existCustomFields = $this->internalGetFields();
 
-        foreach ( $fieldMap->toArray() as $fieldLink ) {
-            if ( $fieldLink->getTarget() == ServiceConstant::AUTO_GENERATE_FIELD ) {
+        foreach ($fieldMap->toArray() as $fieldLink) {
+            if ($fieldLink->getTarget() == ServiceConstant::AUTO_GENERATE_FIELD) {
                 $key_exist = array_search($fieldLink->getSourceTitle(), array_column($existCustomFields, 'name'));
                 if ($key_exist !== false) {
                     $fieldLink->setTarget($existCustomFields[$key_exist]['slug']);
@@ -42,14 +42,14 @@ class SendinBlueService extends Service
      */
     protected function internalCreateMember(FieldMap $fieldMap, $group_id = null, array $data = [])
     {
-        $data = $fieldMap->transform( $data );
+        $data = $fieldMap->transform($data);
 
         $api_instance = new \SendinBlue\Client\Api\ContactsApi();
         try {
             $api_instance->createContact(new \SendinBlue\Client\Model\CreateContact([
-                "email"      => $data->getEmail(),
+                "email" => $data->getEmail(),
                 "attributes" => $data->getFields(),
-                "listid"     => [ $group_id ]
+                "listid" => [$group_id]
             ]));
         } catch (\Exception $e) {
             //@todo save logs
@@ -63,13 +63,13 @@ class SendinBlueService extends Service
     protected function internalGetGroups()
     {
         $result = [];
-        foreach ( $this->_getGroups() as $i => $row ) {
+        foreach ($this->_getGroups() as $i => $row) {
             $group = new Group();
             $group
-                ->setId( $row['id'] )
-                ->setName( $row['name'] );
+                ->setId($row['id'])
+                ->setName($row['name']);
 
-            $result[ $i ] = $group;
+            $result[$i] = $group;
         }
 
         return $result;
@@ -84,18 +84,18 @@ class SendinBlueService extends Service
     {
         return [
             0 => [
-                'name'     => 'Email',
-                'slug'     => ServiceConstant::EMAIL_FIELD,
+                'name' => 'Email',
+                'slug' => ServiceConstant::EMAIL_FIELD,
                 'required' => true
             ],
             1 => [
-                'name'     => 'Last Name',
-                'slug'     => 'LASTNAME',
+                'name' => 'Last Name',
+                'slug' => 'LASTNAME',
                 'required' => false
             ],
             2 => [
-                'name'     => 'First Name',
-                'slug'     => 'FIRSTNAME',
+                'name' => 'First Name',
+                'slug' => 'FIRSTNAME',
                 'required' => false
             ]
         ];
@@ -106,12 +106,12 @@ class SendinBlueService extends Service
      */
     protected function hasValidAuthenticationData()
     {
-        if ( ! $this->authenticationData ) {
+        if (!$this->authenticationData) {
             return false;
         }
 
         $data = $this->authenticationData->getData();
-        if ( ! isset( $data['api_key'] ) ) {
+        if (!isset($data['api_key'])) {
             return false;
         }
 

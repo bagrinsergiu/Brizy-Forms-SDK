@@ -160,3 +160,45 @@ $fields = $campaignMonitorService->getFields($active_group);
 var_dump($fields);
 
 $campaignMonitorService->createMember($fieldMap, $active_group->getId(), $dataArray);
+
+
+//create $convertKitService service
+
+$fields   = '[{"source_id":"1", "source_title":"Email", "target":"email"}, {"source_id":"2", "source_title":"My Name", "target":"_auto_generate"}]';
+$fieldMap = new \BrizyForms\FieldMap(json_decode($fields, true));
+
+$data = '[{"name":"2","value":"Anthony","required":false,"type":"text","slug":"name"},{"name":"1","value":"bodnar1212@gmail.com","required":false,"type":"email","slug":"email"}]';
+$data = json_decode($data, true);
+
+$dataArray = [];
+foreach ($data as $row) {
+    $data = new \BrizyForms\Model\Data();
+    $data
+        ->setName($row['name'])
+        ->setValue($row['value']);
+    $dataArray[] = $data;
+}
+
+$convertKitService = \BrizyForms\ServiceFactory::getInstance(\BrizyForms\ServiceFactory::CONVERTKIT);
+
+$convertKitService->setAuthenticationData(new \BrizyForms\Model\AuthenticationData([
+    'api_key'    => 'wrRowWfjkKQhDTlARCq59g',
+    'api_secret' => '1iopMMrUAef8ptm71HIS_phBpt4iS1PitM0b88OXe9A'
+]));
+
+$groups = $convertKitService->getGroups();
+
+var_dump($groups);
+
+$active_group = null;
+foreach ($groups as $group) {
+    var_dump($group);
+    $active_group = $group;
+    break;
+}
+
+$fields = $convertKitService->getFields($active_group);
+
+var_dump($fields);
+
+$convertKitService->createMember($fieldMap, $active_group->getId(), $dataArray);

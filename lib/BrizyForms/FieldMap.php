@@ -65,7 +65,7 @@ class FieldMap
     public function transform(array $data)
     {
         $mergeFields = [];
-        $email       = null;
+        $email = null;
         foreach ($this->fields as $i => $field) {
             if ($field->getTarget() == ServiceConstant::AUTO_GENERATE_FIELD) {
                 continue;
@@ -77,7 +77,7 @@ class FieldMap
                 }
 
                 if ($row->getName() == $field->getSourceId()) {
-                    if ($field->getTarget() == ServiceConstant::EMAIL_FIELD && filter_var($row->getValue(), FILTER_VALIDATE_EMAIL) ) {
+                    if ($field->getTarget() == ServiceConstant::EMAIL_FIELD && filter_var($row->getValue(), FILTER_VALIDATE_EMAIL)) {
                         $email = $row->getValue();
                     } else {
                         $mergeFields[$field->getTarget()] = $row->getValue();
