@@ -16,6 +16,7 @@ class ServiceFactory
     const ZAPIER          = 'zapier';
     const CAMPAIGNMONITOR = 'campaignmonitor';
     const CONVERTKIT      = 'convertkit';
+    const ACTIVECAMPAIGN  = 'activecampaign';
 
     /**
      * @param $service_name
@@ -43,7 +44,8 @@ class ServiceFactory
             self::SENDINBLUE      => 'BrizyForms\Service\SendinBlueService',
             self::ZAPIER          => 'BrizyForms\Service\ZapierService',
             self::CAMPAIGNMONITOR => 'BrizyForms\Service\CampaignMonitorService',
-            self::CONVERTKIT      => 'BrizyForms\Service\ConvertKitService'
+            self::CONVERTKIT      => 'BrizyForms\Service\ConvertKitService',
+            self::ACTIVECAMPAIGN  => 'BrizyForms\Service\ActiveCampaignService'
         ];
     }
 
@@ -57,7 +59,8 @@ class ServiceFactory
             self::SENDINBLUE,
             self::ZAPIER,
             self::CAMPAIGNMONITOR,
-            self::CONVERTKIT
+            self::CONVERTKIT,
+            self::ACTIVECAMPAIGN
         ];
     }
 }

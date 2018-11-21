@@ -116,7 +116,7 @@ $sendinBlueService->setAuthenticationData(new \BrizyForms\Model\AuthenticationDa
     'webhook_url' => 'https://webhook.site/9a0c8a1e-cff7-4469-a305-e963aa4c515b'
 ]));
 
-$sendinBlueService->createMember($fieldMap, null, $dataArray);
+//$sendinBlueService->createMember($fieldMap, null, $dataArray);
 
 
 
@@ -202,3 +202,44 @@ $fields = $convertKitService->getFields($active_group);
 var_dump($fields);
 
 $convertKitService->createMember($fieldMap, $active_group->getId(), $dataArray);
+
+
+//create $activeCampaignService service
+
+$fields   = '[{"source_id":"1", "source_title":"Email", "target":"email"}, {"source_id":"2", "source_title":"My Name", "target":"_auto_generate"}]';
+$fieldMap = new \BrizyForms\FieldMap(json_decode($fields, true));
+
+$data = '[{"name":"2","value":"Anthony","required":false,"type":"text","slug":"name"},{"name":"1","value":"bodnar1212@gmail.com","required":false,"type":"email","slug":"email"}]';
+$data = json_decode($data, true);
+
+$dataArray = [];
+foreach ($data as $row) {
+    $data = new \BrizyForms\Model\Data();
+    $data
+        ->setName($row['name'])
+        ->setValue($row['value']);
+    $dataArray[] = $data;
+}
+
+$activeCampaignService = \BrizyForms\ServiceFactory::getInstance(\BrizyForms\ServiceFactory::ACTIVECAMPAIGN);
+
+$activeCampaignService->setAuthenticationData(new \BrizyForms\Model\AuthenticationData([
+    'api_key' => 'd66c759eba166d4c339d0a841fc42a5300c6392f5e5aba2379533ed0a5877f1ac30173ae',
+    'api_url' => 'https://bodnar1212.api-us1.com'
+]));
+
+$groups = $activeCampaignService->getGroups();
+
+var_dump($groups);
+
+$active_group = null;
+foreach ($groups as $group) {
+    var_dump($group);
+    $active_group = $group->getId();
+}
+
+foreach ($groups as $group) {
+    var_dump($activeCampaignService->getFields($group));
+}
+
+//$activeCampaignService->createMember($fieldMap, $active_group, $dataArray);

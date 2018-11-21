@@ -19,6 +19,13 @@ class Field
      */
     protected $required;
 
+    public function __construct($name = null, $slug = null, $required = null)
+    {
+        $this->name = $name;
+        $this->slug = $slug;
+        $this->required = $required;
+    }
+
     /**
      * @return string
      */

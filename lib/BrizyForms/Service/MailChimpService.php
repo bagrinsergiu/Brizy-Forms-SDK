@@ -105,13 +105,11 @@ class MailChimpService extends Service
             $result[$i] = $field;
         }
 
-        $emailField = new Field();
-        $emailField
-            ->setName('Email')
-            ->setSlug(ServiceConstant::EMAIL_FIELD)
-            ->setRequired(true);
+        $defaults = [
+            new Field('Email', ServiceConstant::EMAIL_FIELD, true)
+        ];
 
-        $result = array_merge([$emailField], $result);
+        $result = array_merge($defaults, $result);
 
         return $result;
     }

@@ -1,0 +1,193 @@
+<?php
+
+namespace BrizyForms\Service;
+
+use AppBundle\Utils\StringUtils;
+use BrizyForms\FieldMap;
+use BrizyForms\Model\Field;
+use BrizyForms\Model\Group;
+use BrizyForms\Model\RedirectResponse;
+use BrizyForms\Model\Response;
+use BrizyForms\ServiceConstant;
+
+/**
+ * Class ActiveCampaignService
+ * @package BrizyForms\Service
+ */
+class ActiveCampaignService extends Service
+{
+
+    /**
+     * @var \ActiveCampaign
+     */
+    private $nativeActiveCampaign;
+
+    /**
+     * @param FieldMap $fieldMap
+     * @param string $group_id
+     *
+     * @return mixed
+     */
+    protected function mapFields(FieldMap $fieldMap, $group_id = null)
+    {
+        $existCustomFields = $this->_getFields();
+
+        foreach ($fieldMap->toArray() as $fieldLink) {
+            if ($fieldLink->getTarget() == ServiceConstant::AUTO_GENERATE_FIELD) {
+                $newCustomField = null;
+                $perstag = StringUtils::getSlug($fieldLink->getSourceTitle());
+                $key_exist = array_search($fieldLink->getSourceTitle(), array_column($existCustomFields, 'title'));
+                if ($key_exist === false) {
+                    $payload = [
+                        "title" => $fieldLink->getSourceTitle(),
+                        "type" => 1,
+                        "req" => false,
+                        "perstag" => "%" . strtoupper($perstag) . "%",
+                        "p[{$group_id}]" => $group_id
+                    ];
+                    $newCustomField = $this->nativeActiveCampaign->api("list/field_add", $payload);
+                }
+
+                if ($newCustomField) {
+                    if ((int)$newCustomField->success != 1) {
+                        continue;
+                    }
+                    $tag = "field[{$newCustomField->fieldid},0]";
+                } else {
+                    $tag = "field[{$existCustomFields[$key_exist]['id']},0]";
+                }
+
+                $fieldLink->setTarget($tag);
+            }
+        }
+
+        return $fieldMap;
+    }
+
+    /**
+     * @param FieldMap $fieldMap
+     * @param null $group_id
+     * @param array $data
+     * @return mixed|void
+     * @throws \BrizyForms\Exception\FieldMapException
+     */
+    protected function internalCreateMember(FieldMap $fieldMap, $group_id = null, array $data = [])
+    {
+        $data = $fieldMap->transform($data);
+
+        $contact = [
+            "email" => $data->getEmail(),
+            "p[{$group_id}]" => $group_id,
+            "status[{$group_id}]" => 1,
+        ];
+
+        $contact = array_merge($contact, $data->getFields());
+        $contact_sync = $this->nativeActiveCampaign->api("contact/sync", $contact);
+
+        if (!(int)$contact_sync->success) {
+            //@todo handle error
+        }
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function internalGetGroups()
+    {
+        $lists = $this->nativeActiveCampaign->api("list/list?ids=all");
+
+        if (!(int)$lists->success) {
+            return [];
+        }
+
+        $response = [];
+        foreach ((array)$lists as $key => $list) {
+            if (is_numeric($key)) {
+                $group = new Group();
+                $group
+                    ->setId($list->id)
+                    ->setName($list->name);
+
+                $response[] = $group;
+            }
+        }
+
+        return $response;
+    }
+
+    /**
+     * @param Group $group
+     *
+     * @return mixed
+     */
+    protected function internalGetFields(Group $group = null)
+    {
+        $clearFields = $this->_getFields();
+
+        $defaults = [
+            new Field('Email', ServiceConstant::EMAIL_FIELD, true),
+            new Field('First Name', 'first_name', false),
+            new Field('Last Name', 'last_name', false),
+            new Field('Organization', 'orgname', false),
+            new Field('phone', 'phone', false)
+        ];
+
+        $response = array_merge($defaults, $clearFields);
+
+        return $response;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function hasValidAuthenticationData()
+    {
+        if (!$this->authenticationData) {
+            return false;
+        }
+
+        $data = $this->authenticationData->getData();
+        if (!isset($data['api_key']) || !isset($data['api_url'])) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return void
+     */
+    protected function initializeNativeService()
+    {
+        $data = $this->authenticationData->getData();
+
+        $this->nativeActiveCampaign = new \ActiveCampaign($data['api_url'], $data['api_key']);
+    }
+
+    /**
+     * @return RedirectResponse|Response|null
+     */
+    public function authenticate()
+    {
+        return null;
+    }
+
+    private function _getFields()
+    {
+        $fields = $this->nativeActiveCampaign->api("list/field_view?ids=all");
+        $clearFields = [];
+        foreach ((array)$fields as $key => $field) {
+            if (is_numeric($key)) {
+                $field = new Field();
+                $field
+                    ->setName($field->title)
+                    ->setSlug("field[{$field->id},0]")
+                    ->setRequired(false);
+
+                $clearFields[] = $field;
+            }
+        }
+
+        return $clearFields;
+    }
+}

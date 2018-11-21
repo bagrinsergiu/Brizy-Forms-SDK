@@ -4,6 +4,7 @@ namespace BrizyForms\Service;
 
 use BrizyForms\Exception\ServiceException;
 use BrizyForms\FieldMap;
+use BrizyForms\Model\Field;
 use BrizyForms\Model\Group;
 use BrizyForms\Model\RedirectResponse;
 use BrizyForms\Model\Response;
@@ -83,21 +84,9 @@ class SendinBlueService extends Service
     protected function internalGetFields(Group $group = null)
     {
         return [
-            0 => [
-                'name' => 'Email',
-                'slug' => ServiceConstant::EMAIL_FIELD,
-                'required' => true
-            ],
-            1 => [
-                'name' => 'Last Name',
-                'slug' => 'LASTNAME',
-                'required' => false
-            ],
-            2 => [
-                'name' => 'First Name',
-                'slug' => 'FIRSTNAME',
-                'required' => false
-            ]
+            new Field('Email', ServiceConstant::EMAIL_FIELD, true),
+            new Field('Last Name', 'LASTNAME', false),
+            new Field('First Name', 'FIRSTNAME', false)
         ];
     }
 

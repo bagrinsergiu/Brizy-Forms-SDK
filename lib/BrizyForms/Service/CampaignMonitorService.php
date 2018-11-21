@@ -160,19 +160,12 @@ class CampaignMonitorService extends Service
             $response[$i] = $field;
         }
 
-        $emailField = new Field();
-        $emailField
-            ->setName('Email')
-            ->setSlug(ServiceConstant::EMAIL_FIELD)
-            ->setRequired(true);
+        $defaults = [
+            new Field('Email', ServiceConstant::EMAIL_FIELD, true),
+            new Field('Name', 'Name', false),
+        ];
 
-        $nameField = new Field();
-        $nameField
-            ->setName('Name')
-            ->setSlug('Name')
-            ->setRequired(false);
-
-        $response = array_merge([$emailField, $nameField], $response);
+        $response = array_merge($defaults, $response);
 
         return $response;
     }
