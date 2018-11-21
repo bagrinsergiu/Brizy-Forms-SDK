@@ -117,3 +117,46 @@ $sendinBlueService->setAuthenticationData(new \BrizyForms\Model\AuthenticationDa
 ]));
 
 $sendinBlueService->createMember($fieldMap, null, $dataArray);
+
+
+
+//create $campaignMonitorService service
+
+$fields   = '[{"source_id":"1", "source_title":"Email", "target":"email"}, {"source_id":"2", "source_title":"My Name", "target":"_auto_generate"}]';
+$fieldMap = new \BrizyForms\FieldMap(json_decode($fields, true));
+
+$data = '[{"name":"2","value":"Anthony","required":false,"type":"text","slug":"name"},{"name":"1","value":"bodnar1212@gmail.com","required":false,"type":"email","slug":"email"}]';
+$data = json_decode($data, true);
+
+$dataArray = [];
+foreach ($data as $row) {
+    $data = new \BrizyForms\Model\Data();
+    $data
+        ->setName($row['name'])
+        ->setValue($row['value']);
+    $dataArray[] = $data;
+}
+
+$campaignMonitorService = \BrizyForms\ServiceFactory::getInstance(\BrizyForms\ServiceFactory::CAMPAIGNMONITOR);
+
+$campaignMonitorService->setAuthenticationData(new \BrizyForms\Model\AuthenticationData([
+    'access_token'  => 'AcF1B9iqyuVDuybgAvToAzMxMw==',
+    'refresh_token' => 'AS6ASOzvRp5Kuio8AlMK6XUxMw=='
+]));
+
+$groups = $campaignMonitorService->getGroups();
+
+var_dump($groups);
+
+$active_group = null;
+foreach ($groups as $group) {
+    var_dump($group);
+    $active_group = $group;
+    break;
+}
+
+$fields = $campaignMonitorService->getFields($active_group);
+
+var_dump($fields);
+
+$campaignMonitorService->createMember($fieldMap, $active_group->getId(), $dataArray);

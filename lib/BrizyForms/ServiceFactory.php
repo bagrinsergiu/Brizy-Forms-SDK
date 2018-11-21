@@ -11,9 +11,10 @@ use BrizyForms\Model\AuthenticationData;
  */
 class ServiceFactory
 {
-    const MAILCHIMP  = 'mailchimp';
-    const SENDINBLUE = 'sendinblue';
-    const ZAPIER     = 'zapier';
+    const MAILCHIMP       = 'mailchimp';
+    const SENDINBLUE      = 'sendinblue';
+    const ZAPIER          = 'zapier';
+    const CAMPAIGNMONITOR = 'campaignmonitor';
 
     /**
      * @param $service_name
@@ -37,9 +38,10 @@ class ServiceFactory
     static public function getServiceClasses()
     {
         return [
-            self::MAILCHIMP  => 'BrizyForms\Service\MailChimpService',
-            self::SENDINBLUE => 'BrizyForms\Service\SendinBlueService',
-            self::ZAPIER     => 'BrizyForms\Service\ZapierService'
+            self::MAILCHIMP       => 'BrizyForms\Service\MailChimpService',
+            self::SENDINBLUE      => 'BrizyForms\Service\SendinBlueService',
+            self::ZAPIER          => 'BrizyForms\Service\ZapierService',
+            self::CAMPAIGNMONITOR => 'BrizyForms\Service\CampaignMonitorService'
         ];
     }
 
@@ -51,7 +53,8 @@ class ServiceFactory
         return [
             self::MAILCHIMP,
             self::SENDINBLUE,
-            self::ZAPIER
+            self::ZAPIER,
+            self::CAMPAIGNMONITOR
         ];
     }
 }

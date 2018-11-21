@@ -3,53 +3,178 @@
 namespace BrizyForms\Service;
 
 
+use BrizyForms\Exception\ServiceException;
 use BrizyForms\FieldMap;
+use BrizyForms\Model\Field;
 use BrizyForms\Model\Group;
 use BrizyForms\Model\RedirectResponse;
 use BrizyForms\Model\Response;
+use BrizyForms\ServiceConstant;
 
+/**
+ * Class CampaignMonitorService
+ * @package BrizyForms\Service
+ */
 class CampaignMonitorService extends Service
 {
+    /**
+     * @var array
+     */
+    private $authData = [];
+
+    /**
+     * @var mixed
+     */
+    private $clients;
 
     /**
      * @param FieldMap $fieldMap
-     * @param string $group_id
-     *
-     * @return mixed
+     * @param null $group_id
+     * @return FieldMap|mixed
+     * @throws ServiceException
      */
     protected function mapFields(FieldMap $fieldMap, $group_id = null)
     {
-        // TODO: Implement mapFields() method.
+        if (!$group_id) {
+            throw new ServiceException("Group is required");
+        }
+        $campaignMonitor   = $this->_getCS_RESTLists($group_id);
+        $existCustomFields = $this->_getFields($campaignMonitor);
+        $existCustomFields = json_decode(json_encode($existCustomFields->response),true);
+
+        foreach ( $fieldMap->toArray() as $fieldLink ) {
+            if ($fieldLink->getTarget() == ServiceConstant::AUTO_GENERATE_FIELD) {
+                $newCustomField = null;
+                $key_exist      = array_search($fieldLink->getSourceTitle(), array_column($existCustomFields, 'FieldName'));
+                if ($key_exist === false) {
+                    $newCustomField = $campaignMonitor->create_custom_field([
+                        'FieldName' => $fieldLink->getSourceTitle(),
+                        'DataType'  => 'Text',
+                    ]);
+                }
+
+                if ($newCustomField) {
+                    if (!$newCustomField->was_successful()) {
+                        continue;
+                    }
+                    $tag = $newCustomField->response;
+                } else {
+                    $tag = $existCustomFields[$key_exist]['Key'];
+                }
+                $fieldLink->setTarget($tag);
+            }
+        }
+
+        return $fieldMap;
     }
 
     /**
      * @param FieldMap $fieldMap
-     * @param $group_id
-     * @param $data
-     *
-     * @return mixed
+     * @param null $group_id
+     * @param array $data
+     * @return mixed|void
+     * @throws ServiceException
+     * @throws \BrizyForms\Exception\FieldMapException
      */
     protected function internalCreateMember(FieldMap $fieldMap, $group_id = null, array $data = [])
     {
-        // TODO: Implement internalCreateMember() method.
+        $data = $fieldMap->transform( $data );
+
+        $campaignMonitor = $this->_getCS_REST('subscriber', $group_id);
+
+        $mergeFields = [];
+        foreach ($data->getFields() as $target => $value) {
+            $mergeFields[] = [
+                'Key'   => $target,
+                'Value' => $value
+            ];
+        }
+
+        $key = array_search('Name', array_column($mergeFields, 'Key'));
+        if ($key !== false) {
+            $payload['Name'] = $mergeFields[$key]['Value'];
+            unset($mergeFields[$key]);
+        }
+
+        $payload['EmailAddress']   = $data->getEmail();
+        $payload['CustomFields']   = array_values($mergeFields);
+        $payload['Resubscribe']    = false;
+        $payload['ConsentToTrack'] = 'Yes';
+
+        $result = $campaignMonitor->add($payload);
+        if (!$result->was_successful()) {
+            //@todo save logs
+        }
     }
 
     /**
-     * @return mixed
+     * @return array|mixed
+     * @throws ServiceException
      */
     protected function internalGetGroups()
     {
-        // TODO: Implement internalGetGroups() method.
+        $response = [];
+        foreach ($this->clients as $clientId => $clientValue) {
+            $campaignMonitor = $this->_getCS_REST('lists', $clientId);
+            $lists           = $campaignMonitor->get_lists();
+
+            if (!$lists->was_successful()) {
+                throw new ServiceException('Invalid request');
+            }
+
+            foreach ($lists->response as $key => $listValue) {
+                $group = new Group();
+                $group
+                    ->setId( $listValue->ListID )
+                    ->setName( $listValue->Name.' - '.$clientValue );
+
+                $response[] = $group;
+            }
+        }
+
+        return $response;
     }
 
     /**
-     * @param Group $group
-     *
-     * @return mixed
+     * @param Group|null $group
+     * @return array|mixed
+     * @throws ServiceException
      */
     protected function internalGetFields(Group $group = null)
     {
-        // TODO: Implement internalGetFields() method.
+        if (!$group) {
+            throw new ServiceException("Grop is required");
+        }
+
+        $campaignMonitor = $this->_getCS_RESTLists($group->getId());
+        $customFields    = $this->_getFields($campaignMonitor);
+
+        $response = [];
+        foreach ($customFields->response as $i => $customField) {
+            $field = new Field();
+            $field
+                ->setName( $customField->FieldName )
+                ->setSlug( $customField->Key )
+                ->setRequired( false );
+
+            $response[$i] = $field;
+        }
+
+        $emailField = new Field();
+        $emailField
+            ->setName( 'Email' )
+            ->setSlug( ServiceConstant::EMAIL_FIELD )
+            ->setRequired( true );
+
+        $nameField = new Field();
+        $nameField
+            ->setName( 'Name' )
+            ->setSlug( 'Name' )
+            ->setRequired( false );
+
+        $response = array_merge([$emailField, $nameField], $response);
+
+        return $response;
     }
 
     /**
@@ -70,11 +195,18 @@ class CampaignMonitorService extends Service
     }
 
     /**
-     * @return void
+     * @throws ServiceException
      */
     protected function initializeNativeService()
     {
-        // TODO: Implement initializeNativeService() method.
+        $data = $this->authenticationData->getData();
+
+        $this->authData = [
+            'access_token'  => $data['access_token'],
+            'refresh_token' => $data['refresh_token']
+        ];
+
+        $this->clients = $this->_getClients();
     }
 
     /**
@@ -93,5 +225,77 @@ class CampaignMonitorService extends Service
             MAILCHIMP_CLIENT_ID,
             MAILCHIMP_REDIRECT_URI
         ) );
+    }
+
+    /**
+     * @param $type
+     * @param null $id
+     * @return \CS_REST_Clients|\CS_REST_General|\CS_REST_Lists|\CS_REST_Subscribers
+     * @throws ServiceException
+     */
+    private function _getCS_REST($type, $id = null) {
+        switch($type) {
+            case 'clients':
+                $wrap = new \CS_REST_General($this->authData);
+                break;
+            case 'lists':
+                $wrap = new \CS_REST_Clients($id, $this->authData);
+                break;
+            case 'subscriber':
+                $wrap = new \CS_REST_Subscribers($id, $this->authData);
+                break;
+            case 'fields':
+                $wrap = new \CS_REST_Lists($id, $this->authData);
+                break;
+            default:
+                throw new ServiceException('Invalid CS REST');
+        }
+
+        return $wrap;
+    }
+
+    /**
+     * @return array
+     * @throws ServiceException
+     */
+    private function _getClients() {
+        $campaignMonitor = $this->_getCS_REST('clients');
+        $clients         = $campaignMonitor->get_clients();
+
+        if ($clients->was_successful()) {
+            $response = [];
+            foreach($clients->response as $key => $value) {
+                $response[$value->ClientID] = $value->Name;
+            }
+
+            return $response;
+        }
+
+        throw new ServiceException(json_encode($clients->response));
+    }
+
+    /**
+     * @param $group_id
+     * @return \CS_REST_Clients|\CS_REST_General|\CS_REST_Lists|\CS_REST_Subscribers
+     * @throws ServiceException
+     */
+    private function _getCS_RESTLists($group_id)
+    {
+        return $this->_getCS_REST('fields', $group_id);
+    }
+
+    /**
+     * @param \CS_REST_Lists $campaignMonitor
+     * @return \CS_REST_Wrapper_Result
+     * @throws ServiceException
+     */
+    private function _getFields(\CS_REST_Lists $campaignMonitor)
+    {
+        $customFields    = $campaignMonitor->get_custom_fields();
+        if (!$customFields->was_successful()) {
+            throw new ServiceException('Fields not found.');
+        }
+
+        return $customFields;
     }
 }
