@@ -242,3 +242,40 @@ foreach ($groups as $group) {
 }
 
 $activeCampaignService->createMember($fieldMap, $active_group, $dataArray);
+
+//create getResponse service
+
+$fields   = '[{"source_id":"1", "source_title":"Email", "target":"email"}, {"source_id":"2", "source_title":"My mmmfwef", "target":"_auto_generate"}]';
+$fieldMap = new \BrizyForms\FieldMap(json_decode($fields, true));
+
+$data = '[{"name":"2","value":"Anthony","required":false,"type":"text","slug":"name"},{"name":"1","value":"bodnar.brizy@gmail.com","required":false,"type":"email","slug":"email"}]';
+$data = json_decode($data, true);
+
+$dataArray = [];
+foreach ($data as $row) {
+    $data = new \BrizyForms\Model\Data();
+    $data
+        ->setName($row['name'])
+        ->setValue($row['value']);
+    $dataArray[] = $data;
+}
+
+$getResponseService = \BrizyForms\ServiceFactory::getInstance(\BrizyForms\ServiceFactory::GETRESPONSE);
+
+$getResponseService->setAuthenticationData(new \BrizyForms\Model\AuthenticationData([
+    'api_key' => '09eaf3ebaac4afb918c573d7da37d0c8'
+]));
+
+$groups = $getResponseService->getGroups();
+
+$active_group = null;
+foreach ($groups as $group) {
+    //var_dump($group);
+    $active_group = $group->getId();
+}
+
+$fields = $getResponseService->getFields();
+
+//var_dump($fields);
+
+$getResponseService->createMember($fieldMap, $active_group, $dataArray);
