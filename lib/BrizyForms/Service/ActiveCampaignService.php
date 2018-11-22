@@ -2,7 +2,8 @@
 
 namespace BrizyForms\Service;
 
-use AppBundle\Utils\StringUtils;
+use BrizyForms\Exception\ServiceException;
+use BrizyForms\Utils\StringUtils;
 use BrizyForms\FieldMap;
 use BrizyForms\Model\Field;
 use BrizyForms\Model\Group;
@@ -69,6 +70,7 @@ class ActiveCampaignService extends Service
      * @param null $group_id
      * @param array $data
      * @return mixed|void
+     * @throws ServiceException
      * @throws \BrizyForms\Exception\FieldMapException
      */
     protected function internalCreateMember(FieldMap $fieldMap, $group_id = null, array $data = [])
@@ -85,7 +87,7 @@ class ActiveCampaignService extends Service
         $contact_sync = $this->nativeActiveCampaign->api("contact/sync", $contact);
 
         if (!(int)$contact_sync->success) {
-            //@todo handle error
+            throw new ServiceException('Member was not created.');
         }
     }
 
@@ -176,12 +178,12 @@ class ActiveCampaignService extends Service
     {
         $fields = $this->nativeActiveCampaign->api("list/field_view?ids=all");
         $clearFields = [];
-        foreach ((array)$fields as $key => $field) {
+        foreach ((array)$fields as $key => $row) {
             if (is_numeric($key)) {
                 $field = new Field();
                 $field
-                    ->setName($field->title)
-                    ->setSlug("field[{$field->id},0]")
+                    ->setName($row->title)
+                    ->setSlug("field[{$row->id},0]")
                     ->setRequired(false);
 
                 $clearFields[] = $field;

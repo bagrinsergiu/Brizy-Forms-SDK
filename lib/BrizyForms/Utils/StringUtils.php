@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Utils;
+namespace BrizyForms\Utils;
 
 
 class StringUtils

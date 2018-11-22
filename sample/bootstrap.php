@@ -110,13 +110,13 @@ foreach ($data as $row) {
     $dataArray[] = $data;
 }
 
-$sendinBlueService = \BrizyForms\ServiceFactory::getInstance(\BrizyForms\ServiceFactory::ZAPIER);
+$zapierService = \BrizyForms\ServiceFactory::getInstance(\BrizyForms\ServiceFactory::ZAPIER);
 
-$sendinBlueService->setAuthenticationData(new \BrizyForms\Model\AuthenticationData([
+$zapierService->setAuthenticationData(new \BrizyForms\Model\AuthenticationData([
     'webhook_url' => 'https://webhook.site/9a0c8a1e-cff7-4469-a305-e963aa4c515b'
 ]));
 
-//$sendinBlueService->createMember($fieldMap, null, $dataArray);
+//$zapierService->createMember($fieldMap, null, $dataArray);
 
 
 
@@ -242,4 +242,4 @@ foreach ($groups as $group) {
     var_dump($activeCampaignService->getFields($group));
 }
 
-//$activeCampaignService->createMember($fieldMap, $active_group, $dataArray);
+$activeCampaignService->createMember($fieldMap, $active_group, $dataArray);

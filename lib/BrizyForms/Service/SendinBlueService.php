@@ -36,9 +36,10 @@ class SendinBlueService extends Service
 
     /**
      * @param FieldMap $fieldMap
-     * @param $group_id
+     * @param null $group_id
      * @param array $data
      * @return mixed|void
+     * @throws ServiceException
      * @throws \BrizyForms\Exception\FieldMapException
      */
     protected function internalCreateMember(FieldMap $fieldMap, $group_id = null, array $data = [])
@@ -50,10 +51,11 @@ class SendinBlueService extends Service
             $api_instance->createContact(new \SendinBlue\Client\Model\CreateContact([
                 "email" => $data->getEmail(),
                 "attributes" => $data->getFields(),
-                "listid" => [$group_id]
+                "listIds" => [$group_id],
+                'updateEnabled' => true
             ]));
         } catch (\Exception $e) {
-            //@todo save logs
+            throw new ServiceException('Member was not created.');
         }
     }
 

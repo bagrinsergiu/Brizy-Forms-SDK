@@ -2,6 +2,7 @@
 
 namespace BrizyForms\Service;
 
+use BrizyForms\Exception\ServiceException;
 use BrizyForms\FieldMap;
 use BrizyForms\Model\Field;
 use BrizyForms\Model\Group;
@@ -67,6 +68,7 @@ class ConvertKitService extends Service
      * @param null $group_id
      * @param array $data
      * @return mixed|void
+     * @throws ServiceException
      * @throws \BrizyForms\Exception\FieldMapException
      */
     protected function internalCreateMember(FieldMap $fieldMap, $group_id = null, array $data = [])
@@ -89,7 +91,10 @@ class ConvertKitService extends Service
             "fields" => $mergeFields
         ];
 
-        $this->nativeConvertKit->request("courses/{$group_id}/subscribe", "post", $payload);
+        $response = $this->nativeConvertKit->request("courses/{$group_id}/subscribe", "post", $payload);
+        if (!isset($response->subscription->id)) {
+            throw new ServiceException('Member was not created.');
+        }
     }
 
     /**

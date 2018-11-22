@@ -103,7 +103,7 @@ class CampaignMonitorService extends Service
 
         $result = $campaignMonitor->add($payload);
         if (!$result->was_successful()) {
-            //@todo save logs
+            throw new ServiceException('Member was not created.');
         }
     }
 
