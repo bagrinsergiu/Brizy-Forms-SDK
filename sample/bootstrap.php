@@ -113,11 +113,10 @@ foreach ($data as $row) {
 $zapierService = \BrizyForms\ServiceFactory::getInstance(\BrizyForms\ServiceFactory::ZAPIER);
 
 $zapierService->setAuthenticationData(new \BrizyForms\Model\AuthenticationData([
-    'webhook_url' => 'https://webhook.site/9a0c8a1e-cff7-4469-a305-e963aa4c515b'
+    'webhook_url' => 'https://hooks.zapier.com/hooks/catch/1671845/fro8it/'
 ]));
 
-//$zapierService->createMember($fieldMap, null, $dataArray);
-
+$zapierService->createMember($fieldMap, null, $dataArray);
 
 
 //create $campaignMonitorService service
