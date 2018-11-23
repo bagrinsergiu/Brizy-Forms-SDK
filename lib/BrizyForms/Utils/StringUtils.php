@@ -5,7 +5,7 @@ namespace BrizyForms\Utils;
 
 class StringUtils
 {
-    public static function getSlug($string)
+    static public function getSlug($string)
     {
         $string = strtolower(str_replace(' ', '_', trim($string)));
         $string = preg_replace('/[^A-Za-z0-9\_]/', '', $string);
