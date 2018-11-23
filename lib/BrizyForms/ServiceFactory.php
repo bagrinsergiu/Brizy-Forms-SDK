@@ -19,6 +19,7 @@ class ServiceFactory
     const ACTIVECAMPAIGN  = 'activecampaign';
     const GETRESPONSE     = 'getresponse';
     const MAILJET         = 'mailjet';
+    const EGOI            = 'egoi';
 
     /**
      * @param $service_name
@@ -49,7 +50,8 @@ class ServiceFactory
             self::CONVERTKIT      => 'BrizyForms\Service\ConvertKitService',
             self::ACTIVECAMPAIGN  => 'BrizyForms\Service\ActiveCampaignService',
             self::GETRESPONSE     => 'BrizyForms\Service\GetResponseService',
-            self::MAILJET         => 'BrizyForms\Service\MailjetService'
+            self::MAILJET         => 'BrizyForms\Service\MailjetService',
+            self::EGOI            => 'BrizyForms\Service\EgoiService'
         ];
     }
 
@@ -66,7 +68,8 @@ class ServiceFactory
             self::CONVERTKIT,
             self::ACTIVECAMPAIGN,
             self::GETRESPONSE,
-            self::MAILJET
+            self::MAILJET,
+            self::EGOI
         ];
     }
 }

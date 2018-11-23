@@ -317,3 +317,40 @@ $fields = $mailjetService->getFields();
 var_dump($fields);
 
 $mailjetService->createMember($fieldMap, $active_group, $dataArray);
+
+//create $egoiService service
+
+$fields   = '[{"source_id":"1", "source_title":"Email", "target":"email"}, {"source_id":"2", "source_title":"First Name", "target":"_auto_generate"}]';
+$fieldMap = new \BrizyForms\FieldMap(json_decode($fields, true));
+
+$data = '[{"name":"2","value":"Anthony","required":false,"type":"text","slug":"name"},{"name":"1","value":"bodnar1212@gmail.com","required":false,"type":"email","slug":"email"}]';
+$data = json_decode($data, true);
+
+$dataArray = [];
+foreach ($data as $row) {
+    $data = new \BrizyForms\Model\Data();
+    $data
+        ->setName($row['name'])
+        ->setValue($row['value']);
+    $dataArray[] = $data;
+}
+
+$egoiService = \BrizyForms\ServiceFactory::getInstance(\BrizyForms\ServiceFactory::EGOI);
+
+$egoiService->setAuthenticationData(new \BrizyForms\Model\AuthenticationData([
+    'api_key' => '420e46172b32e87990c57522cdd979c83defdf28'
+]));
+
+$groups = $egoiService->getGroups();
+
+$active_group = null;
+foreach ($groups as $group) {
+    var_dump($group);
+    $active_group = $group->getId();
+}
+
+$fields = $egoiService->getFields();
+
+var_dump($fields);
+
+$egoiService->createMember($fieldMap, $active_group, $dataArray);
