@@ -14,6 +14,9 @@
     "activecampaign/api-php": "2.0.*",
     "getresponse/getresponse": "dev-master"
   },
+  "require-dev": {
+    "phpunit/phpunit": "^4.8"
+  },
   "autoload": {
     "psr-0": {
       "BrizyForms": "lib/"

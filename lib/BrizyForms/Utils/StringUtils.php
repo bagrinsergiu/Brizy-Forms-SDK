@@ -11,7 +11,7 @@ class StringUtils
         $string = preg_replace('/[^A-Za-z0-9\_]/', '', $string);
 
         if ($string == '' || preg_match('/^\_+$/', $string)) {
-            $string = 'custom_field-' . self::generate(4);
+            $string = 'custom_field_' . self::generate(4);
         }
 
         return $string;
