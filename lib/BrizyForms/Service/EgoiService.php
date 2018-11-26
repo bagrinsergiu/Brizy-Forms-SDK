@@ -8,24 +8,17 @@ use BrizyForms\Model\Field;
 use BrizyForms\Model\Group;
 use BrizyForms\Model\RedirectResponse;
 use BrizyForms\Model\Response;
+use BrizyForms\NativeService\EgoiNativeService;
 use BrizyForms\ServiceConstant;
 use BrizyForms\Utils\StringUtils;
-use Egoi\Api\RestImpl;
-use Egoi\Factory;
-use Egoi\Protocol;
 
 class EgoiService extends Service
 {
 
     /**
-     * @var RestImpl
+     * @var EgoiNativeService
      */
     private $egoiNativeService;
-
-    /**
-     * @var array
-     */
-    private $arguments;
 
     /**
      * @param FieldMap $fieldMap
@@ -57,17 +50,27 @@ class EgoiService extends Service
     {
         $data = $fieldMap->transform($data);
 
-        $arguments = [
+        $functionOptions = array(
+            'apikey' => $this->authenticationData->getData()['api_key'],
             "listID" => $group_id,
-            "email" => $data->getEmail()
-        ];
+            "email" => $data->getEmail(),
+            'status' => 1,
+        );
 
-        $arguments = array_merge($arguments, $this->arguments);
-        $arguments = array_merge($arguments, $data->getFields());
+        $functionOptions = array_merge($functionOptions, $data->getFields());
 
-        $subscriber = $this->egoiNativeService->addSubscriber($arguments);
+        $options = array(
+            'query' => array(
+                'functionOptions' => $functionOptions,
+                'type' => 'json',
+                'method' => 'addSubscriber',
+            )
+        );
 
-        if (isset($subscriber['response'])) {
+        $subscriber = $this->egoiNativeService->request('', 'post', $options);
+        $subscriber = json_decode(json_encode($subscriber), true);
+
+        if (isset($subscriber['Egoi_Api']['addSubscriber']['ERROR'])) {
             throw new ServiceException('Member was not created.');
         }
     }
@@ -78,14 +81,27 @@ class EgoiService extends Service
      */
     protected function internalGetGroups()
     {
-        $lists = $this->egoiNativeService->getLists($this->arguments);
-        if (isset($lists['response'])) {
-            throw new ServiceException($lists['response']);
+        $options = array(
+            'query' => array(
+                'functionOptions' => array(
+                    'apikey' => $this->authenticationData->getData()['api_key']
+                ),
+                'type' => 'json',
+                'method' => 'getLists'
+            )
+        );
+
+        $lists = $this->egoiNativeService->request('', 'get', $options);
+
+        $lists = json_decode(json_encode($lists), true);
+
+        if (isset($lists['Egoi_Api']['getLists']['ERROR'])) {
+            throw new ServiceException('Invalid request');
         }
 
         $response = [];
-        foreach ((array)$lists as $key => $list) {
-            if (is_numeric($key)) {
+        foreach ($lists['Egoi_Api']['getLists'] as $key => $list) {
+            if (strpos($key, 'key_') !== false) {
                 $group = new Group();
                 $group
                     ->setId($list['listnum'])
@@ -130,11 +146,7 @@ class EgoiService extends Service
      */
     protected function initializeNativeService()
     {
-        $this->egoiNativeService = Factory::getApi(Protocol::Rest);
-
-        $this->arguments = [
-            "apikey" => $this->authenticationData->getData()['api_key']
-        ];
+        $this->egoiNativeService = new EgoiNativeService();
     }
 
     /**
