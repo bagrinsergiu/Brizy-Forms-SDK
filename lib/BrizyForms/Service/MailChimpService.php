@@ -9,6 +9,7 @@ use BrizyForms\Model\Field;
 use BrizyForms\Model\Group;
 use BrizyForms\Model\RedirectResponse;
 use BrizyForms\ServiceConstant;
+use BrizyForms\Utils\ArrayUtils;
 
 class MailChimpService extends Service
 {
@@ -49,16 +50,23 @@ class MailChimpService extends Service
     }
 
     /**
+     * @param array $options
      * @return RedirectResponse
      */
-    public function authenticate()
+    public function authenticate(array $options = null)
     {
-        $login_url = MAILCHIMP_AUTH_URL . "?response_type=code&client_id=%s&redirect_uri=%s";
+        $options = ArrayUtils::rewrite([
+            'client_id' => MAILCHIMP_CLIENT_ID,
+            'redirect_uri' => MAILCHIMP_REDIRECT_URI,
+            'auth_url' => MAILCHIMP_AUTH_URL
+        ], $options);
+
+        $login_url = $options['auth_url'] . "?response_type=code&client_id=%s&redirect_uri=%s";
 
         return new RedirectResponse(301, "RedirectResponse", sprintf(
             $login_url,
-            MAILCHIMP_CLIENT_ID,
-            MAILCHIMP_REDIRECT_URI
+            $options['client_id'],
+            $options['redirect_uri']
         ));
     }
 

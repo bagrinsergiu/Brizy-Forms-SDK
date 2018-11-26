@@ -120,9 +120,10 @@ class SendinBlueService extends Service
     }
 
     /**
+     * @param array $options
      * @return RedirectResponse|Response|null
      */
-    public function authenticate()
+    public function authenticate(array $options = null)
     {
         return null;
     }

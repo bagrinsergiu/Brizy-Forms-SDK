@@ -10,6 +10,7 @@ use BrizyForms\Model\Group;
 use BrizyForms\Model\RedirectResponse;
 use BrizyForms\Model\Response;
 use BrizyForms\ServiceConstant;
+use BrizyForms\Utils\ArrayUtils;
 
 /**
  * Class CampaignMonitorService
@@ -203,21 +204,24 @@ class CampaignMonitorService extends Service
     }
 
     /**
+     * @param array $options
      * @return RedirectResponse|Response|null
      */
-    public function authenticate()
+    public function authenticate(array $options = null)
     {
+        $options = ArrayUtils::rewrite([
+            'client_id' => CAMPAIGNMONITOR_CLIENT_ID,
+            'redirect_uri' => CAMPAIGNMONITOR_REDIRECT_URI,
+            'scope' => CAMPAIGNMONITOR_SCOPE
+        ], $options);
+
         $authorize_url = \CS_REST_General::authorize_url(
-            CAMPAIGNMONITOR_CLIENT_ID,
-            CAMPAIGNMONITOR_REDIRECT_URI,
-            CAMPAIGNMONITOR_SCOPE
+            $options['client_id'],
+            $options['redirect_uri'],
+            $options['scope']
         );
 
-        return new RedirectResponse(301, "RedirectResponse", sprintf(
-            $authorize_url,
-            MAILCHIMP_CLIENT_ID,
-            MAILCHIMP_REDIRECT_URI
-        ));
+        return new RedirectResponse(301, "RedirectResponse", $authorize_url);
     }
 
     /**
