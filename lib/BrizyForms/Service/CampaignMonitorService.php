@@ -10,7 +10,6 @@ use BrizyForms\Model\Group;
 use BrizyForms\Model\RedirectResponse;
 use BrizyForms\Model\Response;
 use BrizyForms\ServiceConstant;
-use BrizyForms\Utils\ArrayUtils;
 
 /**
  * Class CampaignMonitorService
@@ -144,7 +143,7 @@ class CampaignMonitorService extends Service
     protected function internalGetFields(Group $group = null)
     {
         if (!$group) {
-            throw new ServiceException("Grop is required");
+            throw new ServiceException("Group is required");
         }
 
         $campaignMonitor = $this->_getCS_RESTLists($group->getId());
@@ -181,7 +180,7 @@ class CampaignMonitorService extends Service
         }
 
         $data = $this->authenticationData->getData();
-        if (!isset($data['access_token']) || !isset($data['refresh_token'])) {
+        if (!isset($data['api_key'])) {
             return false;
         }
 
@@ -195,33 +194,18 @@ class CampaignMonitorService extends Service
     {
         $data = $this->authenticationData->getData();
 
-        $this->authData = [
-            'access_token' => $data['access_token'],
-            'refresh_token' => $data['refresh_token']
-        ];
+        $this->authData = ['api_key' => $data['api_key']];
 
         $this->clients = $this->_getClients();
     }
 
     /**
-     * @param array $options
+     * @param array|null $options
      * @return RedirectResponse|Response|null
      */
     public function authenticate(array $options = null)
     {
-        $options = ArrayUtils::rewrite([
-            'client_id' => CAMPAIGNMONITOR_CLIENT_ID,
-            'redirect_uri' => CAMPAIGNMONITOR_REDIRECT_URI,
-            'scope' => CAMPAIGNMONITOR_SCOPE
-        ], $options);
-
-        $authorize_url = \CS_REST_General::authorize_url(
-            $options['client_id'],
-            $options['redirect_uri'],
-            $options['scope']
-        );
-
-        return new RedirectResponse(301, "RedirectResponse", $authorize_url);
+        return null;
     }
 
     /**

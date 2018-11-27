@@ -9,7 +9,6 @@ use BrizyForms\Model\Field;
 use BrizyForms\Model\Group;
 use BrizyForms\Model\RedirectResponse;
 use BrizyForms\ServiceConstant;
-use BrizyForms\Utils\ArrayUtils;
 
 class MailChimpService extends Service
 {
@@ -28,7 +27,7 @@ class MailChimpService extends Service
         }
 
         $data = $this->authenticationData->getData();
-        if (!isset($data['access_token']) || !isset($data['dc'])) {
+        if (!isset($data['api_key'])) {
             return false;
         }
 
@@ -43,31 +42,19 @@ class MailChimpService extends Service
     {
         try {
             $data = $this->authenticationData->getData();
-            $this->mailChimpSDK = new \DrewM\MailChimp\MailChimp($data['access_token'] . '-' . $data['dc']);
+            $this->mailChimpSDK = new \DrewM\MailChimp\MailChimp($data['api_key']);
         } catch (\Exception $e) {
             throw new AuthenticationDataException('Can\'t initialize native service');
         }
     }
 
     /**
-     * @param array $options
-     * @return RedirectResponse
+     * @param array|null $options
+     * @return RedirectResponse|\BrizyForms\Model\Response|null
      */
     public function authenticate(array $options = null)
     {
-        $options = ArrayUtils::rewrite([
-            'client_id' => MAILCHIMP_CLIENT_ID,
-            'redirect_uri' => MAILCHIMP_REDIRECT_URI,
-            'auth_url' => MAILCHIMP_AUTH_URL
-        ], $options);
-
-        $login_url = $options['auth_url'] . "?response_type=code&client_id=%s&redirect_uri=%s";
-
-        return new RedirectResponse(301, "RedirectResponse", sprintf(
-            $login_url,
-            $options['client_id'],
-            $options['redirect_uri']
-        ));
+        return null;
     }
 
     /**

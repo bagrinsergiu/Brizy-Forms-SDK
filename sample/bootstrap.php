@@ -7,7 +7,6 @@ if (!file_exists($composerAutoload)) {
 }
 
 require $composerAutoload;
-require __DIR__ . '/config.php';
 
 //create MailChimp service
 
@@ -28,16 +27,9 @@ foreach ($data as $row) {
 
 $mailChimpService = \BrizyForms\ServiceFactory::getInstance(\BrizyForms\ServiceFactory::MAILCHIMP);
 
-$response = $mailChimpService->authenticate();
-if ($response instanceof \BrizyForms\Model\RedirectResponse) {
-    //@todo handle response
-    $mailChimpService->setAuthenticationData(new \BrizyForms\Model\AuthenticationData([
-        'access_token' => '27abb01297b7832e89cde4ef82ca0051',
-        'dc' => 'us13'
-    ]));
-} else {
-	$mailChimpService->setAuthenticationData();
-}
+$mailChimpService->setAuthenticationData(new \BrizyForms\Model\AuthenticationData([
+    'api_key' => '456541911f402cb3072a4b5a240fd87f-us13'
+]));
 
 $groups = $mailChimpService->getGroups();
 
@@ -139,13 +131,10 @@ foreach ($data as $row) {
 $campaignMonitorService = \BrizyForms\ServiceFactory::getInstance(\BrizyForms\ServiceFactory::CAMPAIGNMONITOR);
 
 $campaignMonitorService->setAuthenticationData(new \BrizyForms\Model\AuthenticationData([
-    'access_token'  => 'AcF1B9iqyuVDuybgAvToAzMxMw==',
-    'refresh_token' => 'AS6ASOzvRp5Kuio8AlMK6XUxMw=='
+    'api_key'  => 'EvjzjXOpziCS0pkcyah6UKUHpTlQ7SOWuB+3hK2FqP+o+g+C1wyMFr2EOXeOxAmwO5zuSevNBsRjyQdHV40c1pJrfqa4ZdpENR6U9J76GMS7fZID5a/oQyvMePiFgKfXSbrDFNsm0guM1uND8OJ5rQ=='
 ]));
 
 $groups = $campaignMonitorService->getGroups();
-
-var_dump($groups);
 
 $active_group = null;
 foreach ($groups as $group) {
