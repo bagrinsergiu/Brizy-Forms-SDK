@@ -81,6 +81,10 @@ abstract class NativeService
     {
         $options = $this->getOptions();
 
+        if (!empty($this->headers)) {
+            $options['headers'] = $this->headers;
+        }
+
         switch ($method) {
             case 'get' :
                 if (!empty($data)) {

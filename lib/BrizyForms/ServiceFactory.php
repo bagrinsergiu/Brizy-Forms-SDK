@@ -21,6 +21,7 @@ class ServiceFactory
     const MAILJET         = 'mailjet';
     const EGOI            = 'egoi';
     const HUBSPOT         = 'hubspot';
+    const MAILERLITE      = 'mailerlite';
 
     /**
      * @param $service_name
@@ -53,7 +54,8 @@ class ServiceFactory
             self::GETRESPONSE     => 'BrizyForms\Service\GetResponseService',
             self::MAILJET         => 'BrizyForms\Service\MailjetService',
             self::EGOI            => 'BrizyForms\Service\EgoiService',
-            self::HUBSPOT         => 'BrizyForms\Service\HubSpotService'
+            self::HUBSPOT         => 'BrizyForms\Service\HubSpotService',
+            self::MAILERLITE      => 'BrizyForms\Service\MailerLiteService'
         ];
     }
 
@@ -72,7 +74,8 @@ class ServiceFactory
             self::GETRESPONSE,
             self::MAILJET,
             self::EGOI,
-            self::HUBSPOT
+            self::HUBSPOT,
+            self::MAILERLITE
         ];
     }
 }
