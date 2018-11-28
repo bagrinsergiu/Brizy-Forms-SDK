@@ -60,14 +60,12 @@ class EgoiService extends Service
         $functionOptions = array_merge($functionOptions, $data->getFields());
 
         $options = array(
-            'query' => array(
-                'functionOptions' => $functionOptions,
-                'type' => 'json',
-                'method' => 'addSubscriber',
-            )
+            'functionOptions' => $functionOptions,
+            'type' => 'json',
+            'method' => 'addSubscriber'
         );
 
-        $subscriber = $this->egoiNativeService->request('', 'post', $options);
+        $subscriber = $this->egoiNativeService->request('', 'get', $options);
         $subscriber = json_decode(json_encode($subscriber), true);
 
         if (isset($subscriber['Egoi_Api']['addSubscriber']['ERROR'])) {
@@ -82,13 +80,11 @@ class EgoiService extends Service
     protected function internalGetGroups()
     {
         $options = array(
-            'query' => array(
-                'functionOptions' => array(
-                    'apikey' => $this->authenticationData->getData()['api_key']
-                ),
-                'type' => 'json',
-                'method' => 'getLists'
-            )
+            'functionOptions' => array(
+                'apikey' => $this->authenticationData->getData()['api_key']
+            ),
+            'type' => 'json',
+            'method' => 'getLists'
         );
 
         $lists = $this->egoiNativeService->request('', 'get', $options);

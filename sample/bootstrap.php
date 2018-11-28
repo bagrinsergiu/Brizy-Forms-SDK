@@ -343,3 +343,31 @@ $fields = $egoiService->getFields();
 var_dump($fields);
 
 $egoiService->createMember($fieldMap, $active_group, $dataArray);
+
+
+//create $hubSpotService service
+
+$fields   = '[{"source_id":"1", "source_title":"Email", "target":"email"}, {"source_id":"2", "source_title":"My Name dffsssss", "target":"_auto_generate"}]';
+$fieldMap = new \BrizyForms\FieldMap(json_decode($fields, true));
+
+$data = '[{"name":"2","value":"Anthony","required":false,"type":"text","slug":"name"},{"name":"1","value":"bodnar1217772m@gmail.com","required":false,"type":"email","slug":"email"}]';
+$data = json_decode($data, true);
+
+$dataArray = [];
+foreach ($data as $row) {
+    $data = new \BrizyForms\Model\Data();
+    $data
+        ->setName($row['name'])
+        ->setValue($row['value']);
+    $dataArray[] = $data;
+}
+
+$hubSpotService = \BrizyForms\ServiceFactory::getInstance(\BrizyForms\ServiceFactory::HUBSPOT);
+
+$hubSpotService->setAuthenticationData(new \BrizyForms\Model\AuthenticationData([
+    'api_key' => 'd18ad803-18f4-41b1-865d-1aa07ed40524'
+]));
+
+var_dump($hubSpotService->getFields());
+
+$hubSpotService->createMember($fieldMap, null, $dataArray);

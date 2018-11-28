@@ -2,18 +2,18 @@
 
 namespace BrizyForms\NativeService;
 
-class ConvertKitNativeService extends NativeService
+class HubSpotNativeService extends NativeService
 {
     /**
      * @var string
      */
-    protected $baseUrl = 'https://api.convertkit.com/v3/';
+    protected $baseUrl = 'https://api.hubapi.com';
 
     protected function internalGetOptions()
     {
         return [
             'query' => [
-                'api_key' => $this->getApiKey()
+                'hapikey' => $this->getApiKey()
             ]
         ];
     }
