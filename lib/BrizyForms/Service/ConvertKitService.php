@@ -94,7 +94,7 @@ class ConvertKitService extends Service
 
         $response = $this->nativeConvertKit->request("courses/{$group_id}/subscribe", "post", $payload);
         if (!isset($response->subscription->id)) {
-            $this->logger->error(json_encode($response), ['service' => ServiceFactory::CONVERTKIT]);
+            $this->logger->error(json_encode($response), ['service' => ServiceFactory::CONVERTKIT, 'method' => 'internalCreateMember']);
             throw new ServiceException('Member was not created.');
         }
     }

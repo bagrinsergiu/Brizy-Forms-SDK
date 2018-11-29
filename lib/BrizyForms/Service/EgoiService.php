@@ -70,7 +70,7 @@ class EgoiService extends Service
         $subscriber = json_decode(json_encode($subscriber), true);
 
         if (isset($subscriber['Egoi_Api']['addSubscriber']['ERROR']) || isset($subscriber['Egoi_Api']['addSubscriber']['response'])) {
-            $this->logger->error(json_encode($subscriber), ['service' => ServiceFactory::EGOI]);
+            $this->logger->error(json_encode($subscriber), ['service' => ServiceFactory::EGOI, 'method' => 'internalCreateMember']);
             throw new ServiceException('Member was not created.');
         }
     }

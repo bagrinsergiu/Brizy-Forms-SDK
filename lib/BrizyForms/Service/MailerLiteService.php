@@ -84,7 +84,7 @@ class MailerLiteService extends Service
         ]);
 
         if ($this->mailerLiteNativeService->getResponseCode() != 200) {
-            $this->logger->error(json_encode($member), ['service' => ServiceFactory::MAILERLITE]);
+            $this->logger->error(json_encode($member), ['service' => ServiceFactory::MAILERLITE, 'method' => 'internalCreateMember']);
             throw new ServiceException('Member was not created.');
         }
     }

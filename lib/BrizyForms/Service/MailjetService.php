@@ -86,7 +86,7 @@ class MailjetService extends Service
 
         $this->nativeMailjetService->contactslistManageContact($payload);
         if ($this->nativeMailjetService->_response_code != 201) {
-            $this->logger->error(json_encode($this->nativeMailjetService->_response), ['service' => ServiceFactory::MAILJET]);
+            $this->logger->error(json_encode($this->nativeMailjetService->_response), ['service' => ServiceFactory::MAILJET, 'method' => 'internalCreateMember']);
             throw new ServiceException('Member was not created.');
         }
     }

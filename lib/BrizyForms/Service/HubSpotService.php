@@ -85,7 +85,7 @@ class HubSpotService extends Service
         $member = $this->hubSpotNativeService->request('/contacts/v1/contact', 'post', $mergeFields);
 
         if ($this->hubSpotNativeService->getResponseCode() != 200 && $this->hubSpotNativeService->getResponseCode() != 409) {
-            $this->logger->error(json_encode($member), ['service' => ServiceFactory::HUBSPOT]);
+            $this->logger->error(json_encode($member), ['service' => ServiceFactory::HUBSPOT, 'method' => 'internalCreateMember']);
             throw new ServiceException('Member was not created.');
         }
     }

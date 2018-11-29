@@ -56,7 +56,7 @@ class SendinBlueService extends Service
                 'updateEnabled' => true
             ]));
         } catch (\Exception $e) {
-            $this->logger->error($e->getMessage(), ['service' => ServiceFactory::SENDINBLUE]);
+            $this->logger->error($e->getMessage(), ['service' => ServiceFactory::SENDINBLUE, 'method' => 'internalCreateMember']);
             throw new ServiceException('Member was not created.');
         }
     }

@@ -88,7 +88,7 @@ class ActiveCampaignService extends Service
         $contact_sync = $this->nativeActiveCampaign->api("contact/sync", $contact);
 
         if (!(int)$contact_sync->success) {
-            $this->logger->error(json_encode($contact_sync), ['service' => ServiceFactory::ACTIVECAMPAIGN]);
+            $this->logger->error(json_encode($contact_sync), ['service' => ServiceFactory::ACTIVECAMPAIGN, 'method' => 'internalCreateMember']);
             throw new ServiceException('Member was not created.');
         }
     }
