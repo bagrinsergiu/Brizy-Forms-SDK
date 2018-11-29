@@ -10,6 +10,7 @@ use BrizyForms\Model\RedirectResponse;
 use BrizyForms\Model\Response;
 use BrizyForms\NativeService\HubSpotNativeService;
 use BrizyForms\ServiceConstant;
+use BrizyForms\ServiceFactory;
 use BrizyForms\Utils\StringUtils;
 
 class HubSpotService extends Service
@@ -81,9 +82,10 @@ class HubSpotService extends Service
             ];
         }
 
-        $this->hubSpotNativeService->request('/contacts/v1/contact', 'post', $mergeFields);
+        $member = $this->hubSpotNativeService->request('/contacts/v1/contact', 'post', $mergeFields);
 
         if ($this->hubSpotNativeService->getResponseCode() != 200 && $this->hubSpotNativeService->getResponseCode() != 409) {
+            $this->logger->error(json_encode($member), ['service' => ServiceFactory::HUBSPOT]);
             throw new ServiceException('Member was not created.');
         }
     }

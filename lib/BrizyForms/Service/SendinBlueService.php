@@ -9,6 +9,7 @@ use BrizyForms\Model\Group;
 use BrizyForms\Model\RedirectResponse;
 use BrizyForms\Model\Response;
 use BrizyForms\ServiceConstant;
+use BrizyForms\ServiceFactory;
 
 class SendinBlueService extends Service
 {
@@ -55,6 +56,7 @@ class SendinBlueService extends Service
                 'updateEnabled' => true
             ]));
         } catch (\Exception $e) {
+            $this->logger->error($e->getMessage(), ['service' => ServiceFactory::SENDINBLUE]);
             throw new ServiceException('Member was not created.');
         }
     }

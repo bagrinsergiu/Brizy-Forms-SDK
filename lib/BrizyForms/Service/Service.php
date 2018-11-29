@@ -6,14 +6,18 @@ use BrizyForms\Exception\AuthenticationDataException;
 use BrizyForms\FieldMap;
 use BrizyForms\Model\AuthenticationData;
 use BrizyForms\Model\Group;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\NullLogger;
 
 /**
- * @todo create logs
  * Class Service
  * @package BrizyForms\Service
  */
-abstract class Service implements ServiceInterface
+abstract class Service implements ServiceInterface, LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     /**
      * @var AuthenticationData
      */
@@ -29,6 +33,8 @@ abstract class Service implements ServiceInterface
         if ($authenticationData instanceof AuthenticationData) {
             $this->setAuthenticationData($authenticationData);
         }
+
+        $this->logger = new NullLogger();
     }
 
     /**
@@ -41,7 +47,6 @@ abstract class Service implements ServiceInterface
         if ($this->hasValidAuthenticationData()) {
             $this->initializeNativeService();
         }
-
     }
 
     /**

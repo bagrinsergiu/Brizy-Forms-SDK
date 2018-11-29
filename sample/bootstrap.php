@@ -269,7 +269,7 @@ $fields = $getResponseService->getFields();
 
 $getResponseService->createMember($fieldMap, $active_group, $dataArray);
 
-//create getResponse service
+//create $mailjetService service
 
 $fields   = '[{"source_id":"1", "source_title":"Email", "target":"email"}, {"source_id":"2", "source_title":"M89k9l89j", "target":"_auto_generate"}]';
 $fieldMap = new \BrizyForms\FieldMap(json_decode($fields, true));

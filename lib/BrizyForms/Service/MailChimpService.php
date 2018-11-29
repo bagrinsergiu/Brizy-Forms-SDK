@@ -9,6 +9,7 @@ use BrizyForms\Model\Field;
 use BrizyForms\Model\Group;
 use BrizyForms\Model\RedirectResponse;
 use BrizyForms\ServiceConstant;
+use BrizyForms\ServiceFactory;
 
 class MailChimpService extends Service
 {
@@ -111,10 +112,10 @@ class MailChimpService extends Service
 
     /**
      * @param FieldMap $fieldMap
-     * @param $group_id
-     * @param $data
-     *
+     * @param null $group_id
+     * @param array $data
      * @return mixed|void
+     * @throws ServiceException
      * @throws \BrizyForms\Exception\FieldMapException
      */
     protected function internalCreateMember(FieldMap $fieldMap, $group_id = null, array $data = [])
@@ -130,7 +131,11 @@ class MailChimpService extends Service
             $payload['merge_fields'] = $data->getFields();
         }
 
-        $this->_createMember($group_id, $payload);
+        $member = $this->_createMember($group_id, $payload);
+        if (!isset($member['id']) && $member['title'] != 'Member Exists') {
+            $this->logger->error(json_encode($member), ['service' => ServiceFactory::MAILCHIMP]);
+            throw new ServiceException('Member was not created.');
+        }
     }
 
     /**

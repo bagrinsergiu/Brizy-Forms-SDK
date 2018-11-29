@@ -10,6 +10,7 @@ use BrizyForms\Model\RedirectResponse;
 use BrizyForms\Model\Response;
 use BrizyForms\NativeService\MailjetNativeService;
 use BrizyForms\ServiceConstant;
+use BrizyForms\ServiceFactory;
 use BrizyForms\Utils\StringUtils;
 
 class MailjetService extends Service
@@ -85,6 +86,7 @@ class MailjetService extends Service
 
         $this->nativeMailjetService->contactslistManageContact($payload);
         if ($this->nativeMailjetService->_response_code != 201) {
+            $this->logger->error(json_encode($this->nativeMailjetService->_response), ['service' => ServiceFactory::MAILJET]);
             throw new ServiceException('Member was not created.');
         }
     }

@@ -12,7 +12,8 @@
     "campaignmonitor/createsend-php": "dev-master",
     "guzzlehttp/guzzle": "4.*",
     "activecampaign/api-php": "2.0.*",
-    "getresponse/getresponse": "dev-master"
+    "getresponse/getresponse": "dev-master",
+    "psr/log": "^1.0.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^4.8"

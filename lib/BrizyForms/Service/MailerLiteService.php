@@ -10,6 +10,7 @@ use BrizyForms\Model\RedirectResponse;
 use BrizyForms\Model\Response;
 use BrizyForms\NativeService\MailerLiteNativeService;
 use BrizyForms\ServiceConstant;
+use BrizyForms\ServiceFactory;
 
 class MailerLiteService extends Service
 {
@@ -76,13 +77,14 @@ class MailerLiteService extends Service
             unset($mergeFields['name']);
         }
 
-        $this->mailerLiteNativeService->request("groups/{$group_id}/subscribers", 'post', [
+        $member = $this->mailerLiteNativeService->request("groups/{$group_id}/subscribers", 'post', [
             'name' => $name,
             'email' => $data->getEmail(),
             'fields' => $mergeFields
         ]);
 
         if ($this->mailerLiteNativeService->getResponseCode() != 200) {
+            $this->logger->error(json_encode($member), ['service' => ServiceFactory::MAILERLITE]);
             throw new ServiceException('Member was not created.');
         }
     }

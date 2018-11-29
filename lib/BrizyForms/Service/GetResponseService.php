@@ -9,6 +9,7 @@ use BrizyForms\Model\Group;
 use BrizyForms\Model\RedirectResponse;
 use BrizyForms\Model\Response;
 use BrizyForms\ServiceConstant;
+use BrizyForms\ServiceFactory;
 use BrizyForms\Utils\StringUtils;
 
 class GetResponseService extends Service
@@ -106,9 +107,10 @@ class GetResponseService extends Service
             'customFieldValues' => $mergeFields
         ];
 
-        $this->getResponseNativeService->addContact($payload);
+        $member = $this->getResponseNativeService->addContact($payload);
 
         if ($this->getResponseNativeService->http_status != 202 && $this->getResponseNativeService->http_status != 409) {
+            $this->logger->error(json_encode($member), ['service' => ServiceFactory::GETRESPONSE]);
             throw new ServiceException('Member was not created.');
         }
     }

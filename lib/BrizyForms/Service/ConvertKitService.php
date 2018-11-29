@@ -10,6 +10,7 @@ use BrizyForms\Model\RedirectResponse;
 use BrizyForms\Model\Response;
 use BrizyForms\NativeService\ConvertKitNativeService;
 use BrizyForms\ServiceConstant;
+use BrizyForms\ServiceFactory;
 
 class ConvertKitService extends Service
 {
@@ -93,6 +94,7 @@ class ConvertKitService extends Service
 
         $response = $this->nativeConvertKit->request("courses/{$group_id}/subscribe", "post", $payload);
         if (!isset($response->subscription->id)) {
+            $this->logger->error(json_encode($response), ['service' => ServiceFactory::CONVERTKIT]);
             throw new ServiceException('Member was not created.');
         }
     }

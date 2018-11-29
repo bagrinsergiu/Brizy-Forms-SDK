@@ -3,6 +3,7 @@
 namespace BrizyForms\Service;
 
 use BrizyForms\Exception\ServiceException;
+use BrizyForms\ServiceFactory;
 use BrizyForms\Utils\StringUtils;
 use BrizyForms\FieldMap;
 use BrizyForms\Model\Field;
@@ -87,6 +88,7 @@ class ActiveCampaignService extends Service
         $contact_sync = $this->nativeActiveCampaign->api("contact/sync", $contact);
 
         if (!(int)$contact_sync->success) {
+            $this->logger->error(json_encode($contact_sync), ['service' => ServiceFactory::ACTIVECAMPAIGN]);
             throw new ServiceException('Member was not created.');
         }
     }

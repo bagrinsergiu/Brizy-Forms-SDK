@@ -10,6 +10,7 @@ use BrizyForms\Model\Group;
 use BrizyForms\Model\RedirectResponse;
 use BrizyForms\Model\Response;
 use BrizyForms\ServiceConstant;
+use BrizyForms\ServiceFactory;
 
 /**
  * Class CampaignMonitorService
@@ -103,6 +104,7 @@ class CampaignMonitorService extends Service
 
         $result = $campaignMonitor->add($payload);
         if (!$result->was_successful()) {
+            $this->logger->error(json_encode($result), ['service' => ServiceFactory::CAMPAIGNMONITOR]);
             throw new ServiceException('Member was not created.');
         }
     }
