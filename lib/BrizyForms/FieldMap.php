@@ -34,7 +34,7 @@ class FieldMap
         $result = [];
         foreach ($fields as $field) {
             if (!isset($field['sourceId']) || !isset($field['sourceTitle']) || !isset($field['target'])) {
-                throw new FieldMapException('"source_id" && "source_title" && "target" are required properties');
+                throw new FieldMapException('"sourceId" && "sourceTitle" && "target" are required properties');
             }
 
             $fieldLink = new FieldLink();
