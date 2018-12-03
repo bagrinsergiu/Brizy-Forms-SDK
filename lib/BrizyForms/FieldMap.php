@@ -33,14 +33,14 @@ class FieldMap
     {
         $result = [];
         foreach ($fields as $field) {
-            if (!isset($field['source_id']) || !isset($field['source_title']) || !isset($field['target'])) {
+            if (!isset($field['sourceId']) || !isset($field['sourceTitle']) || !isset($field['target'])) {
                 throw new FieldMapException('"source_id" && "source_title" && "target" are required properties');
             }
 
             $fieldLink = new FieldLink();
             $fieldLink
-                ->setSourceId($field['source_id'])
-                ->setSourceTitle($field['source_title'])
+                ->setSourceId($field['sourceId'])
+                ->setSourceTitle($field['sourceTitle'])
                 ->setTarget($field['target']);
 
             $result[] = $fieldLink;
