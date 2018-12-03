@@ -1,10 +1,11 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "3c5d5229c40ebf6465d922e91ebd9e52",
+    "hash": "034f2b6c2f391c42370caf09d7a99603",
+    "content-hash": "0d84dfe146cdefae4db06c9740d08473",
     "packages": [
         {
             "name": "activecampaign/api-php",
@@ -46,7 +47,7 @@
                 "newsletter",
                 "subscribe"
             ],
-            "time": "2017-04-26T00:00:00+00:00"
+            "time": "2017-04-26 00:00:00"
         },
         {
             "name": "campaignmonitor/createsend-php",
@@ -104,7 +105,7 @@
                 "campaign",
                 "monitor"
             ],
-            "time": "2018-10-26T03:12:12+00:00"
+            "time": "2018-10-26 03:12:12"
         },
         {
             "name": "drewm/mailchimp-api",
@@ -147,7 +148,7 @@
             ],
             "description": "Super-simple, minimum abstraction MailChimp API v3 wrapper",
             "homepage": "https://github.com/drewm/mailchimp-api",
-            "time": "2018-02-16T15:31:05+00:00"
+            "time": "2018-02-16 15:31:05"
         },
         {
             "name": "getresponse/getresponse",
@@ -194,7 +195,7 @@
                 "email",
                 "getresponse"
             ],
-            "time": "2018-03-02T08:40:50+00:00"
+            "time": "2018-03-02 08:40:50"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -259,7 +260,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2016-07-15T17:44:18+00:00"
+            "time": "2016-07-15 17:44:18"
         },
         {
             "name": "guzzlehttp/streams",
@@ -312,7 +313,7 @@
                 "Guzzle",
                 "stream"
             ],
-            "time": "2014-08-17T21:15:53+00:00"
+            "time": "2014-08-17 21:15:53"
         },
         {
             "name": "psr/log",
@@ -359,7 +360,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2018-11-20T15:27:04+00:00"
+            "time": "2018-11-20 15:27:04"
         },
         {
             "name": "sendinblue/api-v3-sdk",
@@ -418,7 +419,7 @@
                 "sendinblue",
                 "swagger"
             ],
-            "time": "2018-04-12T10:37:38+00:00"
+            "time": "2018-04-12 10:37:38"
         }
     ],
     "packages-dev": [
@@ -474,7 +475,7 @@
                 "constructor",
                 "instantiate"
             ],
-            "time": "2015-06-14T21:17:01+00:00"
+            "time": "2015-06-14 21:17:01"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -528,7 +529,7 @@
                 "reflection",
                 "static analysis"
             ],
-            "time": "2017-09-11T18:02:19+00:00"
+            "time": "2017-09-11 18:02:19"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -579,7 +580,7 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2017-11-30T07:14:17+00:00"
+            "time": "2017-11-30 07:14:17"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -626,7 +627,7 @@
                     "email": "me@mikevanriel.com"
                 }
             ],
-            "time": "2017-07-14T14:27:02+00:00"
+            "time": "2017-07-14 14:27:02"
         },
         {
             "name": "phpspec/prophecy",
@@ -689,7 +690,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2018-08-05T17:53:17+00:00"
+            "time": "2018-08-05 17:53:17"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -751,7 +752,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-10-06T15:47:00+00:00"
+            "time": "2015-10-06 15:47:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -798,7 +799,7 @@
                 "filesystem",
                 "iterator"
             ],
-            "time": "2017-11-27T13:52:08+00:00"
+            "time": "2017-11-27 13:52:08"
         },
         {
             "name": "phpunit/php-text-template",
@@ -839,7 +840,7 @@
             "keywords": [
                 "template"
             ],
-            "time": "2015-06-21T13:50:34+00:00"
+            "time": "2015-06-21 13:50:34"
         },
         {
             "name": "phpunit/php-timer",
@@ -888,7 +889,7 @@
             "keywords": [
                 "timer"
             ],
-            "time": "2017-02-26T11:10:40+00:00"
+            "time": "2017-02-26 11:10:40"
         },
         {
             "name": "phpunit/php-token-stream",
@@ -937,7 +938,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2017-12-04T08:55:13+00:00"
+            "time": "2017-12-04 08:55:13"
         },
         {
             "name": "phpunit/phpunit",
@@ -1009,7 +1010,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2017-06-21T08:07:12+00:00"
+            "time": "2017-06-21 08:07:12"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -1065,7 +1066,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2015-10-02T06:51:40+00:00"
+            "time": "2015-10-02 06:51:40"
         },
         {
             "name": "sebastian/comparator",
@@ -1129,7 +1130,7 @@
                 "compare",
                 "equality"
             ],
-            "time": "2017-01-29T09:50:25+00:00"
+            "time": "2017-01-29 09:50:25"
         },
         {
             "name": "sebastian/diff",
@@ -1181,7 +1182,7 @@
             "keywords": [
                 "diff"
             ],
-            "time": "2017-05-22T07:24:03+00:00"
+            "time": "2017-05-22 07:24:03"
         },
         {
             "name": "sebastian/environment",
@@ -1231,7 +1232,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2016-08-18T05:49:44+00:00"
+            "time": "2016-08-18 05:49:44"
         },
         {
             "name": "sebastian/exporter",
@@ -1298,7 +1299,7 @@
                 "export",
                 "exporter"
             ],
-            "time": "2016-06-17T09:04:28+00:00"
+            "time": "2016-06-17 09:04:28"
         },
         {
             "name": "sebastian/global-state",
@@ -1349,7 +1350,7 @@
             "keywords": [
                 "global state"
             ],
-            "time": "2015-10-12T03:26:01+00:00"
+            "time": "2015-10-12 03:26:01"
         },
         {
             "name": "sebastian/recursion-context",
@@ -1402,7 +1403,7 @@
             ],
             "description": "Provides functionality to recursively process PHP variables",
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
-            "time": "2016-10-03T07:41:43+00:00"
+            "time": "2016-10-03 07:41:43"
         },
         {
             "name": "sebastian/version",
@@ -1437,7 +1438,7 @@
             ],
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
-            "time": "2015-06-21T13:59:46+00:00"
+            "time": "2015-06-21 13:59:46"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -1495,7 +1496,7 @@
                 "polyfill",
                 "portable"
             ],
-            "time": "2018-08-06T14:22:27+00:00"
+            "time": "2018-08-06 14:22:27"
         },
         {
             "name": "symfony/yaml",
@@ -1554,7 +1555,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2018-11-11T19:48:54+00:00"
+            "time": "2018-11-11 19:48:54"
         },
         {
             "name": "webmozart/assert",
@@ -1604,7 +1605,7 @@
                 "check",
                 "validate"
             ],
-            "time": "2018-01-29T19:49:41+00:00"
+            "time": "2018-01-29 19:49:41"
         }
     ],
     "aliases": [],
@@ -1618,7 +1619,10 @@
     "platform": {
         "php": ">=5.4.0",
         "ext-curl": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-mbstring": "*"
     },
-    "platform-dev": []
+    "platform-dev": {
+        "ext-dom": "*"
+    }
 }

@@ -7,6 +7,7 @@
     "php": ">=5.4.0",
     "ext-curl": "*",
     "ext-json": "*",
+    "ext-mbstring": "*",
     "drewm/mailchimp-api": "~2.2",
     "sendinblue/api-v3-sdk": "~5.0",
     "campaignmonitor/createsend-php": "dev-master",
@@ -16,6 +17,7 @@
     "psr/log": "^1.0.0"
   },
   "require-dev": {
+    "ext-dom": "*",
     "phpunit/phpunit": "^4.8"
   },
   "autoload": {
