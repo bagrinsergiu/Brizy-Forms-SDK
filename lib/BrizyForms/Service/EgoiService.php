@@ -153,7 +153,27 @@ class EgoiService extends Service
      */
     public function authenticate(array $options = null)
     {
-        return null;
+        if (!$this->egoiNativeService) {
+            return new Response(400, 'native service was not init');
+        }
+
+        $options = array(
+            'functionOptions' => array(
+                'apikey' => $this->authenticationData->getData()['api_key']
+            ),
+            'type' => 'json',
+            'method' => 'getLists'
+        );
+
+        $lists = $this->egoiNativeService->request('', 'get', $options);
+
+        $lists = json_decode(json_encode($lists), true);
+
+        if (isset($lists['Egoi_Api']['getLists']['ERROR'])) {
+            return new Response(401, 'Unauthenticated');
+        }
+
+        return new Response(200, 'Successfully authenticated');
     }
 
     public function _getFields()

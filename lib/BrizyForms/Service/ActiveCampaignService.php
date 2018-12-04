@@ -174,7 +174,17 @@ class ActiveCampaignService extends Service
      */
     public function authenticate(array $options = null)
     {
-        return null;
+        if (!$this->nativeActiveCampaign) {
+            return new Response(400, 'native service was not init');
+        }
+
+        $lists = $this->nativeActiveCampaign->api("list/list?ids=all");
+
+        if (!(int)$lists->success) {
+            return new Response(401, 'Unauthenticated');
+        }
+
+        return new Response(200, 'Successfully authenticated');
     }
 
     private function _getFields()

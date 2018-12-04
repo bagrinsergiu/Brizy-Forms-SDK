@@ -186,7 +186,16 @@ class ConvertKitService extends Service
      */
     public function authenticate(array $options = null)
     {
-        return null;
+        if (!$this->nativeConvertKit) {
+            return new Response(400, 'native service was not init');
+        }
+
+        $sequences = $this->nativeConvertKit->request("sequences");
+        if (!isset($sequences->courses)) {
+            return new Response(401, 'Unauthenticated');
+        }
+
+        return new Response(200, 'Successfully authenticated');
     }
 
     private function _getFields()

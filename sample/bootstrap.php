@@ -10,7 +10,7 @@ require $composerAutoload;
 
 //create MailChimp service
 
-$fields   = '[{"source_id":"1", "source_title":"Email", "target":"email"}, {"source_id":"2", "source_title":"My Name", "target":"_auto_generate"}]';
+$fields   = '[{"sourceId":"1", "sourceTitle":"Email", "target":"email"}, {"sourceId":"2", "sourceTitle":"My Name", "target":"_auto_generate"}]';
 $fieldMap = new \BrizyForms\FieldMap(json_decode($fields, true));
 
 $data = '[{"name":"2","value":"Anthony","required":false,"type":"text","slug":"name"},{"name":"1","value":"bodnar1212@gmail.com","required":false,"type":"email","slug":"email"}]';
@@ -31,6 +31,8 @@ $mailChimpService->setAuthenticationData(new \BrizyForms\Model\AuthenticationDat
     'api_key' => '456541911f402cb3072a4b5a240fd87f-us13'
 ]));
 
+var_dump($mailChimpService->authenticate());
+
 $groups = $mailChimpService->getGroups();
 
 $active_group = null;
@@ -48,7 +50,7 @@ $mailChimpService->createMember($fieldMap, $active_group, $dataArray);
 
 //create SendinBlue service
 
-$fields   = '[{"source_id":"1", "source_title":"Email", "target":"email"}, {"source_id":"2", "source_title":"My Name", "target":"_auto_generate"}]';
+$fields   = '[{"sourceId":"1", "sourceTitle":"Email", "target":"email"}, {"sourceId":"2", "sourceTitle":"My Name", "target":"_auto_generate"}]';
 $fieldMap = new \BrizyForms\FieldMap(json_decode($fields, true));
 
 $data = '[{"name":"2","value":"Anthony","required":false,"type":"text","slug":"name"},{"name":"1","value":"bodnar1212@gmail.com","required":false,"type":"email","slug":"email"}]';
@@ -69,6 +71,8 @@ $sendinBlueService->setAuthenticationData(new \BrizyForms\Model\AuthenticationDa
     'api_key' => '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'
 ]));
 
+var_dump($sendinBlueService->authenticate());
+
 $groups = $sendinBlueService->getGroups();
 
 $active_group = null;
@@ -83,11 +87,9 @@ var_dump($fields);
 
 $sendinBlueService->createMember($fieldMap, $active_group, $dataArray);
 
-
-
 //create Zapier service
 
-$fields   = '[{"source_id":"1", "source_title":"Email", "target":"email"}, {"source_id":"2", "source_title":"My Name", "target":"_auto_generate"}]';
+$fields   = '[{"sourceId":"1", "sourceTitle":"Email", "target":"email"}, {"sourceId":"2", "sourceTitle":"My Name", "target":"_auto_generate"}]';
 $fieldMap = new \BrizyForms\FieldMap(json_decode($fields, true));
 
 $data = '[{"name":"2","value":"Anthony","required":false,"type":"text","slug":"name"},{"name":"1","value":"bodnar1212@gmail.com","required":false,"type":"email","slug":"email"}]';
@@ -108,12 +110,13 @@ $zapierService->setAuthenticationData(new \BrizyForms\Model\AuthenticationData([
     'webhook_url' => 'https://hooks.zapier.com/hooks/catch/1671845/fro8it/'
 ]));
 
-$zapierService->createMember($fieldMap, null, $dataArray);
+var_dump($zapierService->authenticate());
 
+$zapierService->createMember($fieldMap, null, $dataArray);
 
 //create $campaignMonitorService service
 
-$fields   = '[{"source_id":"1", "source_title":"Email", "target":"email"}, {"source_id":"2", "source_title":"My Name", "target":"_auto_generate"}]';
+$fields   = '[{"sourceId":"1", "sourceTitle":"Email", "target":"email"}, {"sourceId":"2", "sourceTitle":"My Name", "target":"_auto_generate"}]';
 $fieldMap = new \BrizyForms\FieldMap(json_decode($fields, true));
 
 $data = '[{"name":"2","value":"Anthony","required":false,"type":"text","slug":"name"},{"name":"1","value":"bodnar1212@gmail.com","required":false,"type":"email","slug":"email"}]';
@@ -134,6 +137,8 @@ $campaignMonitorService->setAuthenticationData(new \BrizyForms\Model\Authenticat
     'api_key'  => 'EvjzjXOpziCS0pkcyah6UKUHpTlQ7SOWuB+3hK2FqP+o+g+C1wyMFr2EOXeOxAmwO5zuSevNBsRjyQdHV40c1pJrfqa4ZdpENR6U9J76GMS7fZID5a/oQyvMePiFgKfXSbrDFNsm0guM1uND8OJ5rQ=='
 ]));
 
+var_dump($campaignMonitorService->authenticate());
+
 $groups = $campaignMonitorService->getGroups();
 
 $active_group = null;
@@ -149,10 +154,9 @@ var_dump($fields);
 
 $campaignMonitorService->createMember($fieldMap, $active_group->getId(), $dataArray);
 
-
 //create $convertKitService service
 
-$fields   = '[{"source_id":"1", "source_title":"Email", "target":"email"}, {"source_id":"2", "source_title":"My Name", "target":"_auto_generate"}]';
+$fields   = '[{"sourceId":"1", "sourceTitle":"Email", "target":"email"}, {"sourceId":"2", "sourceTitle":"My Name", "target":"_auto_generate"}]';
 $fieldMap = new \BrizyForms\FieldMap(json_decode($fields, true));
 
 $data = '[{"name":"2","value":"Anthony","required":false,"type":"text","slug":"name"},{"name":"1","value":"bodnar1212@gmail.com","required":false,"type":"email","slug":"email"}]';
@@ -174,6 +178,8 @@ $convertKitService->setAuthenticationData(new \BrizyForms\Model\AuthenticationDa
     'api_secret' => '1iopMMrUAef8ptm71HIS_phBpt4iS1PitM0b88OXe9A'
 ]));
 
+var_dump($convertKitService->authenticate());
+
 $groups = $convertKitService->getGroups();
 
 var_dump($groups);
@@ -191,10 +197,9 @@ var_dump($fields);
 
 $convertKitService->createMember($fieldMap, $active_group->getId(), $dataArray);
 
-
 //create $activeCampaignService service
 
-$fields   = '[{"source_id":"1", "source_title":"Email", "target":"email"}, {"source_id":"2", "source_title":"My Name", "target":"_auto_generate"}]';
+$fields   = '[{"sourceId":"1", "sourceTitle":"Email", "target":"email"}, {"sourceId":"2", "sourceTitle":"My Name", "target":"_auto_generate"}]';
 $fieldMap = new \BrizyForms\FieldMap(json_decode($fields, true));
 
 $data = '[{"name":"2","value":"Anthony","required":false,"type":"text","slug":"name"},{"name":"1","value":"bodnar1212@gmail.com","required":false,"type":"email","slug":"email"}]';
@@ -216,6 +221,8 @@ $activeCampaignService->setAuthenticationData(new \BrizyForms\Model\Authenticati
     'api_url' => 'https://bodnar1212.api-us1.com'
 ]));
 
+var_dump($activeCampaignService->authenticate());
+
 $groups = $activeCampaignService->getGroups();
 
 var_dump($groups);
@@ -234,7 +241,7 @@ $activeCampaignService->createMember($fieldMap, $active_group, $dataArray);
 
 //create getResponse service
 
-$fields   = '[{"source_id":"1", "source_title":"Email", "target":"email"}, {"source_id":"2", "source_title":"My mmmfwef", "target":"_auto_generate"}]';
+$fields   = '[{"sourceId":"1", "sourceTitle":"Email", "target":"email"}, {"sourceId":"2", "sourceTitle":"My mmmfwef", "target":"_auto_generate"}]';
 $fieldMap = new \BrizyForms\FieldMap(json_decode($fields, true));
 
 $data = '[{"name":"2","value":"Anthony","required":false,"type":"text","slug":"name"},{"name":"1","value":"bodnar.brizy@gmail.com","required":false,"type":"email","slug":"email"}]';
@@ -255,6 +262,8 @@ $getResponseService->setAuthenticationData(new \BrizyForms\Model\AuthenticationD
     'api_key' => '09eaf3ebaac4afb918c573d7da37d0c8'
 ]));
 
+var_dump($getResponseService->authenticate());
+
 $groups = $getResponseService->getGroups();
 
 $active_group = null;
@@ -271,7 +280,7 @@ $getResponseService->createMember($fieldMap, $active_group, $dataArray);
 
 //create $mailjetService service
 
-$fields   = '[{"source_id":"1", "source_title":"Email", "target":"email"}, {"source_id":"2", "source_title":"M89k9l89j", "target":"_auto_generate"}]';
+$fields   = '[{"sourceId":"1", "sourceTitle":"Email", "target":"email"}, {"sourceId":"2", "sourceTitle":"M89k9l89j", "target":"_auto_generate"}]';
 $fieldMap = new \BrizyForms\FieldMap(json_decode($fields, true));
 
 $data = '[{"name":"2","value":"Anthony","required":false,"type":"text","slug":"name"},{"name":"1","value":"bodnar.llk@gmail.com","required":false,"type":"email","slug":"email"}]';
@@ -293,6 +302,8 @@ $mailjetService->setAuthenticationData(new \BrizyForms\Model\AuthenticationData(
     'secret_key' => '6aac0c35e5abdbea767aa008f9214e93'
 ]));
 
+var_dump($mailjetService->authenticate());
+
 $groups = $mailjetService->getGroups();
 
 $active_group = null;
@@ -309,7 +320,7 @@ $mailjetService->createMember($fieldMap, $active_group, $dataArray);
 
 //create $egoiService service
 
-$fields   = '[{"source_id":"1", "source_title":"Email", "target":"email"}, {"source_id":"2", "source_title":"First Name", "target":"_auto_generate"}]';
+$fields   = '[{"sourceId":"1", "sourceTitle":"Email", "target":"email"}, {"sourceId":"2", "sourceTitle":"First Name", "target":"_auto_generate"}]';
 $fieldMap = new \BrizyForms\FieldMap(json_decode($fields, true));
 
 $data = '[{"name":"2","value":"Anthony","required":false,"type":"text","slug":"name"},{"name":"1","value":"bodnar.brizy@gmail.com","required":false,"type":"email","slug":"email"}]';
@@ -330,6 +341,8 @@ $egoiService->setAuthenticationData(new \BrizyForms\Model\AuthenticationData([
     'api_key' => 'd8cdf68233ea0821105338731da3d32d339daf62'
 ]));
 
+var_dump($egoiService->authenticate());
+
 $groups = $egoiService->getGroups();
 
 $active_group = null;
@@ -347,7 +360,7 @@ $egoiService->createMember($fieldMap, $active_group, $dataArray);
 
 //create $hubSpotService service
 
-$fields   = '[{"source_id":"1", "source_title":"Email", "target":"email"}, {"source_id":"2", "source_title":"My Name dffsssss", "target":"_auto_generate"}]';
+$fields   = '[{"sourceId":"1", "sourceTitle":"Email", "target":"email"}, {"sourceId":"2", "sourceTitle":"My Name dffsssss", "target":"_auto_generate"}]';
 $fieldMap = new \BrizyForms\FieldMap(json_decode($fields, true));
 
 $data = '[{"name":"2","value":"Anthony","required":false,"type":"text","slug":"name"},{"name":"1","value":"bodnar1217772m@gmail.com","required":false,"type":"email","slug":"email"}]';
@@ -374,7 +387,7 @@ $hubSpotService->createMember($fieldMap, null, $dataArray);
 
 //create $mailerLiteService service
 
-$fields   = '[{"source_id":"1", "source_title":"Email", "target":"email"}, {"source_id":"2", "source_title":"My Name", "target":"_auto_generate"}]';
+$fields   = '[{"sourceId":"1", "sourceTitle":"Email", "target":"email"}, {"sourceId":"2", "sourceTitle":"My Name", "target":"_auto_generate"}]';
 $fieldMap = new \BrizyForms\FieldMap(json_decode($fields, true));
 
 $data = '[{"name":"2","value":"Anthony","required":false,"type":"text","slug":"name"},{"name":"1","value":"bodnar121211111111@gmail.com","required":false,"type":"email","slug":"email"}]';
@@ -394,6 +407,8 @@ $mailerLiteService = \BrizyForms\ServiceFactory::getInstance(\BrizyForms\Service
 $mailerLiteService->setAuthenticationData(new \BrizyForms\Model\AuthenticationData([
     'api_key' => 'b37a47c4374f5917a49805dca0230651'
 ]));
+
+var_dump($egoiService->authenticate());
 
 $groups = $mailerLiteService->getGroups();
 

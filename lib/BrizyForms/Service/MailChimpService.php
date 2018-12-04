@@ -8,6 +8,7 @@ use BrizyForms\FieldMap;
 use BrizyForms\Model\Field;
 use BrizyForms\Model\Group;
 use BrizyForms\Model\RedirectResponse;
+use BrizyForms\Model\Response;
 use BrizyForms\ServiceConstant;
 use BrizyForms\ServiceFactory;
 
@@ -55,7 +56,17 @@ class MailChimpService extends Service
      */
     public function authenticate(array $options = null)
     {
-        return null;
+        if (!$this->mailChimpSDK) {
+            return new Response(400, 'native service was not init');
+        }
+
+        $this->mailChimpSDK->get('lists?count=1');
+
+        if (!$this->mailChimpSDK->success()) {
+            return new Response(401, 'Unauthenticated');
+        }
+
+        return new Response(200, 'Successfully authenticated');
     }
 
     /**
@@ -201,7 +212,7 @@ class MailChimpService extends Service
      */
     private function _getGroups()
     {
-        $lists = $this->mailChimpSDK->get('lists?count=30');
+        $lists = $this->mailChimpSDK->get('lists?count=100');
 
         if (!isset($lists['lists'])) {
             throw new ServiceException("Invalid request");

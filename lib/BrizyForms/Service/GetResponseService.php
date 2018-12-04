@@ -204,7 +204,16 @@ class GetResponseService extends Service
      */
     public function authenticate(array $options = null)
     {
-        return null;
+        if (!$this->getResponseNativeService) {
+            return new Response(400, 'native service was not init');
+        }
+
+        $this->getResponseNativeService->getCampaigns();
+        if ($this->getResponseNativeService->http_status != 200) {
+            return new Response(401, 'Unauthenticated');
+        }
+
+        return new Response(200, 'Successfully authenticated');
     }
 
     private function _getFields()

@@ -173,7 +173,16 @@ class MailjetService extends Service
      */
     public function authenticate(array $options = null)
     {
-        return null;
+        if (!$this->nativeMailjetService) {
+            return new Response(400, 'native service was not init');
+        }
+
+        $this->nativeMailjetService->contactslist();
+        if ($this->nativeMailjetService->_response_code != 200) {
+            return new Response(401, 'Unauthenticated');
+        }
+
+        return new Response(200, 'Successfully authenticated');
     }
 
     /**

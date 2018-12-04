@@ -22,9 +22,9 @@ class HubSpotService extends Service
 
     /**
      * @param FieldMap $fieldMap
-     * @param string $group_id
-     *
-     * @return mixed
+     * @param null $group_id
+     * @return FieldMap|mixed
+     * @throws ServiceException
      */
     protected function mapFields(FieldMap $fieldMap, $group_id = null)
     {
@@ -99,9 +99,9 @@ class HubSpotService extends Service
     }
 
     /**
-     * @param Group $group
-     *
-     * @return mixed
+     * @param Group|null $group
+     * @return array|mixed
+     * @throws ServiceException
      */
     protected function internalGetFields(Group $group = null)
     {
@@ -155,12 +155,29 @@ class HubSpotService extends Service
      */
     public function authenticate(array $options = null)
     {
-        return null;
+        if (!$this->hubSpotNativeService) {
+            return new Response(400, 'native service was not init');
+        }
+
+        try {
+            $this->_getFields();
+            return new Response(200, 'Successfully authenticated');
+        } catch (\Exception $e) {
+            return new Response(401, 'Unauthenticated');
+        }
     }
 
+    /**
+     * @return array
+     * @throws ServiceException
+     */
     public function _getFields()
     {
         $existCustomFields = $this->hubSpotNativeService->request('/properties/v1/contacts/properties', 'get', []);
+
+        if ($this->hubSpotNativeService->getResponseCode() != 200) {
+            throw new ServiceException('Invalid request.');
+        }
 
         return json_decode(json_encode($existCustomFields), true);
     }

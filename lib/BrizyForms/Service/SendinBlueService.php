@@ -127,7 +127,13 @@ class SendinBlueService extends Service
      */
     public function authenticate(array $options = null)
     {
-        return null;
+        try {
+            $api_instance = new \SendinBlue\Client\Api\ListsApi();
+            $api_instance->getLists()->getLists();
+            return new Response(200, 'Successfully authenticated');
+        } catch (\Exception $e) {
+            return new Response(401, 'Unauthenticated');
+        }
     }
 
     /**

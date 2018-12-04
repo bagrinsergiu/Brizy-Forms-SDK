@@ -169,7 +169,16 @@ class MailerLiteService extends Service
      */
     public function authenticate(array $options = null)
     {
-        return null;
+        if (!$this->mailerLiteNativeService) {
+            return new Response(400, 'native service was not init');
+        }
+
+        $this->mailerLiteNativeService->request('groups');
+        if ($this->mailerLiteNativeService->getResponseCode() != 200) {
+            return new Response(401, 'Unauthenticated');
+        }
+
+        return new Response(200, 'Successfully authenticated');
     }
 
     /**

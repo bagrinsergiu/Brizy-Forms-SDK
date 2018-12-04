@@ -91,7 +91,7 @@ class ZapierService extends Service
         }
 
         $data = $this->authenticationData->getData();
-        if (!isset($data['webhook_url']) || !preg_match('/^https:\/\/hooks.zapier.com\/hooks\/catch\//', $data['webhook_url'])) {
+        if (!isset($data['webhook_url'])) {
             return false;
         }
 
@@ -111,6 +111,12 @@ class ZapierService extends Service
      */
     public function authenticate(array $options = null)
     {
-        return null;
+        $data = $this->authenticationData->getData();
+
+        if (!preg_match('/^https:\/\/hooks.zapier.com\/hooks\/catch\//', $data['webhook_url'])) {
+            return new Response(400, 'Unauthenticated');
+        }
+
+        return new Response(200, 'Successfully authenticated');
     }
 }
