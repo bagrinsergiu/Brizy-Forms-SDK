@@ -11,7 +11,7 @@
     "drewm/mailchimp-api": "~2.2",
     "sendinblue/api-v3-sdk": "~5.0",
     "campaignmonitor/createsend-php": "dev-master",
-    "guzzlehttp/guzzle": "4.*",
+    "guzzlehttp/guzzle": "5.3.1",
     "activecampaign/api-php": "2.0.*",
     "getresponse/getresponse": "dev-master",
     "psr/log": "^1.0.0"
