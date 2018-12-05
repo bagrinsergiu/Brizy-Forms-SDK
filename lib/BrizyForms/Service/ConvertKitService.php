@@ -123,9 +123,9 @@ class ConvertKitService extends Service
     }
 
     /**
-     * @param Group $group
-     *
-     * @return mixed
+     * @param Group|null $group
+     * @return array|mixed
+     * @throws ServiceException
      */
     protected function internalGetFields(Group $group = null)
     {
@@ -198,9 +198,17 @@ class ConvertKitService extends Service
         return new Response(200, 'Successfully authenticated');
     }
 
+    /**
+     * @return mixed
+     * @throws ServiceException
+     */
     private function _getFields()
     {
         $customFields = $this->nativeConvertKit->request("custom_fields");
+
+        if (!isset($customFields->custom_fields)) {
+            throw new ServiceException('Invalid request');
+        }
 
         return $customFields->custom_fields;
     }
