@@ -13,35 +13,35 @@ class FieldMapTest extends \PHPUnit_Framework_TestCase
 {
     public function testMap1()
     {
-        $this->setExpectedException('BrizyForms\Exception\FieldMapException', '"source_id" && "source_title" && "target" are required properties');
+        $this->setExpectedException('BrizyForms\Exception\FieldMapException', '"sourceId" && "sourceTitle" && "target" are required properties');
 
         new FieldMap([['test' => 'test']]);
     }
 
     public function testMap2()
     {
-        $this->setExpectedException('BrizyForms\Exception\FieldMapException', '"source_id" && "source_title" && "target" are required properties');
+        $this->setExpectedException('BrizyForms\Exception\FieldMapException', '"sourceId" && "sourceTitle" && "target" are required properties');
 
         new FieldMap([['source_id' => 'dfdfd']]);
     }
 
     public function testMap3()
     {
-        $this->setExpectedException('BrizyForms\Exception\FieldMapException', '"source_id" && "source_title" && "target" are required properties');
+        $this->setExpectedException('BrizyForms\Exception\FieldMapException', '"sourceId" && "sourceTitle" && "target" are required properties');
 
         new FieldMap([['source_id' => 'dfdfd', 'source_title' => 'dfdfd']]);
     }
 
     public function testMap4()
     {
-        $this->setExpectedException('BrizyForms\Exception\FieldMapException', '"source_id" && "source_title" && "target" are required properties');
+        $this->setExpectedException('BrizyForms\Exception\FieldMapException', '"sourceId" && "sourceTitle" && "target" are required properties');
 
         new FieldMap([['source_id' => 'dfdfd', 'target' => 'dfdfd']]);
     }
 
     public function testMapOutputToArray()
     {
-        $fieldMap = new FieldMap([['source_id' => 'dfdfd', 'target' => 'dfdfd', 'source_title' => 'sdasdas']]);
+        $fieldMap = new FieldMap([['sourceId' => 'dfdfd', 'target' => 'dfdfd', 'sourceTitle' => 'sdasdas']]);
 
         $fieldLink = new FieldLink();
         $fieldLink
@@ -60,8 +60,8 @@ class FieldMapTest extends \PHPUnit_Framework_TestCase
     {
         //data from editor integration setting
         $fieldMap = new FieldMap([
-            ['source_id' => '1', 'target' => 'email', 'source_title' => 'Email'],
-            ['source_id' => '2', 'target' => 'name', 'source_title' => 'Name']
+            ['sourceId' => '1', 'target' => 'email', 'sourceTitle' => 'Email'],
+            ['sourceId' => '2', 'target' => 'name', 'sourceTitle' => 'Name']
         ]);
 
         // data from preview (form.submit)
@@ -88,8 +88,8 @@ class FieldMapTest extends \PHPUnit_Framework_TestCase
 
         //data from editor integration setting
         $fieldMap = new FieldMap([
-            ['source_id' => '1', 'target' => 'email', 'source_title' => 'Email'],
-            ['source_id' => '2', 'target' => 'name', 'source_title' => 'Name']
+            ['sourceId' => '1', 'target' => 'email', 'sourceTitle' => 'Email'],
+            ['sourceId' => '2', 'target' => 'name', 'sourceTitle' => 'Name']
         ]);
 
         $data = '[{"name":"2","value":"Anthony","required":false,"type":"text","slug":"name"},{"name":"1","value":"bodnar.llk@gmail.com","required":false,"type":"email","slug":"email"}]';
@@ -113,8 +113,8 @@ class FieldMapTest extends \PHPUnit_Framework_TestCase
 
         //data from editor integration setting
         $fieldMap = new FieldMap([
-            ['source_id' => '1', 'target' => 'email', 'source_title' => 'Email'],
-            ['source_id' => '2', 'target' => 'name', 'source_title' => 'Name']
+            ['sourceId' => '1', 'target' => 'email', 'sourceTitle' => 'Email'],
+            ['sourceId' => '2', 'target' => 'name', 'sourceTitle' => 'Name']
         ]);
 
         // data from preview (form.submit)
