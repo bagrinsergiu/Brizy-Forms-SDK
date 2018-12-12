@@ -21,6 +21,11 @@ interface ServiceInterface
     public function getGroups();
 
     /**
+     * @return mixed
+     */
+    public function createGroup();
+
+    /**
      * @param Group $group
      * @return array
      */
@@ -28,9 +33,10 @@ interface ServiceInterface
 
     /**
      * @param FieldMap $fieldMap
-     * @param $group_id
-     * @param $data
+     * @param null $group_id
+     * @param array $data
+     * @param bool $confirmation_email
      * @return mixed
      */
-    public function createMember(FieldMap $fieldMap, $group_id = null, array $data = []);
+    public function createMember(FieldMap $fieldMap, $group_id = null, array $data = [], $confirmation_email = false);
 }

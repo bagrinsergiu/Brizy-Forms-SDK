@@ -125,17 +125,23 @@ class MailChimpService extends Service
      * @param FieldMap $fieldMap
      * @param null $group_id
      * @param array $data
+     * @param bool $confirmation_email
      * @return mixed|void
      * @throws ServiceException
      * @throws \BrizyForms\Exception\FieldMapException
      */
-    protected function internalCreateMember(FieldMap $fieldMap, $group_id = null, array $data = [])
+    protected function internalCreateMember(FieldMap $fieldMap, $group_id = null, array $data = [], $confirmation_email = false)
     {
         $data = $fieldMap->transform($data);
 
+        $status = 'pending';
+        if ($confirmation_email) {
+            $status = 'subscribed';
+        }
+
         $payload = [
             'email_address' => $data->getEmail(),
-            'status' => 'pending',
+            'status' => $status,
         ];
 
         if (count($data->getFields()) > 0) {

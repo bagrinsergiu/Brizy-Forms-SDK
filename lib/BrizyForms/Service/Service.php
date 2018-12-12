@@ -51,13 +51,13 @@ abstract class Service implements ServiceInterface, LoggerAwareInterface
 
     /**
      * @param FieldMap $fieldMap
-     * @param $group_id
+     * @param null $group_id
      * @param array $data
-     *
+     * @param bool $confirmation_email
      * @return mixed|void
      * @throws AuthenticationDataException
      */
-    public function createMember(FieldMap $fieldMap, $group_id = null, array $data = [])
+    public function createMember(FieldMap $fieldMap, $group_id = null, array $data = [], $confirmation_email = false)
     {
         if (!$this->hasValidAuthenticationData()) {
             throw new AuthenticationDataException();
