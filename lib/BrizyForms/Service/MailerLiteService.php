@@ -6,6 +6,7 @@ use BrizyForms\Exception\ServiceException;
 use BrizyForms\FieldMap;
 use BrizyForms\Model\Field;
 use BrizyForms\Model\Group;
+use BrizyForms\Model\GroupData;
 use BrizyForms\Model\RedirectResponse;
 use BrizyForms\Model\Response;
 use BrizyForms\NativeService\MailerLiteNativeService;
@@ -61,11 +62,12 @@ class MailerLiteService extends Service
      * @param FieldMap $fieldMap
      * @param null $group_id
      * @param array $data
+     * @param bool $confirmation_email
      * @return mixed|void
      * @throws ServiceException
      * @throws \BrizyForms\Exception\FieldMapException
      */
-    protected function internalCreateMember(FieldMap $fieldMap, $group_id = null, array $data = [])
+    protected function internalCreateMember(FieldMap $fieldMap, $group_id = null, array $data = [], $confirmation_email = false)
     {
         $data = $fieldMap->transform($data);
 
@@ -195,5 +197,23 @@ class MailerLiteService extends Service
         $fields = json_decode(json_encode($fields), true);
 
         return $fields;
+    }
+
+    /**
+     * @param GroupData $groupData
+     * @return mixed
+     */
+    protected function internalCreateGroup(GroupData $groupData)
+    {
+        // TODO: Implement internalCreateGroup() method.
+    }
+
+    /**
+     * @param GroupData $groupData
+     * @return mixed
+     */
+    protected function hasValidGroupData(GroupData $groupData)
+    {
+        // TODO: Implement hasValidGroupData() method.
     }
 }

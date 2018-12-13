@@ -6,6 +6,7 @@ namespace BrizyForms\Service;
 use BrizyForms\Exception\ServiceException;
 use BrizyForms\FieldMap;
 use BrizyForms\Model\Group;
+use BrizyForms\Model\GroupData;
 use BrizyForms\Model\RedirectResponse;
 use BrizyForms\Model\Response;
 use BrizyForms\ServiceConstant;
@@ -32,11 +33,12 @@ class ZapierService extends Service
      * @param FieldMap $fieldMap
      * @param null $group_id
      * @param array $data
+     * @param bool $confirmation_email
      * @return mixed|void
      * @throws ServiceException
      * @throws \BrizyForms\Exception\FieldMapException
      */
-    protected function internalCreateMember(FieldMap $fieldMap, $group_id = null, array $data = [])
+    protected function internalCreateMember(FieldMap $fieldMap, $group_id = null, array $data = [], $confirmation_email = false)
     {
         $data = $fieldMap->transform($data);
         $data_json = json_encode(array_merge(['Email' => $data->getEmail()], $data->getFields()));
@@ -118,5 +120,23 @@ class ZapierService extends Service
         }
 
         return new Response(200, 'Successfully authenticated');
+    }
+
+    /**
+     * @param GroupData $groupData
+     * @return mixed
+     */
+    protected function internalCreateGroup(GroupData $groupData)
+    {
+        // TODO: Implement internalCreateGroup() method.
+    }
+
+    /**
+     * @param GroupData $groupData
+     * @return mixed
+     */
+    protected function hasValidGroupData(GroupData $groupData)
+    {
+        // TODO: Implement hasValidGroupData() method.
     }
 }
