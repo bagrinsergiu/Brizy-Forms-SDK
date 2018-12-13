@@ -201,11 +201,21 @@ class MailerLiteService extends Service
 
     /**
      * @param GroupData $groupData
-     * @return mixed
+     * @return Group
+     * @throws ServiceException
      */
     protected function internalCreateGroup(GroupData $groupData)
     {
-        // TODO: Implement internalCreateGroup() method.
+        $data = $groupData->getData();
+        $group = $this->mailerLiteNativeService->request("groups", 'post', [
+            'name' => $data['name']
+        ]);
+
+        if ($this->mailerLiteNativeService->getResponseCode() != 201) {
+            throw new ServiceException('Group was not created.');
+        }
+
+        return new Group($group->id, $group->name);
     }
 
     /**
@@ -214,6 +224,11 @@ class MailerLiteService extends Service
      */
     protected function hasValidGroupData(GroupData $groupData)
     {
-        // TODO: Implement hasValidGroupData() method.
+        $data = $groupData->getData();
+        if (!isset($data['name'])) {
+            return false;
+        }
+
+        return true;
     }
 }
