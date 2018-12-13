@@ -124,7 +124,7 @@ class MailjetService extends Service
 
             $field = new Field();
             $field
-                ->setName($customField['ID'])
+                ->setName($customField['Name'])
                 ->setSlug($customField['Name'])
                 ->setRequired(false);
 
