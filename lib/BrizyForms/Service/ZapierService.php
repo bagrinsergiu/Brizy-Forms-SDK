@@ -128,7 +128,7 @@ class ZapierService extends Service
      */
     protected function internalCreateGroup(GroupData $groupData)
     {
-        // TODO: Implement internalCreateGroup() method.
+        return null;
     }
 
     /**
@@ -137,6 +137,6 @@ class ZapierService extends Service
      */
     protected function hasValidGroupData(GroupData $groupData)
     {
-        // TODO: Implement hasValidGroupData() method.
+        return true;
     }
 }
