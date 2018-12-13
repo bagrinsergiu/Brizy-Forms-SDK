@@ -4,6 +4,7 @@ namespace BrizyForms\Service;
 
 use BrizyForms\FieldMap;
 use BrizyForms\Model\Group;
+use BrizyForms\Model\GroupData;
 use BrizyForms\Model\RedirectResponse;
 use BrizyForms\Model\Response;
 
@@ -21,9 +22,10 @@ interface ServiceInterface
     public function getGroups();
 
     /**
-     * @return mixed
+     * @param GroupData $groupData
+     * @return Group
      */
-    public function createGroup();
+    public function createGroup(GroupData $groupData);
 
     /**
      * @param Group $group

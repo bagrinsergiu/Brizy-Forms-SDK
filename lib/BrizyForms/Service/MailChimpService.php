@@ -7,6 +7,7 @@ use BrizyForms\Exception\ServiceException;
 use BrizyForms\FieldMap;
 use BrizyForms\Model\Field;
 use BrizyForms\Model\Group;
+use BrizyForms\Model\GroupData;
 use BrizyForms\Model\RedirectResponse;
 use BrizyForms\Model\Response;
 use BrizyForms\ServiceConstant;
@@ -96,7 +97,6 @@ class MailChimpService extends Service
      */
     protected function internalGetFields(Group $group = null)
     {
-
         if (!$group) {
             throw new ServiceException('Group must be defined');
         }
@@ -134,9 +134,9 @@ class MailChimpService extends Service
     {
         $data = $fieldMap->transform($data);
 
-        $status = 'pending';
+        $status = 'subscribed';
         if ($confirmation_email) {
-            $status = 'subscribed';
+            $status = 'pending';
         }
 
         $payload = [
@@ -247,5 +247,64 @@ class MailChimpService extends Service
     private function _createMember($group_id, $payload)
     {
         return $this->mailChimpSDK->post("lists/{$group_id}/members", $payload);
+    }
+
+    /**
+     * @param GroupData $groupData
+     * @return Group
+     * @throws ServiceException
+     */
+    protected function internalCreateGroup(GroupData $groupData)
+    {
+        $data = $groupData->getData();
+
+        $account = $this->mailChimpSDK->get('');
+        if (!isset($account['contact'])) {
+            throw new ServiceException('Invalid request');
+        }
+
+        $account['contact']['address1'] = $account['contact']['addr1'];
+        unset($account['contact']['addr1']);
+        $account['contact']['address2'] = $account['contact']['addr2'];
+        unset($account['contact']['addr2']);
+
+        $payload = [
+            'name' => $data['name'],
+            'permission_reminder' => $data['reminder_message'],
+            'email_type_option' => false,
+            'campaign_defaults' => [
+                'from_email' => $data['from_email'],
+                'from_name' => $data['from_name'],
+                'subject' => $data['name'],
+                'language' => 'en'
+            ],
+            'contact' => $account['contact']
+        ];
+
+        $result = $this->mailChimpSDK->post('lists', $payload);
+
+        if (!$this->mailChimpSDK->success()) {
+            throw new ServiceException('Group was not created');
+        }
+
+        return new Group($result['id'], $result['name']);
+    }
+
+    /**
+     * @param GroupData $groupData
+     * @return bool
+     */
+    public function hasValidGroupData(GroupData $groupData)
+    {
+        $data = $groupData->getData();
+        if (!isset($data['name']) ||
+            !isset($data['from_name']) ||
+            !isset($data['from_email']) ||
+            !isset($data['reminder_message'])
+        ) {
+            return false;
+        }
+
+        return true;
     }
 }

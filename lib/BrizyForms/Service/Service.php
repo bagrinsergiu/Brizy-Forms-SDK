@@ -3,9 +3,11 @@
 namespace BrizyForms\Service;
 
 use BrizyForms\Exception\AuthenticationDataException;
+use BrizyForms\Exception\GroupDataException;
 use BrizyForms\FieldMap;
 use BrizyForms\Model\AuthenticationData;
 use BrizyForms\Model\Group;
+use BrizyForms\Model\GroupData;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
@@ -64,7 +66,7 @@ abstract class Service implements ServiceInterface, LoggerAwareInterface
         }
 
         $this->mapFields($fieldMap, $group_id);
-        $this->internalCreateMember($fieldMap, $group_id, $data);
+        $this->internalCreateMember($fieldMap, $group_id, $data, $confirmation_email);
     }
 
     /**
@@ -78,6 +80,20 @@ abstract class Service implements ServiceInterface, LoggerAwareInterface
         }
 
         return $this->internalGetGroups();
+    }
+
+    /**
+     * @param GroupData $groupData
+     * @return Group
+     * @throws GroupDataException
+     */
+    public function createGroup(GroupData $groupData)
+    {
+        if (!$this->hasValidGroupData($groupData)) {
+            throw new GroupDataException('Invalid group data');
+        }
+
+        return $this->internalCreateGroup($groupData);
     }
 
     /**
@@ -104,17 +120,23 @@ abstract class Service implements ServiceInterface, LoggerAwareInterface
 
     /**
      * @param FieldMap $fieldMap
-     * @param $group_id
-     * @param $data
-     *
+     * @param null $group_id
+     * @param array $data
+     * @param bool $confirmation_email
      * @return mixed
      */
-    abstract protected function internalCreateMember(FieldMap $fieldMap, $group_id = null, array $data = []);
+    abstract protected function internalCreateMember(FieldMap $fieldMap, $group_id = null, array $data = [], $confirmation_email = false);
 
     /**
      * @return mixed
      */
     abstract protected function internalGetGroups();
+
+    /**
+     * @param GroupData $groupData
+     * @return mixed
+     */
+    abstract protected function internalCreateGroup(GroupData $groupData);
 
     /**
      * @param Group $group
@@ -132,4 +154,10 @@ abstract class Service implements ServiceInterface, LoggerAwareInterface
      * @return void
      */
     abstract protected function initializeNativeService();
+
+    /**
+     * @param GroupData $groupData
+     * @return mixed
+     */
+    abstract protected function hasValidGroupData(GroupData $groupData);
 }
