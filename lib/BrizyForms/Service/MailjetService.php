@@ -77,9 +77,17 @@ class MailjetService extends Service
     {
         $data = $fieldMap->transform($data);
 
+        if (isset($mergeFields['name']) && !empty($mergeFields['name'])) {
+            $name = $mergeFields['name'];
+            unset($mergeFields['name']);
+        } else {
+            $name = explode("@", $data->getEmail());
+            $name = $name[0];
+        }
+
         $payload = [
             'Email' => $data->getEmail(),
-            'Name' => 'Andrei',
+            'Name' => $name,
             'method' => 'POST',
             'Properties' => $data->getFields(),
             'ID' => $group_id,
@@ -88,7 +96,10 @@ class MailjetService extends Service
 
         $this->nativeMailjetService->contactslistManageContact($payload);
         if ($this->nativeMailjetService->_response_code != 201) {
-            $this->logger->error(json_encode($this->nativeMailjetService->_response), ['service' => ServiceFactory::MAILJET, 'method' => 'internalCreateMember']);
+            $this->logger->error(json_encode($this->nativeMailjetService->_response), [
+                    'service' => ServiceFactory::MAILJET,
+                    'method' => 'internalCreateMember'
+            ]);
             throw new ServiceException('Member was not created.');
         }
     }
@@ -221,11 +232,24 @@ class MailjetService extends Service
 
     /**
      * @param GroupData $groupData
-     * @return mixed
+     * @return Group|mixed
+     * @throws ServiceException
      */
     protected function internalCreateGroup(GroupData $groupData)
     {
-        // TODO: Implement internalCreateGroup() method.
+        $data = $groupData->getData();
+
+        $payload = [
+            'name' => $data['name'],
+            'method' => 'POST'
+        ];
+
+        $result = $this->nativeMailjetService->contactslist($payload);
+        if ($this->nativeMailjetService->_response_code != 201 || !isset($result->Data[0])) {
+            throw new ServiceException('Group was not created');
+        }
+
+        return new Group($result->Data[0]->ID, $result->Data[0]->Name);
     }
 
     /**
@@ -234,6 +258,11 @@ class MailjetService extends Service
      */
     protected function hasValidGroupData(GroupData $groupData)
     {
-        // TODO: Implement hasValidGroupData() method.
+        $data = $groupData->getData();
+        if (!isset($data['name'])) {
+            return false;
+        }
+
+        return true;
     }
 }
