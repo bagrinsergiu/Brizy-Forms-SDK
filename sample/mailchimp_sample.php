@@ -57,4 +57,6 @@ foreach ($groups as $group) {
     var_dump($mailChimpService->getFields($group));
 }
 
+$mailChimpService->createFields($fieldMap, $group->getId());
+
 $mailChimpService->createMember($fieldMap, $group->getId(), $dataArray, true);

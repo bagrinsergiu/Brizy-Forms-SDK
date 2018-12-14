@@ -146,6 +146,8 @@ class ZapierService extends Service
      */
     protected function internalGetAccount()
     {
-        // TODO: Implement internalGetAccount() method.
+        $data = $this->authenticationData->getData();
+
+        return new Account($data['webhook_url']);
     }
 }

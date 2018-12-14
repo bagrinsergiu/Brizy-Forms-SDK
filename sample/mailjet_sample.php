@@ -34,6 +34,8 @@ $mailjetService->setAuthenticationData(new \BrizyForms\Model\AuthenticationData(
 
 var_dump($mailjetService->authenticate());
 
+var_dump($mailjetService->getAccount());
+
 $groupData = new \BrizyForms\Model\GroupData([
     'name' => 'List'.rand(1,1000)
 ]);
@@ -52,5 +54,7 @@ foreach ($groups as $group) {
 $fields = $mailjetService->getFields();
 
 var_dump($fields);
+
+$mailjetService->createFields($fieldMap, $group->getId());
 
 $mailjetService->createMember($fieldMap, $active_group, $dataArray);

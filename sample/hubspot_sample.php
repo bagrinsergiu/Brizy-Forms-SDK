@@ -32,6 +32,8 @@ $hubSpotService->setAuthenticationData(new \BrizyForms\Model\AuthenticationData(
     'api_key' => 'demo' //'d18ad803-18f4-41b1-865d-1aa07ed40524' // or 'demo'
 ]));
 
+var_dump($hubSpotService->getAccount());
+
 $groups = $hubSpotService->getGroups();
 
 $groupData = new \BrizyForms\Model\GroupData([
@@ -49,5 +51,7 @@ foreach ($groups as $group) {
 }
 
 //var_dump($hubSpotService->getFields());
+
+$hubSpotService->createFields($fieldMap, $group->getId());
 
 $hubSpotService->createMember($fieldMap, $active_group, $dataArray);

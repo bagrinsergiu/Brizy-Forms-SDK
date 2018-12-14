@@ -13,6 +13,7 @@ use BrizyForms\Model\Response;
 use BrizyForms\NativeService\MailerLiteNativeService;
 use BrizyForms\ServiceConstant;
 use BrizyForms\ServiceFactory;
+use Symfony\Component\Yaml\Tests\A;
 
 class MailerLiteService extends Service
 {
@@ -235,9 +236,15 @@ class MailerLiteService extends Service
 
     /**
      * @return Account
+     * @throws ServiceException
      */
     protected function internalGetAccount()
     {
-        // TODO: Implement internalGetAccount() method.
+        $response = $this->mailerLiteNativeService->request('me');
+        if ($this->mailerLiteNativeService->getResponseCode() != 200) {
+            throw new ServiceException('Invalid request');
+        }
+
+        return new Account($response->account->email);
     }
 }

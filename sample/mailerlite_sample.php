@@ -33,6 +33,8 @@ $mailerLiteService->setAuthenticationData(new \BrizyForms\Model\AuthenticationDa
 
 var_dump($mailerLiteService->authenticate());
 
+var_dump($mailerLiteService->getAccount());
+
 $groupData = new \BrizyForms\Model\GroupData([
     'name' => 'List'.rand(1,1000)
 ]);
@@ -49,5 +51,7 @@ foreach ($groups as $group) {
 }
 
 var_dump($mailerLiteService->getFields());
+
+$mailerLiteService->createFields($fieldMap, $group->getId());
 
 $mailerLiteService->createMember($fieldMap, $active_group, $dataArray);

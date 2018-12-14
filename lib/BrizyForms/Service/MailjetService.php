@@ -269,9 +269,15 @@ class MailjetService extends Service
 
     /**
      * @return Account
+     * @throws ServiceException
      */
     protected function internalGetAccount()
     {
-        // TODO: Implement internalGetAccount() method.
+        $result = $this->nativeMailjetService->user();
+        if ($this->nativeMailjetService->_response_code != 200 || !isset($result->Data[0])) {
+            throw new ServiceException('Invalid request');
+        }
+
+        return new Account($result->Data[0]->Email);
     }
 }

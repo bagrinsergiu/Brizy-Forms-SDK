@@ -255,9 +255,15 @@ class HubSpotService extends Service
 
     /**
      * @return Account
+     * @throws ServiceException
      */
     protected function internalGetAccount()
     {
-        // TODO: Implement internalGetAccount() method.
+        $result = $this->hubSpotNativeService->request('/integrations/v1/me', 'get', []);
+        if ($this->hubSpotNativeService->getResponseCode() != 200) {
+            throw new ServiceException('Invalid request');
+        }
+
+        return new Account($result->portalId);
     }
 }

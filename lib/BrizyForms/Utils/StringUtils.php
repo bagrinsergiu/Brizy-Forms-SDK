@@ -29,4 +29,8 @@ class StringUtils
         return $rand;
     }
 
+    static public function masking($string, $maskingCharacter = 'X')
+    {
+        return substr($string, 0, 4) . str_repeat($maskingCharacter, strlen($string) - 8) . substr($string, -4);
+    }
 }
