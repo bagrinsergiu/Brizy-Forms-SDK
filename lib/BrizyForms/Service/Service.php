@@ -121,7 +121,7 @@ abstract class Service implements ServiceInterface, LoggerAwareInterface
         if (!$this->hasValidAuthenticationData()) {
             throw new AuthenticationDataException();
         }
-        
+
         if (!$this->hasValidGroupData($groupData)) {
             throw new GroupDataException('Invalid group data');
         }
