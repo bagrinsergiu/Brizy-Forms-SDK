@@ -23,13 +23,15 @@ class SendinBlueService extends Service
      */
     protected function mapFields(FieldMap $fieldMap, $group_id = null)
     {
-        $existCustomFields = $this->internalGetFields();
+        $existCustomFields = $this->_getFields();
 
         foreach ($fieldMap->toArray() as $fieldLink) {
             if ($fieldLink->getTarget() == ServiceConstant::AUTO_GENERATE_FIELD) {
                 $key_exist = array_search($fieldLink->getSourceTitle(), array_column($existCustomFields, 'name'));
                 if ($key_exist !== false) {
                     $fieldLink->setTarget($existCustomFields[$key_exist]['slug']);
+                } else {
+                    $fieldLink->setTarget($fieldLink->getSourceTitle());
                 }
             }
         }
@@ -50,14 +52,19 @@ class SendinBlueService extends Service
     {
         $data = $fieldMap->transform($data);
 
+        $payload = [
+            'email' => $data->getEmail(),
+            'listIds' => [$group_id],
+            'updateEnabled' => true
+        ];
+
+        if (count($data->getFields()) > 0) {
+            $payload['attributes'] = $data->getFields();
+        }
+
         $api_instance = new \SendinBlue\Client\Api\ContactsApi();
         try {
-            $api_instance->createContact(new \SendinBlue\Client\Model\CreateContact([
-                "email" => $data->getEmail(),
-                "attributes" => $data->getFields(),
-                "listIds" => [$group_id],
-                'updateEnabled' => true
-            ]));
+            $api_instance->createContact(new \SendinBlue\Client\Model\CreateContact($payload));
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage(), ['service' => ServiceFactory::SENDINBLUE, 'method' => 'internalCreateMember']);
             throw new ServiceException('Member was not created.');
@@ -94,6 +101,27 @@ class SendinBlueService extends Service
             new Field('Email', ServiceConstant::EMAIL_FIELD, true),
             new Field('Last Name', 'LASTNAME', false),
             new Field('First Name', 'FIRSTNAME', false)
+        ];
+    }
+
+    private function _getFields()
+    {
+        return [
+            [
+                'name' => 'Email',
+                'slug' => ServiceConstant::EMAIL_FIELD,
+                'required' => true
+            ],
+            [
+                'name' => 'Last Name',
+                'slug' => 'LASTNAME',
+                'required' => false
+            ],
+            [
+                'name' => 'First Name',
+                'slug' => 'FIRSTNAME',
+                'required' => false
+            ]
         ];
     }
 
@@ -156,12 +184,49 @@ class SendinBlueService extends Service
     }
 
     /**
+     * @return object[]
+     * @throws ServiceException
+     */
+    public function getFolders()
+    {
+        try {
+            $api_instance = new \SendinBlue\Client\Api\FoldersApi();
+            $folders = $api_instance->getFolders(50,0)->getFolders();
+        } catch (\Exception $e) {
+            throw new ServiceException('Invalid request');
+        }
+
+        $response = [];
+        foreach ($folders as $folder) {
+            $class = new \stdClass();
+            $class->id = $folder['id'];
+            $class->name = $folder['name'];
+            $response[] = $class;
+        }
+
+        return $response;
+    }
+
+    /**
      * @param GroupData $groupData
-     * @return mixed
+     * @return Group|mixed
+     * @throws ServiceException
      */
     protected function internalCreateGroup(GroupData $groupData)
     {
-        // TODO: Implement internalCreateGroup() method.
+        $data = $groupData->getData();
+
+        $api_instance = new \SendinBlue\Client\Api\ListsApi();
+        try {
+            $result = $api_instance->createList(new \SendinBlue\Client\Model\CreateList([
+                'name' => $data['name'],
+                'folderId' => $data['folder_id']
+            ]));
+        } catch (\Exception $e) {
+            throw new ServiceException('Group was not created.');
+        }
+
+        return new Group($result->getId(), $data['name']);
     }
 
     /**
@@ -170,14 +235,27 @@ class SendinBlueService extends Service
      */
     protected function hasValidGroupData(GroupData $groupData)
     {
-        // TODO: Implement hasValidGroupData() method.
+        $data = $groupData->getData();
+        if (!isset($data['name']) || !isset($data['folder_id'])) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
      * @return Account
+     * @throws ServiceException
      */
     protected function internalGetAccount()
     {
-        // TODO: Implement internalGetAccount() method.
+        try {
+            $api_instance = new \SendinBlue\Client\Api\AccountApi();
+            $account = $api_instance->getAccount();
+        } catch (\Exception $e) {
+            throw new ServiceException('Invalid request');
+        }
+
+        return new Account($account['email']);
     }
 }
