@@ -5,6 +5,7 @@ namespace BrizyForms\Service;
 use BrizyForms\Exception\AuthenticationDataException;
 use BrizyForms\Exception\GroupDataException;
 use BrizyForms\FieldMap;
+use BrizyForms\Model\Account;
 use BrizyForms\Model\AuthenticationData;
 use BrizyForms\Model\Group;
 use BrizyForms\Model\GroupData;
@@ -54,6 +55,34 @@ abstract class Service implements ServiceInterface, LoggerAwareInterface
     /**
      * @param FieldMap $fieldMap
      * @param null $group_id
+     * @return mixed|void
+     * @throws AuthenticationDataException
+     */
+    public function createFields(FieldMap $fieldMap, $group_id = null)
+    {
+        if (!$this->hasValidAuthenticationData()) {
+            throw new AuthenticationDataException();
+        }
+
+        $this->mapFields($fieldMap, $group_id);
+    }
+
+    /**
+     * @return Account
+     * @throws AuthenticationDataException
+     */
+    public function getAccount()
+    {
+        if (!$this->hasValidAuthenticationData()) {
+            throw new AuthenticationDataException();
+        }
+
+        return $this->internalGetAccount();
+    }
+
+    /**
+     * @param FieldMap $fieldMap
+     * @param null $group_id
      * @param array $data
      * @param bool $confirmation_email
      * @return mixed|void
@@ -65,7 +94,6 @@ abstract class Service implements ServiceInterface, LoggerAwareInterface
             throw new AuthenticationDataException();
         }
 
-        $this->mapFields($fieldMap, $group_id);
         $this->internalCreateMember($fieldMap, $group_id, $data, $confirmation_email);
     }
 
@@ -160,4 +188,9 @@ abstract class Service implements ServiceInterface, LoggerAwareInterface
      * @return mixed
      */
     abstract protected function hasValidGroupData(GroupData $groupData);
+
+    /**
+     * @return Account
+     */
+    abstract protected function internalGetAccount();
 }

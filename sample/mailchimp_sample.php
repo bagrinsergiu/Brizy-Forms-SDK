@@ -33,6 +33,8 @@ $mailChimpService->setAuthenticationData(new \BrizyForms\Model\AuthenticationDat
 
 var_dump($mailChimpService->authenticate());
 
+var_dump($mailChimpService->getAccount());
+
 $groupData = new \BrizyForms\Model\GroupData([
     'name' => 'List777777',
     'reminder_message' => 'sdfdsfsd',

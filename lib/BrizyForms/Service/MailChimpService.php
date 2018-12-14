@@ -5,6 +5,7 @@ namespace BrizyForms\Service;
 use BrizyForms\Exception\AuthenticationDataException;
 use BrizyForms\Exception\ServiceException;
 use BrizyForms\FieldMap;
+use BrizyForms\Model\Account;
 use BrizyForms\Model\Field;
 use BrizyForms\Model\Group;
 use BrizyForms\Model\GroupData;
@@ -306,5 +307,19 @@ class MailChimpService extends Service
         }
 
         return true;
+    }
+
+    /**
+     * @return Account
+     * @throws ServiceException
+     */
+    protected function internalGetAccount()
+    {
+        $account = $this->mailChimpSDK->get('');
+        if (!$this->mailChimpSDK->success()) {
+            throw new ServiceException('Invalid request');
+        }
+
+        return new Account($account['account_name']);
     }
 }

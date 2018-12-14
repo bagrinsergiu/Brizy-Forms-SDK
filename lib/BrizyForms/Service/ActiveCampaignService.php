@@ -3,6 +3,7 @@
 namespace BrizyForms\Service;
 
 use BrizyForms\Exception\ServiceException;
+use BrizyForms\Model\Account;
 use BrizyForms\Model\GroupData;
 use BrizyForms\ServiceFactory;
 use BrizyForms\Utils\StringUtils;
@@ -224,5 +225,13 @@ class ActiveCampaignService extends Service
     protected function hasValidGroupData(GroupData $groupData)
     {
         // TODO: Implement hasValidGroupData() method.
+    }
+
+    /**
+     * @return Account
+     */
+    protected function internalGetAccount()
+    {
+        // TODO: Implement internalGetAccount() method.
     }
 }

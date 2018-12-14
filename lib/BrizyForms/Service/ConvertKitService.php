@@ -4,6 +4,7 @@ namespace BrizyForms\Service;
 
 use BrizyForms\Exception\ServiceException;
 use BrizyForms\FieldMap;
+use BrizyForms\Model\Account;
 use BrizyForms\Model\Field;
 use BrizyForms\Model\Group;
 use BrizyForms\Model\GroupData;
@@ -231,5 +232,13 @@ class ConvertKitService extends Service
     protected function hasValidGroupData(GroupData $groupData)
     {
         // TODO: Implement hasValidGroupData() method.
+    }
+
+    /**
+     * @return Account
+     */
+    protected function internalGetAccount()
+    {
+        // TODO: Implement internalGetAccount() method.
     }
 }

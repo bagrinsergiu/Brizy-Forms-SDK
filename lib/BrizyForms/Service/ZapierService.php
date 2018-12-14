@@ -5,6 +5,7 @@ namespace BrizyForms\Service;
 
 use BrizyForms\Exception\ServiceException;
 use BrizyForms\FieldMap;
+use BrizyForms\Model\Account;
 use BrizyForms\Model\Group;
 use BrizyForms\Model\GroupData;
 use BrizyForms\Model\RedirectResponse;
@@ -138,5 +139,13 @@ class ZapierService extends Service
     protected function hasValidGroupData(GroupData $groupData)
     {
         return true;
+    }
+
+    /**
+     * @return Account
+     */
+    protected function internalGetAccount()
+    {
+        // TODO: Implement internalGetAccount() method.
     }
 }

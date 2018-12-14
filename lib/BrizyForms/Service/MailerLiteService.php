@@ -4,6 +4,7 @@ namespace BrizyForms\Service;
 
 use BrizyForms\Exception\ServiceException;
 use BrizyForms\FieldMap;
+use BrizyForms\Model\Account;
 use BrizyForms\Model\Field;
 use BrizyForms\Model\Group;
 use BrizyForms\Model\GroupData;
@@ -230,5 +231,13 @@ class MailerLiteService extends Service
         }
 
         return true;
+    }
+
+    /**
+     * @return Account
+     */
+    protected function internalGetAccount()
+    {
+        // TODO: Implement internalGetAccount() method.
     }
 }
