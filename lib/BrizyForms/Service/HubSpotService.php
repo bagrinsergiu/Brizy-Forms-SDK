@@ -90,14 +90,49 @@ class HubSpotService extends Service
             $this->logger->error(json_encode($member), ['service' => ServiceFactory::HUBSPOT, 'method' => 'internalCreateMember']);
             throw new ServiceException('Member was not created.');
         }
+
+        if ($group_id && isset($member->vid)) {
+            $addToList = $this->hubSpotNativeService->request("/contacts/v1/lists/{$group_id}/add", 'post', [
+                "vids" => [
+                    $member->vid
+                ]
+            ]);
+            if ($this->hubSpotNativeService->getResponseCode() != 200) {
+                $this->logger->error(json_encode($addToList), ['service' => ServiceFactory::HUBSPOT, 'method' => 'internalCreateMember']);
+                throw new ServiceException('Member was not added to list.');
+            }
+        }
     }
 
     /**
-     * @return null
+     * @return array|null
+     * @throws ServiceException
      */
     protected function internalGetGroups()
     {
-        return null;
+        $result = $this->hubSpotNativeService->request('/contacts/v1/lists', 'get', []);
+        // if account don't support lists
+        if ($this->hubSpotNativeService->getResponseCode() == 403) {
+            return null;
+        }
+
+        if ($this->hubSpotNativeService->getResponseCode() != 200) {
+            throw new ServiceException('Invalid request');
+        }
+
+        $response = [];
+        foreach ($result->lists as $list) {
+            if ($list->dynamic === false) {
+                $group = new Group();
+                $group
+                    ->setId($list->listId)
+                    ->setName($list->name);
+
+                $response[] = $group;
+            }
+        }
+
+        return $response;
     }
 
     /**
@@ -186,11 +221,21 @@ class HubSpotService extends Service
 
     /**
      * @param GroupData $groupData
-     * @return mixed
+     * @return Group|mixed
+     * @throws ServiceException
      */
     protected function internalCreateGroup(GroupData $groupData)
     {
-        // TODO: Implement internalCreateGroup() method.
+        $data = $groupData->getData();
+        $group = $this->hubSpotNativeService->request('/contacts/v1/lists', 'post', [
+            'name' => $data['name']
+        ]);
+
+        if ($this->hubSpotNativeService->getResponseCode() != 200) {
+            throw new ServiceException('Group was not created.');
+        }
+
+        return new Group($group->listId, $group->name);
     }
 
     /**
@@ -199,6 +244,11 @@ class HubSpotService extends Service
      */
     protected function hasValidGroupData(GroupData $groupData)
     {
-        // TODO: Implement hasValidGroupData() method.
+        $data = $groupData->getData();
+        if (!isset($data['name'])) {
+            return false;
+        }
+
+        return true;
     }
 }
