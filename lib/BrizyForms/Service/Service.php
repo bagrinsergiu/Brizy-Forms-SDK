@@ -112,11 +112,16 @@ abstract class Service implements ServiceInterface, LoggerAwareInterface
 
     /**
      * @param GroupData $groupData
-     * @return Group
+     * @return Group|mixed
+     * @throws AuthenticationDataException
      * @throws GroupDataException
      */
     public function createGroup(GroupData $groupData)
     {
+        if (!$this->hasValidAuthenticationData()) {
+            throw new AuthenticationDataException();
+        }
+        
         if (!$this->hasValidGroupData($groupData)) {
             throw new GroupDataException('Invalid group data');
         }
