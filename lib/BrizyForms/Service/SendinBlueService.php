@@ -197,7 +197,7 @@ class SendinBlueService extends Service
         try {
             $result = $api_instance->createList(new \SendinBlue\Client\Model\CreateList([
                 'name' => $data['name'],
-                'folderId' => $data['folder_id']
+                'folderId' => $data['folder']
             ]));
         } catch (\Exception $e) {
             throw new ServiceException('Group was not created.');
@@ -213,7 +213,7 @@ class SendinBlueService extends Service
     protected function hasValidGroupData(GroupData $groupData)
     {
         $data = $groupData->getData();
-        if (!isset($data['name']) || !isset($data['folder_id'])) {
+        if (!isset($data['name']) || !isset($data['folder'])) {
             return false;
         }
 
@@ -255,5 +255,46 @@ class SendinBlueService extends Service
         }
 
         return $response;
+    }
+
+    /**
+     * @return array
+     * @throws ServiceException
+     */
+    protected function internalGetGroupProperties()
+    {
+        return [
+            [
+                'name' => 'name',
+                'type' => 'input',
+                'choices' => null
+            ],
+            [
+                'name' => 'folder',
+                'type' => 'select',
+                'choices' => $this->internalGetFolders()
+            ]
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    protected function internalGetAccountProperties()
+    {
+        return [
+            [
+                'name' => 'api_key',
+                'title' => 'Api Key'
+            ]
+        ];
+    }
+
+    /**
+     * @return boolean
+     */
+    protected function internalHasConfirmation()
+    {
+        return false;
     }
 }

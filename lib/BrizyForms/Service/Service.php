@@ -83,6 +83,19 @@ abstract class Service implements ServiceInterface, LoggerAwareInterface
     }
 
     /**
+     * @return array
+     * @throws AuthenticationDataException
+     */
+    public function getAccountProperties()
+    {
+        if (!$this->hasValidAuthenticationData()) {
+            throw new AuthenticationDataException();
+        }
+
+        return $this->internalGetAccountProperties();
+    }
+
+    /**
      * @param FieldMap $fieldMap
      * @param null $group_id
      * @param array $data
@@ -110,6 +123,19 @@ abstract class Service implements ServiceInterface, LoggerAwareInterface
         }
 
         return $this->internalGetGroups();
+    }
+
+    /**
+     * @return array
+     * @throws AuthenticationDataException
+     */
+    public function getGroupProperties()
+    {
+        if (!$this->hasValidAuthenticationData()) {
+            throw new AuthenticationDataException();
+        }
+
+        return $this->internalGetGroupProperties();
     }
 
     /**
@@ -156,6 +182,19 @@ abstract class Service implements ServiceInterface, LoggerAwareInterface
         }
 
         return $this->internalGetFolders();
+    }
+
+    /**
+     * @return bool
+     * @throws AuthenticationDataException
+     */
+    public function hasConfirmation()
+    {
+        if (!$this->hasValidAuthenticationData()) {
+            throw new AuthenticationDataException();
+        }
+
+        return $this->internalHasConfirmation();
     }
 
     /**
@@ -218,4 +257,19 @@ abstract class Service implements ServiceInterface, LoggerAwareInterface
      * @return array|null
      */
     abstract protected function internalGetFolders();
+
+    /**
+     * @return array
+     */
+    abstract protected function internalGetGroupProperties();
+
+    /**
+     * @return array
+     */
+    abstract protected function internalGetAccountProperties();
+
+    /**
+     * @return boolean
+     */
+    abstract protected function internalHasConfirmation();
 }

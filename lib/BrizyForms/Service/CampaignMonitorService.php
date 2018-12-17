@@ -325,4 +325,20 @@ class CampaignMonitorService extends Service
     {
         // TODO: Implement internalGetFolders() method.
     }
+
+    /**
+     * @return array
+     */
+    protected function internalGetGroupProperties()
+    {
+        // TODO: Implement internalGetGroupProperties() method.
+    }
+
+    /**
+     * @return array
+     */
+    protected function internalGetAccountProperties()
+    {
+        // TODO: Implement internalGetAccountProperties() method.
+    }
 }

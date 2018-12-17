@@ -34,6 +34,8 @@ $sendinBlueService->setAuthenticationData(new \BrizyForms\Model\AuthenticationDa
 
 var_dump($sendinBlueService->authenticate());
 
+var_dump($sendinBlueService->getGroupProperties()); die;
+
 var_dump($sendinBlueService->getAccount());
 
 var_dump($sendinBlueService->getFolders());

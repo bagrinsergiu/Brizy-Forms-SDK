@@ -158,4 +158,33 @@ class ZapierService extends Service
     {
         return null;
     }
+
+    /**
+     * @return array
+     */
+    protected function internalGetGroupProperties()
+    {
+        return null;
+    }
+
+    /**
+     * @return array
+     */
+    protected function internalGetAccountProperties()
+    {
+        return [
+            [
+                'name' => 'webhook_url',
+                'title' => 'Webhook URL'
+            ]
+        ];
+    }
+
+    /**
+     * @return boolean
+     */
+    protected function internalHasConfirmation()
+    {
+        return false;
+    }
 }

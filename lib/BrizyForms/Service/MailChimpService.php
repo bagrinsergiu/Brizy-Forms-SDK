@@ -330,4 +330,55 @@ class MailChimpService extends Service
     {
         return null;
     }
+
+    /**
+     * @return array
+     */
+    protected function internalGetGroupProperties()
+    {
+        return [
+            [
+                'name' => 'name',
+                'type' => 'input',
+                'choices' => null
+            ],
+            [
+                'name' => 'from_name',
+                'type' => 'input',
+                'choices' => null
+            ],
+            [
+                'name' => 'from_email',
+                'type' => 'input',
+                'choices' => null
+            ],
+            [
+                'name' => 'reminder_message',
+                'type' => 'textarea',
+                'choices' => null
+            ]
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    protected function internalGetAccountProperties()
+    {
+        return [
+            [
+                'name' => 'api_key',
+                'title' => 'Api Key',
+                'hasConfirmation' => true
+            ]
+        ];
+    }
+
+    /**
+     * @return boolean
+     */
+    protected function internalHasConfirmation()
+    {
+        return true;
+    }
 }

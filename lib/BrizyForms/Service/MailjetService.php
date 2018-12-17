@@ -288,4 +288,43 @@ class MailjetService extends Service
     {
         return null;
     }
+
+    /**
+     * @return array
+     */
+    protected function internalGetGroupProperties()
+    {
+        return [
+            [
+                'name' => 'name',
+                'type' => 'input',
+                'choices' => null
+            ]
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    protected function internalGetAccountProperties()
+    {
+        return [
+            [
+                'name' => 'api_key',
+                'title' => 'Api Key',
+            ],
+            [
+                'name' => 'secret_key',
+                'title' => 'Secret Key',
+            ]
+        ];
+    }
+
+    /**
+     * @return boolean
+     */
+    protected function internalHasConfirmation()
+    {
+        return false;
+    }
 }

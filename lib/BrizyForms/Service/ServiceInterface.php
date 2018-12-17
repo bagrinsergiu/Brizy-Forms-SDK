@@ -4,7 +4,6 @@ namespace BrizyForms\Service;
 
 use BrizyForms\FieldMap;
 use BrizyForms\Model\Account;
-use BrizyForms\Model\Folder;
 use BrizyForms\Model\Group;
 use BrizyForms\Model\GroupData;
 use BrizyForms\Model\RedirectResponse;
@@ -22,6 +21,11 @@ interface ServiceInterface
      * @return array
      */
     public function getGroups();
+
+    /**
+     * @return array
+     */
+    public function getGroupProperties();
 
     /**
      * @param GroupData $groupData
@@ -53,6 +57,11 @@ interface ServiceInterface
     public function getAccount();
 
     /**
+     * @return array
+     */
+    public function getAccountProperties();
+
+    /**
      * @param FieldMap $fieldMap
      * @param null $group_id
      * @param array $data
@@ -60,4 +69,9 @@ interface ServiceInterface
      * @return mixed
      */
     public function createMember(FieldMap $fieldMap, $group_id = null, array $data = [], $confirmation_email = false);
+
+    /**
+     * @return boolean
+     */
+    public function hasConfirmation();
 }
