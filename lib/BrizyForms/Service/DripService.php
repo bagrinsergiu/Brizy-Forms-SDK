@@ -184,12 +184,7 @@ class DripService extends Service
      */
     protected function internalGetAccount()
     {
-        $response = $this->dripNativeService->get('');
-//        if ($response->status != 200) {
-//            throw new ServiceException('Fields not found.');
-//        }
-
-        return $response;
+        //TODO implement
     }
 
     /**
@@ -205,7 +200,7 @@ class DripService extends Service
      */
     protected function internalGetGroupProperties()
     {
-        // TODO: Implement internalGetGroupProperties() method.
+        return null;
     }
 
     /**
@@ -213,7 +208,16 @@ class DripService extends Service
      */
     protected function internalGetAccountProperties()
     {
-        // TODO: Implement internalGetAccountProperties() method.
+        return [
+            [
+                'name' => 'api_key',
+                'title' => 'Api Key'
+            ],
+            [
+                'name' => 'account_id',
+                'title' => 'Account ID'
+            ]
+        ];
     }
 
     /**
@@ -221,6 +225,6 @@ class DripService extends Service
      */
     protected function internalHasConfirmation()
     {
-        // TODO: Implement internalHasConfirmation() method.
+        return false;
     }
 }
