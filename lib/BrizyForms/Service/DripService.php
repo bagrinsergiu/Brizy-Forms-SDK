@@ -167,7 +167,7 @@ class DripService extends Service
      */
     protected function internalCreateGroup(GroupData $groupData)
     {
-        // TODO: Implement internalCreateGroup() method.
+        return null;
     }
 
     /**
@@ -176,7 +176,7 @@ class DripService extends Service
      */
     protected function hasValidGroupData(GroupData $groupData)
     {
-        // TODO: Implement hasValidGroupData() method.
+        return true;
     }
 
     /**
@@ -184,7 +184,12 @@ class DripService extends Service
      */
     protected function internalGetAccount()
     {
-        // TODO: Implement internalGetAccount() method.
+        $response = $this->dripNativeService->get('');
+//        if ($response->status != 200) {
+//            throw new ServiceException('Fields not found.');
+//        }
+
+        return $response;
     }
 
     /**
@@ -192,6 +197,6 @@ class DripService extends Service
      */
     protected function internalGetFolders()
     {
-        // TODO: Implement internalGetFolders() method.
+        return null;
     }
 }
