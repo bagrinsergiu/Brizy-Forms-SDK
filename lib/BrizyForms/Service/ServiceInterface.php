@@ -43,7 +43,7 @@ interface ServiceInterface
     /**
      * @param FieldMap $fieldMap
      * @param null $group_id
-     * @return mixed
+     * @return FieldMap
      */
     public function createFields(FieldMap $fieldMap, $group_id = null);
 

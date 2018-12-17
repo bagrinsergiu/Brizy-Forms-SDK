@@ -55,7 +55,7 @@ abstract class Service implements ServiceInterface, LoggerAwareInterface
     /**
      * @param FieldMap $fieldMap
      * @param null $group_id
-     * @return mixed|void
+     * @return FieldMap
      * @throws AuthenticationDataException
      */
     public function createFields(FieldMap $fieldMap, $group_id = null)
@@ -65,6 +65,8 @@ abstract class Service implements ServiceInterface, LoggerAwareInterface
         }
 
         $this->mapFields($fieldMap, $group_id);
+
+        return $fieldMap;
     }
 
     /**
