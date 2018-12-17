@@ -54,11 +54,16 @@ class EgoiService extends Service
     {
         $data = $fieldMap->transform($data);
 
+        $status = 1;
+        if ($confirmation_email) {
+            $status = 0;
+        }
+
         $functionOptions = array(
             'apikey' => $this->authenticationData->getData()['api_key'],
             "listID" => $group_id,
             "email" => $data->getEmail(),
-            'status' => 1,
+            'status' => $status,
         );
 
         $functionOptions = array_merge($functionOptions, $data->getFields());
