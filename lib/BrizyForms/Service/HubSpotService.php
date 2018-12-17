@@ -266,4 +266,12 @@ class HubSpotService extends Service
 
         return new Account($result->portalId);
     }
+
+    /**
+     * @return array|null
+     */
+    protected function internalGetFolders()
+    {
+        return null;
+    }
 }

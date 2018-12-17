@@ -150,4 +150,12 @@ class ZapierService extends Service
 
         return new Account($data['webhook_url']);
     }
+
+    /**
+     * @return array|null
+     */
+    protected function internalGetFolders()
+    {
+        return null;
+    }
 }

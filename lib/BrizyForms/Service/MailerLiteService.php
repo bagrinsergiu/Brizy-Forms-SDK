@@ -247,4 +247,12 @@ class MailerLiteService extends Service
 
         return new Account($response->account->email);
     }
+
+    /**
+     * @return array|null
+     */
+    protected function internalGetFolders()
+    {
+        return null;
+    }
 }

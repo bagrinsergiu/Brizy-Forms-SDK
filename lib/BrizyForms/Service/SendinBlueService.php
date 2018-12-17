@@ -6,6 +6,7 @@ use BrizyForms\Exception\ServiceException;
 use BrizyForms\FieldMap;
 use BrizyForms\Model\Account;
 use BrizyForms\Model\Field;
+use BrizyForms\Model\Folder;
 use BrizyForms\Model\Group;
 use BrizyForms\Model\GroupData;
 use BrizyForms\Model\RedirectResponse;
@@ -184,30 +185,6 @@ class SendinBlueService extends Service
     }
 
     /**
-     * @return object[]
-     * @throws ServiceException
-     */
-    public function getFolders()
-    {
-        try {
-            $api_instance = new \SendinBlue\Client\Api\FoldersApi();
-            $folders = $api_instance->getFolders(50,0)->getFolders();
-        } catch (\Exception $e) {
-            throw new ServiceException('Invalid request');
-        }
-
-        $response = [];
-        foreach ($folders as $folder) {
-            $class = new \stdClass();
-            $class->id = $folder['id'];
-            $class->name = $folder['name'];
-            $response[] = $class;
-        }
-
-        return $response;
-    }
-
-    /**
      * @param GroupData $groupData
      * @return Group|mixed
      * @throws ServiceException
@@ -257,5 +234,26 @@ class SendinBlueService extends Service
         }
 
         return new Account($account['email']);
+    }
+
+    /**
+     * @return array|null
+     * @throws ServiceException
+     */
+    protected function internalGetFolders()
+    {
+        try {
+            $api_instance = new \SendinBlue\Client\Api\FoldersApi();
+            $folders = $api_instance->getFolders(50,0)->getFolders();
+        } catch (\Exception $e) {
+            throw new ServiceException('Invalid request');
+        }
+
+        $response = [];
+        foreach ($folders as $row) {
+            $response[] = new Folder($row['id'], $row['name']);
+        }
+
+        return $response;
     }
 }

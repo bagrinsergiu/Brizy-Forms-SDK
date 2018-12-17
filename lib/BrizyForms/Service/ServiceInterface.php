@@ -4,6 +4,7 @@ namespace BrizyForms\Service;
 
 use BrizyForms\FieldMap;
 use BrizyForms\Model\Account;
+use BrizyForms\Model\Folder;
 use BrizyForms\Model\Group;
 use BrizyForms\Model\GroupData;
 use BrizyForms\Model\RedirectResponse;
@@ -33,6 +34,11 @@ interface ServiceInterface
      * @return array
      */
     public function getFields(Group $group = null);
+
+    /**
+     * @return array
+     */
+    public function getFolders();
 
     /**
      * @param FieldMap $fieldMap

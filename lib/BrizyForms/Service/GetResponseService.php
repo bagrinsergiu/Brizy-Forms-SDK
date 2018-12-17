@@ -274,4 +274,12 @@ class GetResponseService extends Service
     {
         // TODO: Implement internalGetAccount() method.
     }
+
+    /**
+     * @return array|null
+     */
+    protected function internalGetFolders()
+    {
+        // TODO: Implement internalGetFolders() method.
+    }
 }

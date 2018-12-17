@@ -144,6 +144,19 @@ abstract class Service implements ServiceInterface, LoggerAwareInterface
     }
 
     /**
+     * @return array
+     * @throws AuthenticationDataException
+     */
+    public function getFolders()
+    {
+        if (!$this->hasValidAuthenticationData()) {
+            throw new AuthenticationDataException();
+        }
+
+        return $this->internalGetFolders();
+    }
+
+    /**
      * @param FieldMap $fieldMap
      * @param string $group_id
      *
@@ -198,4 +211,9 @@ abstract class Service implements ServiceInterface, LoggerAwareInterface
      * @return Account
      */
     abstract protected function internalGetAccount();
+
+    /**
+     * @return array|null
+     */
+    abstract protected function internalGetFolders();
 }

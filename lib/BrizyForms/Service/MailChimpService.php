@@ -322,4 +322,12 @@ class MailChimpService extends Service
 
         return new Account($account['account_name']);
     }
+
+    /**
+     * @return array|null
+     */
+    protected function internalGetFolders()
+    {
+        return null;
+    }
 }

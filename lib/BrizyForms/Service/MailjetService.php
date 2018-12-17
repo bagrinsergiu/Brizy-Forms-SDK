@@ -280,4 +280,12 @@ class MailjetService extends Service
 
         return new Account($result->Data[0]->Email);
     }
+
+    /**
+     * @return array|null
+     */
+    protected function internalGetFolders()
+    {
+        return null;
+    }
 }
