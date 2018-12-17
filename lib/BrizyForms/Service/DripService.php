@@ -215,4 +215,12 @@ class DripService extends Service
     {
         // TODO: Implement internalGetAccountProperties() method.
     }
+
+    /**
+     * @return boolean
+     */
+    protected function internalHasConfirmation()
+    {
+        // TODO: Implement internalHasConfirmation() method.
+    }
 }
