@@ -38,7 +38,6 @@ var_dump($sendinBlueService->getAccount());
 
 var_dump($sendinBlueService->getFolders());
 
-die;
 $groupData = new \BrizyForms\Model\GroupData([
     'name' => 'List'.rand(1,1000),
     'folder_id' => 8
