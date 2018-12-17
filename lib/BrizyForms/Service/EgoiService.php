@@ -194,11 +194,31 @@ class EgoiService extends Service
 
     /**
      * @param GroupData $groupData
-     * @return mixed
+     * @return Group|mixed
+     * @throws ServiceException
      */
     protected function internalCreateGroup(GroupData $groupData)
     {
-        // TODO: Implement internalCreateGroup() method.
+        $data = $groupData->getData();
+
+        $functionOptions = array(
+            'apikey' => $this->authenticationData->getData()['api_key'],
+            'idioma_lista' => 'EN',
+            'nome' => $data['name']
+        );
+
+        $options = array(
+            'functionOptions' => $functionOptions,
+            'type' => 'json',
+            'method' => 'createList'
+        );
+
+        $list = $this->egoiNativeService->request('', 'get', $options);
+        if (isset($list->Egoi_Api->createList->ERROR) || !isset($list->Egoi_Api->createList->LIST_ID)) {
+            throw new ServiceException('Group was not created.');
+        }
+
+        return new Group($list->Egoi_Api->createList->LIST_ID, $data['name']);
     }
 
     /**
@@ -207,15 +227,39 @@ class EgoiService extends Service
      */
     protected function hasValidGroupData(GroupData $groupData)
     {
-        // TODO: Implement hasValidGroupData() method.
+        $data = $groupData->getData();
+        if (!isset($data['name'])) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
      * @return Account
+     * @throws ServiceException
      */
     protected function internalGetAccount()
     {
-        // TODO: Implement internalGetAccount() method.
+        $options = array(
+            'functionOptions' => array(
+                'apikey' => $this->authenticationData->getData()['api_key']
+            ),
+            'type' => 'json',
+            'method' => 'getUserData'
+        );
+
+        $userData = $this->egoiNativeService->request('', 'get', $options);
+        if ($this->egoiNativeService->getResponseCode() != 200) {
+            throw new ServiceException('Invalid request');
+        }
+
+        $name = null;
+        if (isset($userData->Egoi_Api->getUserData->EMAIL)) {
+            $name = $userData->Egoi_Api->getUserData->EMAIL;
+        }
+
+        return new Account($name);
     }
 
     /**
@@ -223,6 +267,6 @@ class EgoiService extends Service
      */
     protected function internalGetFolders()
     {
-        // TODO: Implement internalGetFolders() method.
+        return null;
     }
 }
