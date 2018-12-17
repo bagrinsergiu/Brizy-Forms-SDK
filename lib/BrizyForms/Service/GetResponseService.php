@@ -114,7 +114,7 @@ class GetResponseService extends Service
 
         if ($this->getResponseNativeService->http_status != 202 && $this->getResponseNativeService->http_status != 409) {
             $this->logger->error(json_encode($member), ['service' => ServiceFactory::GETRESPONSE, 'method' => 'internalCreateMember']);
-            throw new ServiceException('Member was not created.');
+            throw new ServiceException(json_encode($member));
         }
     }
 

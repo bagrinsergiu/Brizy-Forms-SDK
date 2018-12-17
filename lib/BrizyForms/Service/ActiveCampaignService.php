@@ -92,7 +92,7 @@ class ActiveCampaignService extends Service
 
         if (!(int)$contact_sync->success) {
             $this->logger->error(json_encode($contact_sync), ['service' => ServiceFactory::ACTIVECAMPAIGN, 'method' => 'internalCreateMember']);
-            throw new ServiceException('Member was not created.');
+            throw new ServiceException(json_encode($contact_sync));
         }
     }
 

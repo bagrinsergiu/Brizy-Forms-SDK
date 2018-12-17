@@ -101,7 +101,7 @@ class MailjetService extends Service
                     'service' => ServiceFactory::MAILJET,
                     'method' => 'internalCreateMember'
             ]);
-            throw new ServiceException('Member was not created.');
+            throw new ServiceException(json_encode($this->nativeMailjetService->_response));
         }
     }
 

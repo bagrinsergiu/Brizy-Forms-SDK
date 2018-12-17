@@ -62,7 +62,7 @@ class DripService extends Service
         $response = $this->dripNativeService->post('subscribers', $dataset);
         if ($response->status != 200) {
             $this->logger->error(json_encode($response), ['service' => ServiceFactory::DRIP, 'method' => 'internalCreateMember']);
-            throw new ServiceException('Member was not created.');
+            throw new ServiceException(json_encode($response));
         }
     }
 

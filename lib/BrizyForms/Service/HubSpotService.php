@@ -100,7 +100,7 @@ class HubSpotService extends Service
             ]);
             if ($this->hubSpotNativeService->getResponseCode() != 200) {
                 $this->logger->error(json_encode($addToList), ['service' => ServiceFactory::HUBSPOT, 'method' => 'internalCreateMember']);
-                throw new ServiceException('Member was not added to list.');
+                throw new ServiceException(json_encode($addToList));
             }
         }
     }

@@ -108,7 +108,7 @@ class CampaignMonitorService extends Service
         $result = $campaignMonitor->add($payload);
         if (!$result->was_successful()) {
             $this->logger->error(json_encode($result), ['service' => ServiceFactory::CAMPAIGNMONITOR, 'method' => 'internalCreateMember']);
-            throw new ServiceException('Member was not created.');
+            throw new ServiceException(json_encode($result));
         }
     }
 

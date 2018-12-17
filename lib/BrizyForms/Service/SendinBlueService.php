@@ -68,7 +68,7 @@ class SendinBlueService extends Service
             $api_instance->createContact(new \SendinBlue\Client\Model\CreateContact($payload));
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage(), ['service' => ServiceFactory::SENDINBLUE, 'method' => 'internalCreateMember']);
-            throw new ServiceException('Member was not created.');
+            throw new ServiceException($e->getMessage());
         }
     }
 

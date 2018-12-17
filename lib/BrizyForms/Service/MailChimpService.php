@@ -152,7 +152,7 @@ class MailChimpService extends Service
         $member = $this->_createMember($group_id, $payload);
         if (!isset($member['id']) && $member['title'] != 'Member Exists') {
             $this->logger->error(json_encode($member), ['service' => ServiceFactory::MAILCHIMP, 'method' => 'internalCreateMember']);
-            throw new ServiceException('Member was not created.');
+            throw new ServiceException(json_encode($member));
         }
     }
 
