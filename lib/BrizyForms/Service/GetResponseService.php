@@ -251,11 +251,20 @@ class GetResponseService extends Service
 
     /**
      * @param GroupData $groupData
-     * @return mixed
+     * @return Group|mixed
+     * @throws ServiceException
      */
     protected function internalCreateGroup(GroupData $groupData)
     {
-        // TODO: Implement internalCreateGroup() method.
+        $data = $groupData->getData();
+        $group = $this->getResponseNativeService->createCampaign([
+            'name' => StringUtils::getSlug(strtolower($data['name']))
+        ]);
+        if ($this->getResponseNativeService->http_status != 201) {
+            throw new ServiceException('Group was not created');
+        }
+
+        return new Group($group->campaignId, $group->name);
     }
 
     /**
@@ -264,7 +273,12 @@ class GetResponseService extends Service
      */
     protected function hasValidGroupData(GroupData $groupData)
     {
-        // TODO: Implement hasValidGroupData() method.
+        $data = $groupData->getData();
+        if (!isset($data['name'])) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -272,7 +286,14 @@ class GetResponseService extends Service
      */
     protected function internalGetAccount()
     {
-        // TODO: Implement internalGetAccount() method.
+        $account = $this->getResponseNativeService->accounts();
+
+        $name = null;
+        if (isset($account->email)) {
+            $name = $account->email;
+        }
+
+        return new Account($name);
     }
 
     /**
@@ -280,6 +301,6 @@ class GetResponseService extends Service
      */
     protected function internalGetFolders()
     {
-        // TODO: Implement internalGetFolders() method.
+        return null;
     }
 }
