@@ -258,7 +258,16 @@ class ActiveCampaignService extends Service
      */
     protected function internalGetAccountProperties()
     {
-        // TODO: Implement internalGetAccountProperties() method.
+        return [
+            [
+                'name' => 'api_key',
+                'title' => 'Api Key'
+            ],
+            [
+                'name' => 'api_url',
+                'title' => 'Api Url'
+            ]
+        ];
     }
 
     /**
