@@ -82,10 +82,15 @@ class ActiveCampaignService extends Service
     {
         $data = $fieldMap->transform($data);
 
+        $status = 1;
+        if ($confirmation_email) {
+            $status = 0;
+        }
+
         $contact = [
             "email" => $data->getEmail(),
             "p[{$group_id}]" => $group_id,
-            "status[{$group_id}]" => 1,
+            "status[{$group_id}]" => $status,
         ];
 
         $contact = array_merge($contact, $data->getFields());
@@ -217,7 +222,7 @@ class ActiveCampaignService extends Service
      */
     protected function internalCreateGroup(GroupData $groupData)
     {
-        // TODO: Implement internalCreateGroup() method.
+        return null;
     }
 
     /**
@@ -226,15 +231,21 @@ class ActiveCampaignService extends Service
      */
     protected function hasValidGroupData(GroupData $groupData)
     {
-        // TODO: Implement hasValidGroupData() method.
+        return true;
     }
 
     /**
      * @return Account
+     * @throws ServiceException
      */
     protected function internalGetAccount()
     {
-        // TODO: Implement internalGetAccount() method.
+        $account = $this->nativeActiveCampaign->api("account/view");
+        if (!isset($account->email)) {
+            throw new ServiceException('Invalid request');
+        }
+
+        return new Account($account->email);
     }
 
     /**
@@ -242,7 +253,7 @@ class ActiveCampaignService extends Service
      */
     protected function internalGetFolders()
     {
-        // TODO: Implement internalGetFolders() method.
+        return null;
     }
 
     /**
@@ -250,7 +261,7 @@ class ActiveCampaignService extends Service
      */
     protected function internalGetGroupProperties()
     {
-        // TODO: Implement internalGetGroupProperties() method.
+        return null;
     }
 
     /**
@@ -275,6 +286,6 @@ class ActiveCampaignService extends Service
      */
     protected function internalHasConfirmation()
     {
-        // TODO: Implement internalHasConfirmation() method.
+        return false;
     }
 }
