@@ -184,7 +184,9 @@ class DripService extends Service
      */
     protected function internalGetAccount()
     {
-        //TODO implement
+        $data = $this->authenticationData->getData();
+
+        return new Account(StringUtils::masking($data['api_key']));
     }
 
     /**
