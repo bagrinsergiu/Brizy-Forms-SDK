@@ -14,6 +14,7 @@ use BrizyForms\Model\RedirectResponse;
 use BrizyForms\Model\Response;
 use BrizyForms\ServiceConstant;
 use BrizyForms\ServiceFactory;
+use BrizyForms\Utils\StringUtils;
 
 /**
  * Class CampaignMonitorService
@@ -297,23 +298,23 @@ class CampaignMonitorService extends Service
 
     /**
      * @param GroupData $groupData
-     * @return mixed
+     * @return Group|mixed
+     * @throws ServiceException
      */
     protected function internalCreateGroup(GroupData $groupData)
     {
         $data = $groupData->getData();
-        foreach ($this->clients as $clientId => $clientValue) {
-            $campaignMonitor = $this->_getCS_REST('lists', $clientId);
-            $list = $campaignMonitor->create($clientId, [
-                'Title' => $data['name']
-            ]);
 
-            if (!$list->was_successful()) {
-                throw new ServiceException('Invalid request');
-            }
+        $campaignMonitor = $this->_getCS_REST('lists', $data['folder']);
+        $list = $campaignMonitor->create($data['folder'], [
+            'Title' => $data['name']
+        ]);
 
-            return new Group($list->response, $data['name']);
+        if (!$list->was_successful()) {
+            throw new ServiceException('Invalid request');
         }
+
+        return new Group($list->response, $data['name']);
     }
 
     /**
@@ -322,6 +323,11 @@ class CampaignMonitorService extends Service
      */
     protected function hasValidGroupData(GroupData $groupData)
     {
+        $data = $groupData->getData();
+        if (!isset($data['name']) || !isset($data['folder'])) {
+            return false;
+        }
+
         return true;
     }
 
@@ -330,7 +336,9 @@ class CampaignMonitorService extends Service
      */
     protected function internalGetAccount()
     {
-        // TODO: Implement internalGetAccount() method.
+        $data = $this->authenticationData->getData();
+
+        return new Account(StringUtils::masking($data['api_key']));
     }
 
     /**
@@ -351,7 +359,20 @@ class CampaignMonitorService extends Service
      */
     protected function internalGetGroupProperties()
     {
-        // TODO: Implement internalGetGroupProperties() method.
+        return [
+            [
+                'name' => 'name',
+                'title' => 'Name',
+                'type' => 'input',
+                'choices' => null
+            ],
+            [
+                'name' => 'folder',
+                'title' => 'Folder',
+                'type' => 'select',
+                'choices' => $this->internalGetFolders()
+            ]
+        ];
     }
 
     /**
@@ -359,7 +380,12 @@ class CampaignMonitorService extends Service
      */
     protected function internalGetAccountProperties()
     {
-        // TODO: Implement internalGetAccountProperties() method.
+        return [
+            [
+                'name' => 'api_key',
+                'title' => 'Api Key'
+            ]
+        ];
     }
 
     /**

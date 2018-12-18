@@ -34,15 +34,20 @@ $campaignMonitorService->setAuthenticationData(new \BrizyForms\Model\Authenticat
 
 var_dump($campaignMonitorService->authenticate());
 
+var_dump($campaignMonitorService->getAccount());
+
 $folders = $campaignMonitorService->getFolders();
 
 var_dump($folders);
 
-//$groupData = new \BrizyForms\Model\GroupData([
-//    'name' => 'List'.rand(1,1000)
-//]);
-//
-//$campaignMonitorService->createGroup($groupData);
+$groupData = new \BrizyForms\Model\GroupData([
+    'name' => 'List'.rand(1,1000),
+    'folder' => $folders[0]->getId()
+]);
+
+$group = $campaignMonitorService->createGroup($groupData);
+
+var_dump($group);
 
 $groups = $campaignMonitorService->getGroups($folders[0]);
 
