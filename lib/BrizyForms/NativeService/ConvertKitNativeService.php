@@ -11,6 +11,15 @@ class ConvertKitNativeService extends NativeService
 
     protected function internalGetOptions()
     {
+        if ($this->getApiSecret() != '') {
+            return [
+                'query' => [
+                    'api_secret' => $this->getApiSecret(),
+                    'api_key' => $this->getApiKey()
+                ]
+            ];
+        }
+
         return [
             'query' => [
                 'api_key' => $this->getApiKey()

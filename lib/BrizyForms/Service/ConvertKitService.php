@@ -180,7 +180,7 @@ class ConvertKitService extends Service
     {
         $data = $this->authenticationData->getData();
 
-        $this->nativeConvertKit = new ConvertKitNativeService($data['api_key']);
+        $this->nativeConvertKit = new ConvertKitNativeService($data['api_key'], $data['api_secret']);
     }
 
     /**
@@ -195,6 +195,11 @@ class ConvertKitService extends Service
 
         $sequences = $this->nativeConvertKit->request("sequences");
         if (!isset($sequences->courses)) {
+            return new Response(401, 'Unauthenticated');
+        }
+
+        $account = $this->nativeConvertKit->request('account');
+        if (!isset($account->primary_email_address)) {
             return new Response(401, 'Unauthenticated');
         }
 
@@ -222,7 +227,7 @@ class ConvertKitService extends Service
      */
     protected function internalCreateGroup(GroupData $groupData)
     {
-        // TODO: Implement internalCreateGroup() method.
+        return null;
     }
 
     /**
@@ -231,15 +236,21 @@ class ConvertKitService extends Service
      */
     protected function hasValidGroupData(GroupData $groupData)
     {
-        // TODO: Implement hasValidGroupData() method.
+        return null;
     }
 
     /**
      * @return Account
+     * @throws ServiceException
      */
     protected function internalGetAccount()
     {
-        // TODO: Implement internalGetAccount() method.
+        $account = $this->nativeConvertKit->request('account');
+        if (!isset($account->primary_email_address)) {
+            throw new ServiceException('Invalid request');
+        }
+
+        return new Account($account->primary_email_address);
     }
 
     /**
@@ -247,7 +258,7 @@ class ConvertKitService extends Service
      */
     protected function internalGetFolders()
     {
-        // TODO: Implement internalGetFolders() method.
+        return null;
     }
 
     /**
@@ -255,7 +266,7 @@ class ConvertKitService extends Service
      */
     protected function internalGetGroupProperties()
     {
-        // TODO: Implement internalGetGroupProperties() method.
+        return null;
     }
 
     /**
@@ -263,7 +274,16 @@ class ConvertKitService extends Service
      */
     protected function internalGetAccountProperties()
     {
-        // TODO: Implement internalGetAccountProperties() method.
+        return [
+            [
+                'name' => 'api_key',
+                'title' => 'Api Key'
+            ],
+            [
+                'name' => 'api_secret',
+                'title' => 'Api Secret'
+            ]
+        ];
     }
 
     /**
@@ -271,6 +291,6 @@ class ConvertKitService extends Service
      */
     protected function internalHasConfirmation()
     {
-        // TODO: Implement internalHasConfirmation() method.
+        return false;
     }
 }

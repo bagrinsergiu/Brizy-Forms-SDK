@@ -368,8 +368,7 @@ class MailChimpService extends Service
         return [
             [
                 'name' => 'api_key',
-                'title' => 'Api Key',
-                'hasConfirmation' => true
+                'title' => 'Api Key'
             ]
         ];
     }

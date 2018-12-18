@@ -18,6 +18,11 @@ abstract class NativeService
     protected $apiKey;
 
     /**
+     * @var string
+     */
+    protected $apiSecret;
+
+    /**
      * @var \GuzzleHttp\Client
      */
     protected $httpClient;
@@ -27,9 +32,10 @@ abstract class NativeService
      */
     protected $response_code;
 
-    public function __construct($apiKey = '')
+    public function __construct($apiKey = '', $apiSecret = '')
     {
         $this->apiKey = $apiKey;
+        $this->apiSecret = $apiSecret;
     }
 
     /**
@@ -46,6 +52,22 @@ abstract class NativeService
     public function setApiKey($apiKey)
     {
         $this->apiKey = $apiKey;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiSecret()
+    {
+        return $this->apiSecret;
+    }
+
+    /**
+     * @param string $apiSecret
+     */
+    public function setApiSecret($apiSecret)
+    {
+        $this->apiSecret = $apiSecret;
     }
 
     /**
