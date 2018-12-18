@@ -104,6 +104,7 @@ class CampaignMonitorService extends Service
         $payload['CustomFields'] = array_values($mergeFields);
         $payload['Resubscribe'] = false;
         $payload['ConsentToTrack'] = 'Yes';
+        $payload['RestartSubscriptionBasedAutoresponders'] = 'Yes';
 
         $result = $campaignMonitor->add($payload);
         if (!$result->was_successful()) {
@@ -323,7 +324,7 @@ class CampaignMonitorService extends Service
      */
     protected function internalGetFolders()
     {
-        // TODO: Implement internalGetFolders() method.
+        return null;
     }
 
     /**
@@ -347,6 +348,6 @@ class CampaignMonitorService extends Service
      */
     protected function internalHasConfirmation()
     {
-        // TODO: Implement internalHasConfirmation() method.
+        return false;
     }
 }
