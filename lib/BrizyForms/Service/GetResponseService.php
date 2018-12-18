@@ -6,6 +6,7 @@ use BrizyForms\Exception\ServiceException;
 use BrizyForms\FieldMap;
 use BrizyForms\Model\Account;
 use BrizyForms\Model\Field;
+use BrizyForms\Model\Folder;
 use BrizyForms\Model\Group;
 use BrizyForms\Model\GroupData;
 use BrizyForms\Model\RedirectResponse;
@@ -119,10 +120,11 @@ class GetResponseService extends Service
     }
 
     /**
+     * @param Folder|null $folder
      * @return array|mixed
      * @throws ServiceException
      */
-    protected function internalGetGroups()
+    protected function internalGetGroups(Folder $folder = null)
     {
         $campaigns = $this->getResponseNativeService->getCampaigns();
         if ($this->getResponseNativeService->http_status != 200) {

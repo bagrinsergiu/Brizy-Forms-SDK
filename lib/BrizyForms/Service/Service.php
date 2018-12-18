@@ -7,6 +7,7 @@ use BrizyForms\Exception\GroupDataException;
 use BrizyForms\FieldMap;
 use BrizyForms\Model\Account;
 use BrizyForms\Model\AuthenticationData;
+use BrizyForms\Model\Folder;
 use BrizyForms\Model\Group;
 use BrizyForms\Model\GroupData;
 use Psr\Log\LoggerAwareInterface;
@@ -113,16 +114,17 @@ abstract class Service implements ServiceInterface, LoggerAwareInterface
     }
 
     /**
-     * @return array
+     * @param Folder|null $folder
+     * @return array|mixed
      * @throws AuthenticationDataException
      */
-    public function getGroups()
+    public function getGroups(Folder $folder = null)
     {
         if (!$this->hasValidAuthenticationData()) {
             throw new AuthenticationDataException();
         }
 
-        return $this->internalGetGroups();
+        return $this->internalGetGroups($folder);
     }
 
     /**
@@ -210,9 +212,10 @@ abstract class Service implements ServiceInterface, LoggerAwareInterface
     abstract protected function internalCreateMember(FieldMap $fieldMap, $group_id = null, array $data = [], $confirmation_email = false);
 
     /**
+     * @param Folder|null $folder
      * @return mixed
      */
-    abstract protected function internalGetGroups();
+    abstract protected function internalGetGroups(Folder $folder = null);
 
     /**
      * @param GroupData $groupData

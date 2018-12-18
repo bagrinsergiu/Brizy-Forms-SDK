@@ -7,6 +7,7 @@ use BrizyForms\Exception\ServiceException;
 use BrizyForms\FieldMap;
 use BrizyForms\Model\Account;
 use BrizyForms\Model\Field;
+use BrizyForms\Model\Folder;
 use BrizyForms\Model\Group;
 use BrizyForms\Model\GroupData;
 use BrizyForms\Model\RedirectResponse;
@@ -104,7 +105,6 @@ class CampaignMonitorService extends Service
         $payload['CustomFields'] = array_values($mergeFields);
         $payload['Resubscribe'] = false;
         $payload['ConsentToTrack'] = 'Yes';
-        $payload['RestartSubscriptionBasedAutoresponders'] = 'Yes';
 
         $result = $campaignMonitor->add($payload);
         if (!$result->was_successful()) {
@@ -114,28 +114,27 @@ class CampaignMonitorService extends Service
     }
 
     /**
+     * @param Folder|null $folder
      * @return array|mixed
      * @throws ServiceException
      */
-    protected function internalGetGroups()
+    protected function internalGetGroups(Folder $folder = null)
     {
+        $campaignMonitor = $this->_getCS_REST('clients', $folder->getId());
+        $lists = $campaignMonitor->get_lists();
+
+        if (!$lists->was_successful()) {
+            throw new ServiceException('Invalid request');
+        }
+
         $response = [];
-        foreach ($this->clients as $clientId => $clientValue) {
-            $campaignMonitor = $this->_getCS_REST('lists', $clientId);
-            $lists = $campaignMonitor->get_lists();
+        foreach ($lists->response as $key => $listValue) {
+            $group = new Group();
+            $group
+                ->setId($listValue->ListID)
+                ->setName($listValue->Name);
 
-            if (!$lists->was_successful()) {
-                throw new ServiceException('Invalid request');
-            }
-
-            foreach ($lists->response as $key => $listValue) {
-                $group = new Group();
-                $group
-                    ->setId($listValue->ListID)
-                    ->setName($listValue->Name . ' - ' . $clientValue);
-
-                $response[] = $group;
-            }
+            $response[] = $group;
         }
 
         return $response;
@@ -212,7 +211,7 @@ class CampaignMonitorService extends Service
     public function authenticate(array $options = null)
     {
         try {
-            $this->_getClients();
+            var_dump($this->_getClients());
             return new Response(200, 'Successfully authenticated');
         } catch (\Exception $e) {
             return new Response(401, 'Unauthenticated');
@@ -228,11 +227,14 @@ class CampaignMonitorService extends Service
     private function _getCS_REST($type, $id = null)
     {
         switch ($type) {
-            case 'clients':
+            case 'general':
                 $wrap = new \CS_REST_General($this->authData);
                 break;
-            case 'lists':
+            case 'clients':
                 $wrap = new \CS_REST_Clients($id, $this->authData);
+                break;
+            case 'lists':
+                $wrap = new \CS_REST_Lists($id, $this->authData);
                 break;
             case 'subscriber':
                 $wrap = new \CS_REST_Subscribers($id, $this->authData);
@@ -253,7 +255,7 @@ class CampaignMonitorService extends Service
      */
     private function _getClients()
     {
-        $campaignMonitor = $this->_getCS_REST('clients');
+        $campaignMonitor = $this->_getCS_REST('general');
         $clients = $campaignMonitor->get_clients();
 
         if ($clients->was_successful()) {
@@ -299,7 +301,19 @@ class CampaignMonitorService extends Service
      */
     protected function internalCreateGroup(GroupData $groupData)
     {
-        // TODO: Implement internalCreateGroup() method.
+        $data = $groupData->getData();
+        foreach ($this->clients as $clientId => $clientValue) {
+            $campaignMonitor = $this->_getCS_REST('lists', $clientId);
+            $list = $campaignMonitor->create($clientId, [
+                'Title' => $data['name']
+            ]);
+
+            if (!$list->was_successful()) {
+                throw new ServiceException('Invalid request');
+            }
+
+            return new Group($list->response, $data['name']);
+        }
     }
 
     /**
@@ -308,7 +322,7 @@ class CampaignMonitorService extends Service
      */
     protected function hasValidGroupData(GroupData $groupData)
     {
-        // TODO: Implement hasValidGroupData() method.
+        return true;
     }
 
     /**
@@ -324,7 +338,12 @@ class CampaignMonitorService extends Service
      */
     protected function internalGetFolders()
     {
-        return null;
+        $response = [];
+        foreach ($this->clients as $clientId => $clientValue) {
+            $response[] = new Folder($clientId, $clientValue);
+        }
+
+        return $response;
     }
 
     /**

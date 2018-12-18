@@ -73,10 +73,11 @@ class SendinBlueService extends Service
     }
 
     /**
-     * @return array
+     * @param Folder|null $folder
+     * @return array|mixed
      * @throws ServiceException
      */
-    protected function internalGetGroups()
+    protected function internalGetGroups(Folder $folder = null)
     {
         $result = [];
         foreach ($this->_getGroups() as $i => $row) {

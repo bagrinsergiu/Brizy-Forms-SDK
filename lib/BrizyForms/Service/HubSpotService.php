@@ -6,6 +6,7 @@ use BrizyForms\Exception\ServiceException;
 use BrizyForms\FieldMap;
 use BrizyForms\Model\Account;
 use BrizyForms\Model\Field;
+use BrizyForms\Model\Folder;
 use BrizyForms\Model\Group;
 use BrizyForms\Model\GroupData;
 use BrizyForms\Model\RedirectResponse;
@@ -106,10 +107,11 @@ class HubSpotService extends Service
     }
 
     /**
-     * @return array|null
+     * @param Folder|null $folder
+     * @return array|mixed|null
      * @throws ServiceException
      */
-    protected function internalGetGroups()
+    protected function internalGetGroups(Folder $folder = null)
     {
         $result = $this->hubSpotNativeService->request('/contacts/v1/lists', 'get', []);
         // if account don't support lists

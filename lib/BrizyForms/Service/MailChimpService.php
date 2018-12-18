@@ -7,6 +7,7 @@ use BrizyForms\Exception\ServiceException;
 use BrizyForms\FieldMap;
 use BrizyForms\Model\Account;
 use BrizyForms\Model\Field;
+use BrizyForms\Model\Folder;
 use BrizyForms\Model\Group;
 use BrizyForms\Model\GroupData;
 use BrizyForms\Model\RedirectResponse;
@@ -72,10 +73,11 @@ class MailChimpService extends Service
     }
 
     /**
-     * @return array
+     * @param Folder|null $folder
+     * @return array|mixed
      * @throws \Exception
      */
-    protected function internalGetGroups()
+    protected function internalGetGroups(Folder $folder = null)
     {
         $result = [];
         foreach ($this->_getGroups() as $i => $row) {

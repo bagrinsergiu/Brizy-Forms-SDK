@@ -6,6 +6,7 @@ namespace BrizyForms\Service;
 use BrizyForms\Exception\ServiceException;
 use BrizyForms\FieldMap;
 use BrizyForms\Model\Account;
+use BrizyForms\Model\Folder;
 use BrizyForms\Model\Group;
 use BrizyForms\Model\GroupData;
 use BrizyForms\Model\RedirectResponse;
@@ -67,9 +68,10 @@ class ZapierService extends Service
     }
 
     /**
-     * @return mixed
+     * @param Folder|null $folder
+     * @return mixed|null
      */
-    protected function internalGetGroups()
+    protected function internalGetGroups(Folder $folder = null)
     {
         return null;
     }

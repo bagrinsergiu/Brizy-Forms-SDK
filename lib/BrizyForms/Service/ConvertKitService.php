@@ -6,6 +6,7 @@ use BrizyForms\Exception\ServiceException;
 use BrizyForms\FieldMap;
 use BrizyForms\Model\Account;
 use BrizyForms\Model\Field;
+use BrizyForms\Model\Folder;
 use BrizyForms\Model\Group;
 use BrizyForms\Model\GroupData;
 use BrizyForms\Model\RedirectResponse;
@@ -103,9 +104,10 @@ class ConvertKitService extends Service
     }
 
     /**
-     * @return mixed
+     * @param Folder|null $folder
+     * @return array|mixed
      */
-    protected function internalGetGroups()
+    protected function internalGetGroups(Folder $folder = null)
     {
         $sequences = $this->nativeConvertKit->request("sequences");
         if (!isset($sequences->courses)) {

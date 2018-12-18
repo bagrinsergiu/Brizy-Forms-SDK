@@ -4,6 +4,7 @@ namespace BrizyForms\Service;
 
 use BrizyForms\Exception\ServiceException;
 use BrizyForms\Model\Account;
+use BrizyForms\Model\Folder;
 use BrizyForms\Model\GroupData;
 use BrizyForms\ServiceFactory;
 use BrizyForms\Utils\StringUtils;
@@ -97,9 +98,10 @@ class ActiveCampaignService extends Service
     }
 
     /**
-     * @return mixed
+     * @param Folder|null $folder
+     * @return array|mixed
      */
-    protected function internalGetGroups()
+    protected function internalGetGroups(Folder $folder = null)
     {
         $lists = $this->nativeActiveCampaign->api("list/list?ids=all");
 
