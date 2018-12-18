@@ -85,14 +85,9 @@ abstract class Service implements ServiceInterface, LoggerAwareInterface
 
     /**
      * @return array
-     * @throws AuthenticationDataException
      */
     public function getAccountProperties()
     {
-        if (!$this->hasValidAuthenticationData()) {
-            throw new AuthenticationDataException();
-        }
-
         return $this->internalGetAccountProperties();
     }
 
@@ -129,14 +124,9 @@ abstract class Service implements ServiceInterface, LoggerAwareInterface
 
     /**
      * @return array
-     * @throws AuthenticationDataException
      */
     public function getGroupProperties()
     {
-        if (!$this->hasValidAuthenticationData()) {
-            throw new AuthenticationDataException();
-        }
-
         return $this->internalGetGroupProperties();
     }
 
