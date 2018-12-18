@@ -312,6 +312,7 @@ class GetResponseService extends Service
         return [
             [
                 'name' => 'name',
+                'title' => 'Name',
                 'type' => 'input',
                 'choices' => null
             ]

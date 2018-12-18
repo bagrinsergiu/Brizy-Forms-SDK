@@ -266,11 +266,13 @@ class SendinBlueService extends Service
         return [
             [
                 'name' => 'name',
+                'title' => 'Name',
                 'type' => 'input',
                 'choices' => null
             ],
             [
                 'name' => 'folder',
+                'title' => 'Folder',
                 'type' => 'select',
                 'choices' => $this->internalGetFolders()
             ]

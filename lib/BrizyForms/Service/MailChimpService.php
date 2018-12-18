@@ -339,21 +339,25 @@ class MailChimpService extends Service
         return [
             [
                 'name' => 'name',
+                'title' => 'Name',
                 'type' => 'input',
                 'choices' => null
             ],
             [
                 'name' => 'from_name',
+                'title' => 'From Name',
                 'type' => 'input',
                 'choices' => null
             ],
             [
                 'name' => 'from_email',
+                'title' => 'From Email',
                 'type' => 'input',
                 'choices' => null
             ],
             [
                 'name' => 'reminder_message',
+                'title' => 'Reminder Message',
                 'type' => 'textarea',
                 'choices' => null
             ]
