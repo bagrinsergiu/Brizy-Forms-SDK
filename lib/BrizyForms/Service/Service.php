@@ -186,14 +186,9 @@ abstract class Service implements ServiceInterface, LoggerAwareInterface
 
     /**
      * @return bool
-     * @throws AuthenticationDataException
      */
     public function hasConfirmation()
     {
-        if (!$this->hasValidAuthenticationData()) {
-            throw new AuthenticationDataException();
-        }
-
         return $this->internalHasConfirmation();
     }
 
