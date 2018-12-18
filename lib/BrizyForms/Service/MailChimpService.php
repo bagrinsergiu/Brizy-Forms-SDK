@@ -357,7 +357,7 @@ class MailChimpService extends Service
             ],
             [
                 'name' => 'reminder_message',
-                'title' => 'Reminder Message',
+                'title' => 'Remind people how they signed up to your list',
                 'type' => 'textarea',
                 'choices' => null
             ]
