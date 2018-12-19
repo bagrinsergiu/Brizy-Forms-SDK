@@ -121,6 +121,10 @@ class CampaignMonitorService extends Service
      */
     protected function internalGetGroups(Folder $folder = null)
     {
+        if (!$folder) {
+            throw new ServiceException("Folder not found");
+        }
+        
         $campaignMonitor = $this->_getCS_REST('clients', $folder->getId());
         $lists = $campaignMonitor->get_lists();
 
