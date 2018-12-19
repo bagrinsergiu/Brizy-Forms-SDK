@@ -212,7 +212,6 @@ class CampaignMonitorService extends Service
     public function authenticate(array $options = null)
     {
         try {
-            var_dump($this->_getClients());
             return new Response(200, 'Successfully authenticated');
         } catch (\Exception $e) {
             return new Response(401, 'Unauthenticated');
