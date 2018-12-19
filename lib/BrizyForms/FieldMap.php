@@ -59,10 +59,11 @@ class FieldMap
 
     /**
      * @param array $data
+     * @param bool $email_required
      * @return array|TransformedData
      * @throws FieldMapException
      */
-    public function transform(array $data)
+    public function transform(array $data, $email_required = true)
     {
         $mergeFields = [];
         $email = null;
@@ -87,7 +88,7 @@ class FieldMap
             }
         }
 
-        if (!$email) {
+        if (!$email && $email_required === true) {
             throw new FieldMapException('Email was not found.');
         }
 

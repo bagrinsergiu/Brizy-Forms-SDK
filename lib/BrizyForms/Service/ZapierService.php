@@ -42,9 +42,14 @@ class ZapierService extends Service
      */
     protected function internalCreateMember(FieldMap $fieldMap, $group_id = null, array $data = [], $confirmation_email = false)
     {
-        $data = $fieldMap->transform($data);
-        $data_json = json_encode(array_merge(['Email' => $data->getEmail()], $data->getFields()));
+        $data = $fieldMap->transform($data, false);
 
+        $email = [];
+        if ($data->getEmail()) {
+            $email = ['Email' => $data->getEmail()];
+        }
+
+        $data_json = json_encode(array_merge($email, $data->getFields()));
         $auth_data = $this->authenticationData->getData();
 
         $ch = curl_init($auth_data['webhook_url']);

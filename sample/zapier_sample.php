@@ -10,7 +10,7 @@ require $composerAutoload;
 
 //create Zapier service
 
-$fields   = '[{"sourceId":"1", "sourceTitle":"Email", "target":"email"}, {"sourceId":"2", "sourceTitle":"My Name", "target":"_auto_generate"}]';
+$fields   = '[{"sourceId":"1", "sourceTitle":"Email", "target":"Email"}, {"sourceId":"2", "sourceTitle":"My Name", "target":"My Name"}]';
 $fieldMap = new \BrizyForms\FieldMap(json_decode($fields, true));
 
 $data = '[{"name":"2","value":"Anthony","required":false,"type":"text","slug":"name"},{"name":"1","value":"bodnar1212@gmail.com","required":false,"type":"email","slug":"email"}]';

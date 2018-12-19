@@ -11,10 +11,10 @@ require $composerAutoload;
 
 //create SendinBlue service
 
-$fields   = '[{"sourceId":"1", "sourceTitle":"Email", "target":"email"}, {"sourceId":"2", "sourceTitle":"My Name", "target":"_auto_generate"}]';
+$fields   = '[{"sourceId":"1", "sourceTitle":"Email", "target":"email"}, {"sourceId":"2", "sourceTitle":"My Namex x x ", "target":"_auto_generate"}]';
 $fieldMap = new \BrizyForms\FieldMap(json_decode($fields, true));
 
-$data = '[{"name":"2","value":"Anthony","required":false,"type":"text","slug":"name"},{"name":"1","value":"xcxc777777@gmail.com","required":false,"type":"email","slug":"email"}]';
+$data = '[{"name":"2","value":"Anthony","required":false,"type":"text","slug":"name"},{"name":"1","value":"xxxxxxj7j7x@gmail.com","required":false,"type":"email","slug":"email"}]';
 $data = json_decode($data, true);
 
 $dataArray = [];
@@ -34,7 +34,7 @@ $sendinBlueService->setAuthenticationData(new \BrizyForms\Model\AuthenticationDa
 
 var_dump($sendinBlueService->authenticate());
 
-var_dump($sendinBlueService->getGroupProperties()); die;
+var_dump($sendinBlueService->getGroupProperties());
 
 var_dump($sendinBlueService->getAccount());
 
@@ -42,7 +42,7 @@ var_dump($sendinBlueService->getFolders());
 
 $groupData = new \BrizyForms\Model\GroupData([
     'name' => 'List'.rand(1,1000),
-    'folder_id' => 8
+    'folder' => 8
 ]);
 
 var_dump($sendinBlueService->createGroup($groupData));
