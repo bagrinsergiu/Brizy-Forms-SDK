@@ -13,6 +13,7 @@ use BrizyForms\Model\RedirectResponse;
 use BrizyForms\Model\Response;
 use BrizyForms\ServiceConstant;
 use BrizyForms\ServiceFactory;
+use BrizyForms\Utils\StringUtils;
 
 class SendinBlueService extends Service
 {
@@ -32,7 +33,7 @@ class SendinBlueService extends Service
                 if ($key_exist !== false) {
                     $fieldLink->setTarget($existCustomFields[$key_exist]['slug']);
                 } else {
-                    $fieldLink->setTarget($fieldLink->getSourceTitle());
+                    $fieldLink->setTarget(StringUtils::getSlug($fieldLink->getSourceTitle()));
                 }
             }
         }
