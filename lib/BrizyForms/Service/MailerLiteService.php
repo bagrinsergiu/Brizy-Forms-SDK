@@ -131,10 +131,14 @@ class MailerLiteService extends Service
         $response = [];
         foreach ($customFields as $i => $customField) {
             $field = new Field();
-            $field
-                ->setName($customField['title'])
-                ->setSlug($customField['id'])
-                ->setRequired(false);
+            $field->setName($customField['title']);
+            $field->setSlug($customField['key']);
+
+            if ($customField['key'] == 'email') {
+                $field->setRequired(true);
+            } else {
+                $field->setRequired(false);
+            }
 
             $response[$i] = $field;
         }
