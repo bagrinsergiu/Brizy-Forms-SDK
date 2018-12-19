@@ -2,6 +2,7 @@
 
 namespace BrizyForms\Service;
 
+use BrizyForms\Exception\AccessDeniedException;
 use BrizyForms\Exception\ServiceException;
 use BrizyForms\FieldMap;
 use BrizyForms\Model\Account;
@@ -108,7 +109,8 @@ class HubSpotService extends Service
 
     /**
      * @param Folder|null $folder
-     * @return array|mixed|null
+     * @return array|mixed
+     * @throws AccessDeniedException
      * @throws ServiceException
      */
     protected function internalGetGroups(Folder $folder = null)
@@ -116,7 +118,7 @@ class HubSpotService extends Service
         $result = $this->hubSpotNativeService->request('/contacts/v1/lists', 'get', []);
         // if account don't support lists
         if ($this->hubSpotNativeService->getResponseCode() == 403) {
-            return null;
+            throw new AccessDeniedException('Account don\'t support lists');
         }
 
         if ($this->hubSpotNativeService->getResponseCode() != 200) {
