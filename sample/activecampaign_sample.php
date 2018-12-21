@@ -29,8 +29,8 @@ foreach ($data as $row) {
 $activeCampaignService = \BrizyForms\ServiceFactory::getInstance(\BrizyForms\ServiceFactory::ACTIVECAMPAIGN);
 
 $activeCampaignService->setAuthenticationData(new \BrizyForms\Model\AuthenticationData([
-    'api_key' => '3d11044108ef83f9677a19b166ed1a763bc0edf0bf4bc10cf7d6280e886fc28f7d362453',
-    'api_url' => 'https://monintehsan.api-us1.com'
+    'api_key' => '84e3d7da70e35a6d55b47c0d91177e42c239020d67299024210f94e389813b92d17058ac',
+    'api_url' => 'https://bodnarintegrationsbrizy.api-us1.com'
 ]));
 
 var_dump($activeCampaignService->authenticate());
@@ -40,7 +40,7 @@ var_dump($activeCampaignService->getAccount());
 $groups = $activeCampaignService->getGroups();
 
 var_dump($groups);
-
+die;
 $active_group = null;
 foreach ($groups as $group) {
     var_dump($group);

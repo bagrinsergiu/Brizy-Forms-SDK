@@ -188,7 +188,7 @@ class ActiveCampaignService extends Service
             return new Response(400, 'native service was not init');
         }
 
-        $lists = $this->nativeActiveCampaign->api("list/list?ids=all");
+        $lists = $this->nativeActiveCampaign->api("account/view");
 
         if (!(int)$lists->success) {
             return new Response(401, 'Unauthenticated');
