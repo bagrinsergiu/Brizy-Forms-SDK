@@ -172,14 +172,11 @@ class EgoiService extends Service
                 'apikey' => $this->authenticationData->getData()['api_key']
             ),
             'type' => 'json',
-            'method' => 'getLists'
+            'method' => 'getUserData'
         );
 
-        $lists = $this->egoiNativeService->request('', 'get', $options);
-
-        $lists = json_decode(json_encode($lists), true);
-
-        if (isset($lists['Egoi_Api']['getLists']['ERROR'])) {
+        $userData = $this->egoiNativeService->request('', 'get', $options);
+        if (!isset($userData->Egoi_Api->getUserData->USER_ID)) {
             return new Response(401, 'Unauthenticated');
         }
 
