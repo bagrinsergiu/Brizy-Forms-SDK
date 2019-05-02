@@ -2,8 +2,8 @@
 
 namespace BrizyForms\NativeService;
 
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
 
 abstract class NativeService
 {
@@ -76,9 +76,10 @@ abstract class NativeService
     public function getHttpClient()
     {
         if (!$this->httpClient) {
-            $this->httpClient = new Client(array(
-                'base_url' => [$this->baseUrl, []],
-            ));
+            $this->httpClient = new Client([
+                'base_uri' => $this->baseUrl,
+                'exceptions' => false
+            ]);
         }
 
         return $this->httpClient;
@@ -96,8 +97,8 @@ abstract class NativeService
      * @param string $path
      * @param string $method
      * @param array $data
-     *
-     * @return array|bool|mixed|object|string
+     * @return bool|mixed
+     * @throws GuzzleException
      */
     public function request($path = '', $method = 'get', $data = array())
     {
@@ -124,20 +125,14 @@ abstract class NativeService
                     $options['json'] = $json;
                 }
                 break;
+
+            default:
+                return false;
         }
 
-        try {
-            $response = $this->getHttpClient()->{$method}($path, $options);
-            $this->response_code = $response->getStatusCode();
-            return json_decode($response->getBody());
-        } catch (RequestException $e) {
-            $this->response_code = $e->getResponse()->getStatusCode();
-            if ($e->hasResponse()) {
-                return $e->getResponse()->getBody()->getContents();
-            }
-        }
-
-        return false;
+        $response = $this->getHttpClient()->request(strtoupper($method), $path, $options);
+        $this->response_code = $response->getStatusCode();
+        return json_decode($response->getBody()->getContents());
     }
 
     /**
