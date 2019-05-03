@@ -4,7 +4,7 @@
   "keywords": ["brizy", "forms"],
   "type": "library",
   "require": {
-    "php": ">=5.4.0",
+    "php": ">=5.5.0",
     "ext-curl": "*",
     "ext-json": "*",
     "ext-mbstring": "*",
