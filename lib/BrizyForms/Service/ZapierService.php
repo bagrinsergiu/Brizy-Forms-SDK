@@ -123,7 +123,9 @@ class ZapierService extends Service
     {
         $data = $this->authenticationData->getData();
 
-        if (!preg_match('/^https:\/\/hooks.zapier.com\/hooks\/catch\//', $data['webhook_url'])) {
+        if (!$this->hasValidAuthenticationData() ||
+            !preg_match('/^https:\/\/hooks.zapier.com\/hooks\/catch\//', $data['webhook_url'])
+        ) {
             return new Response(400, 'Unauthenticated');
         }
 
