@@ -81,7 +81,7 @@ class SendinBlueService extends Service
     protected function internalGetGroups(Folder $folder = null)
     {
         $result = [];
-        foreach ($this->_getGroups() as $i => $row) {
+        foreach ($this->_getGroups($folder) as $i => $row) {
             $group = new Group();
             $group
                 ->setId($row['id'])
@@ -171,14 +171,19 @@ class SendinBlueService extends Service
     }
 
     /**
+     * @param Folder|null $folder
      * @return array
      * @throws ServiceException
      */
-    private function _getGroups()
+    private function _getGroups(Folder $folder = null)
     {
         try {
             $api_instance = new \SendinBlue\Client\Api\ListsApi();
-            $lists = $api_instance->getLists()->getLists();
+            if ($folder) {
+                $lists = $api_instance->getFolderLists($folder->getId(),50, 0)->getLists();
+            } else {
+                $lists = $api_instance->getLists(50, 0)->getLists();
+            }
         } catch (\Exception $e) {
             throw new ServiceException('');
         }
