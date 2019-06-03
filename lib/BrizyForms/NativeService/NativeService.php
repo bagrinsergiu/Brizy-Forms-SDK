@@ -77,7 +77,7 @@ abstract class NativeService
     {
         if (!$this->httpClient) {
             $this->httpClient = new Client(array(
-                'base_url' => [$this->baseUrl, []],
+                'base_uri' => $this->baseUrl,
             ));
         }
 
