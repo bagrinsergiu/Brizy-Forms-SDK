@@ -16,7 +16,7 @@ class Group implements \Serializable, \JsonSerializable
 
     public function __construct($id = null, $name = null)
     {
-        $this->id = $id;
+        $this->id = (string)$id;
         $this->name = $name;
     }
 
