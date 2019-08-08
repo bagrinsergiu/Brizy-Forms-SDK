@@ -34,7 +34,7 @@ class Group implements \Serializable, \JsonSerializable
      */
     public function setId($id)
     {
-        $this->id = $id;
+        $this->id = (string)$id;
 
         return $this;
     }
