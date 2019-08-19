@@ -14,6 +14,7 @@ use BrizyForms\Model\Response;
 use BrizyForms\ServiceConstant;
 use BrizyForms\ServiceFactory;
 use BrizyForms\Utils\StringUtils;
+use SendinBlue\Client\Model\CreateAttribute;
 
 class SendinBlueService extends Service
 {
@@ -25,15 +26,16 @@ class SendinBlueService extends Service
      */
     protected function mapFields(FieldMap $fieldMap, $group_id = null)
     {
-        $existCustomFields = $this->_getFields();
-
+        $existCustomFields = json_decode(json_encode($this->internalGetFields()), true);
         foreach ($fieldMap->toArray() as $fieldLink) {
+            $attrSlug = strtoupper(StringUtils::getSlug($fieldLink->getSourceTitle()));
             if ($fieldLink->getTarget() == ServiceConstant::AUTO_GENERATE_FIELD) {
-                $key_exist = array_search($fieldLink->getSourceTitle(), array_column($existCustomFields, 'name'));
+                $key_exist = array_search($attrSlug, array_column($existCustomFields, 'name'));
                 if ($key_exist !== false) {
                     $fieldLink->setTarget($existCustomFields[$key_exist]['slug']);
                 } else {
-                    $fieldLink->setTarget(StringUtils::getSlug($fieldLink->getSourceTitle()));
+                    $this->_createField($attrSlug);
+                    $fieldLink->setTarget($attrSlug);
                 }
             }
         }
@@ -100,32 +102,46 @@ class SendinBlueService extends Service
      */
     protected function internalGetFields(Group $group = null)
     {
-        return [
-            new Field('Email', ServiceConstant::EMAIL_FIELD, true),
-            new Field('Last Name', 'LASTNAME', false),
-            new Field('First Name', 'FIRSTNAME', false)
+        $result = [];
+        foreach ($this->_getFields() as $i => $customField) {
+            $field = new Field();
+            $field
+                ->setName($customField->getName())
+                ->setSlug($customField->getName())
+                ->setRequired(false);
+
+            $result[$i] = $field;
+        }
+
+        $default = [
+            new Field('EMAIL', ServiceConstant::EMAIL_FIELD, true),
         ];
+
+        return array_merge($default, $result);
     }
 
     private function _getFields()
     {
-        return [
-            [
-                'name' => 'Email',
-                'slug' => ServiceConstant::EMAIL_FIELD,
-                'required' => true
-            ],
-            [
-                'name' => 'Last Name',
-                'slug' => 'LASTNAME',
-                'required' => false
-            ],
-            [
-                'name' => 'First Name',
-                'slug' => 'FIRSTNAME',
-                'required' => false
-            ]
-        ];
+        $api_instance = new \SendinBlue\Client\Api\AttributesApi();
+        $attributes = $api_instance->getAttributes()->getAttributes();
+
+        $result = [];
+        foreach ($attributes as $attribute) {
+            if ($attribute->getCategory() == 'normal') {
+                $result[] = $attribute;
+            }
+        }
+
+        return $result;
+    }
+
+    private function _createField($name)
+    {
+        $api_instance = new \SendinBlue\Client\Api\AttributesApi();
+        $createAttribute = new CreateAttribute();
+        $createAttribute->setType('text');
+
+        $api_instance->createAttribute('normal', $name, $createAttribute);
     }
 
     /**
