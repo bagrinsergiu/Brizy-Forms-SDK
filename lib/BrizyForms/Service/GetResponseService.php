@@ -87,17 +87,19 @@ class GetResponseService extends Service
         $data = $fieldMap->transform($data);
 
         $mergeFields = [];
+        $name = null;
         foreach ($data->getFields() as $target => $value) {
+            if ($target == 'name') {
+                $name = $value;
+                continue;
+            }
             $mergeFields[] = [
                 'customFieldId' => $target,
                 'value' => [$value]
             ];
         }
 
-        if (isset($mergeFields['name']) && !empty($mergeFields['name'])) {
-            $name = $mergeFields['name'];
-            unset($mergeFields['name']);
-        } else {
+        if (!$name) {
             $name = explode("@", $data->getEmail());
             $name = $name[0];
         }
