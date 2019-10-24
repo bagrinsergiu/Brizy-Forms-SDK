@@ -77,15 +77,15 @@ class HubSpotService extends Service
     protected function internalCreateMember(FieldMap $fieldMap, $group_id = null, array $data = [], $confirmation_email = false)
     {
         $data = $fieldMap->transform($data);
-        $data = array_merge(['email' => $data->getEmail()], $data->getFields());
 
         $mergeFields = [];
-        foreach ($data as $target => $value) {
+        foreach ($data->getFields() as $target => $value) {
             $mergeFields['properties'][] = [
                 'property' => $target,
                 'value' => $value
             ];
         }
+        $mergeFields['email'] = $data->getEmail();
 
         $member = $this->hubSpotNativeService->request('/contacts/v1/contact', 'post', $mergeFields);
 

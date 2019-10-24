@@ -78,7 +78,7 @@ class EgoiService extends Service
         $subscriber = $this->egoiNativeService->request('', 'get', $options);
         $subscriber = json_decode(json_encode($subscriber), true);
 
-        if (isset($subscriber['Egoi_Api']['addSubscriber']['ERROR']) || isset($subscriber['Egoi_Api']['addSubscriber']['response'])) {
+        if ((isset($subscriber['Egoi_Api']['addSubscriber']['ERROR']) && $subscriber['Egoi_Api']['addSubscriber']['ERROR'] != 'EMAIL_ADDRESS_INVALID') || isset($subscriber['Egoi_Api']['addSubscriber']['response'])) {
             $this->logger->error(json_encode($subscriber), ['service' => ServiceFactory::EGOI, 'method' => 'internalCreateMember']);
             throw new ServiceException(json_encode($subscriber));
         }

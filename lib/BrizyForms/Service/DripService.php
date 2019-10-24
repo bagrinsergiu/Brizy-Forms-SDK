@@ -61,7 +61,7 @@ class DripService extends Service
         ]);
 
         $response = $this->dripNativeService->post('subscribers', $dataset);
-        if ($response->status != 200) {
+        if ($response->status != 200 && $response->status != 422) { //Email must be a valid email address
             $this->logger->error(json_encode($response), ['service' => ServiceFactory::DRIP, 'method' => 'internalCreateMember']);
             throw new ServiceException(json_encode($response));
         }
