@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "5b664db4a315f53bbe4f6fc02ccd1350",
+    "content-hash": "baa1953ec4a3dfd1943d9c667c4c9ad2",
     "packages": [
         {
             "name": "activecampaign/api-php",
@@ -190,54 +190,6 @@
             "description": "Super-simple, minimum abstraction MailChimp API v3 wrapper",
             "homepage": "https://github.com/drewm/mailchimp-api",
             "time": "2018-02-16T15:31:05+00:00"
-        },
-        {
-            "name": "getresponse/getresponse",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/GetResponse/getresponse-api-php.git",
-                "reference": "e1137adbddaa96bba6af6c1b5e8aeb50e9036e0a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/GetResponse/getresponse-api-php/zipball/e1137adbddaa96bba6af6c1b5e8aeb50e9036e0a",
-                "reference": "e1137adbddaa96bba6af6c1b5e8aeb50e9036e0a",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "php": ">=5.2.0"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "src/GetResponseAPI3.class.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Pawel Maslak",
-                    "email": "pawel.maslak@getresponse.com"
-                },
-                {
-                    "name": "Grzegorz Struczynski",
-                    "email": "grzegorz.struczynski@getresponse.com"
-                }
-            ],
-            "description": "GetResponse API v3 client library.",
-            "homepage": "https://github.com/GetResponse/getresponse-api-php",
-            "keywords": [
-                "api",
-                "email",
-                "getresponse"
-            ],
-            "abandoned": "getresponse/sdk-php",
-            "time": "2018-03-02T08:40:50+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -1368,6 +1320,7 @@
                 "mock",
                 "xunit"
             ],
+            "abandoned": true,
             "time": "2015-10-02T06:51:40+00:00"
         },
         {
@@ -1959,13 +1912,12 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "campaignmonitor/createsend-php": 20,
-        "getresponse/getresponse": 20
+        "campaignmonitor/createsend-php": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.4.0",
+        "php": ">=5.5",
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mbstring": "*"

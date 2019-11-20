@@ -11,6 +11,7 @@ use BrizyForms\Model\Group;
 use BrizyForms\Model\GroupData;
 use BrizyForms\Model\RedirectResponse;
 use BrizyForms\Model\Response;
+use BrizyForms\NativeService\GetResponseNativeService;
 use BrizyForms\ServiceConstant;
 use BrizyForms\ServiceFactory;
 use BrizyForms\Utils\StringUtils;
@@ -19,7 +20,7 @@ class GetResponseService extends Service
 {
 
     /**
-     * @var \GetResponse
+     * @var GetResponseNativeService
      */
     private $getResponseNativeService;
 
@@ -202,7 +203,7 @@ class GetResponseService extends Service
     {
         $data = $this->authenticationData->getData();
 
-        $this->getResponseNativeService = new \GetResponse($data['api_key']);
+        $this->getResponseNativeService = new GetResponseNativeService($data['api_key']);
     }
 
     /**

@@ -13,7 +13,6 @@
     "campaignmonitor/createsend-php": "dev-master",
     "guzzlehttp/guzzle": "6.3.*",
     "activecampaign/api-php": "2.0.*",
-    "getresponse/getresponse": "dev-master",
     "psr/log": "^1.0.0",
     "drewm/drip": "0.8.*"
   },
