@@ -58,7 +58,7 @@ class SendinBlueService extends Service
 
         $payload = [
             'email' => $data->getEmail(),
-            'listIds' => [$group_id],
+            'listIds' => [(int)$group_id],
             'updateEnabled' => true
         ];
 
