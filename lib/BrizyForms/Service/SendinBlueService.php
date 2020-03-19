@@ -19,6 +19,11 @@ use SendinBlue\Client\Model\CreateAttribute;
 class SendinBlueService extends Service
 {
     /**
+     * @var \SendinBlue\Client\Configuration
+     */
+    protected $config;
+
+    /**
      * @param FieldMap $fieldMap
      * @param string $group_id
      *
@@ -66,7 +71,7 @@ class SendinBlueService extends Service
             $payload['attributes'] = $data->getFields();
         }
 
-        $api_instance = new \SendinBlue\Client\Api\ContactsApi();
+        $api_instance = new \SendinBlue\Client\Api\ContactsApi(null, $this->config);
         try {
             $api_instance->createContact(new \SendinBlue\Client\Model\CreateContact($payload));
         } catch (\Exception $e) {
@@ -122,7 +127,7 @@ class SendinBlueService extends Service
 
     private function _getFields()
     {
-        $api_instance = new \SendinBlue\Client\Api\AttributesApi();
+        $api_instance = new \SendinBlue\Client\Api\AttributesApi(null, $this->config);
         $attributes = $api_instance->getAttributes()->getAttributes();
 
         $result = [];
@@ -137,7 +142,7 @@ class SendinBlueService extends Service
 
     private function _createField($name)
     {
-        $api_instance = new \SendinBlue\Client\Api\AttributesApi();
+        $api_instance = new \SendinBlue\Client\Api\AttributesApi(null, $this->config);
         $createAttribute = new CreateAttribute();
         $createAttribute->setType('text');
 
@@ -168,7 +173,7 @@ class SendinBlueService extends Service
     {
         $data = $this->authenticationData->getData();
 
-        \SendinBlue\Client\Configuration::getDefaultConfiguration()->setApiKey('api-key', $data['api_key']);
+        $this->config = \SendinBlue\Client\Configuration::getDefaultConfiguration()->setApiKey('api-key', $data['api_key']);
     }
 
     /**
@@ -178,7 +183,7 @@ class SendinBlueService extends Service
     public function authenticate(array $options = null)
     {
         try {
-            $api_instance = new \SendinBlue\Client\Api\ListsApi();
+            $api_instance = new \SendinBlue\Client\Api\ListsApi(null, $this->config);
             $api_instance->getLists()->getLists();
             return new Response(200, 'Successfully authenticated');
         } catch (\Exception $e) {
@@ -194,7 +199,7 @@ class SendinBlueService extends Service
     private function _getGroups(Folder $folder = null)
     {
         try {
-            $api_instance = new \SendinBlue\Client\Api\ListsApi();
+            $api_instance = new \SendinBlue\Client\Api\ListsApi(null, $this->config);
             if ($folder) {
                 $lists = $api_instance->getFolderLists($folder->getId(),50, 0)->getLists();
             } else {
@@ -216,7 +221,7 @@ class SendinBlueService extends Service
     {
         $data = $groupData->getData();
 
-        $api_instance = new \SendinBlue\Client\Api\ListsApi();
+        $api_instance = new \SendinBlue\Client\Api\ListsApi(null, $this->config);
         try {
             $result = $api_instance->createList(new \SendinBlue\Client\Model\CreateList([
                 'name' => $data['name'],
@@ -250,7 +255,7 @@ class SendinBlueService extends Service
     protected function internalGetAccount()
     {
         try {
-            $api_instance = new \SendinBlue\Client\Api\AccountApi();
+            $api_instance = new \SendinBlue\Client\Api\AccountApi(null, $this->config);
             $account = $api_instance->getAccount();
         } catch (\Exception $e) {
             throw new ServiceException('Invalid request');
@@ -266,7 +271,7 @@ class SendinBlueService extends Service
     protected function internalGetFolders()
     {
         try {
-            $api_instance = new \SendinBlue\Client\Api\FoldersApi();
+            $api_instance = new \SendinBlue\Client\Api\FoldersApi(null, $this->config);
             $folders = $api_instance->getFolders(50,0)->getFolders();
         } catch (\Exception $e) {
             throw new ServiceException('Invalid request');
