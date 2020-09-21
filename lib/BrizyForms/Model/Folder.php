@@ -5,7 +5,7 @@ namespace BrizyForms\Model;
 class Folder implements \Serializable, \JsonSerializable
 {
     /**
-     * @var integer
+     * @var string
      */
     protected $id;
 
@@ -16,12 +16,12 @@ class Folder implements \Serializable, \JsonSerializable
 
     public function __construct($id = null, $name = null)
     {
-        $this->id = $id;
+        $this->id = (string)$id;
         $this->name  = $name;
     }
 
     /**
-     * @return integer
+     * @return string
      */
     public function getId()
     {
@@ -34,7 +34,7 @@ class Folder implements \Serializable, \JsonSerializable
      */
     public function setId($id)
     {
-        $this->id = $id;
+        $this->id = (string)$id;
 
         return $this;
     }
