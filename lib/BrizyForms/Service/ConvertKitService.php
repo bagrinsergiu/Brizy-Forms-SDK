@@ -92,7 +92,7 @@ class ConvertKitService extends Service
 
         $payload = [
             "email" => $data->getEmail(),
-            "name" => $name,
+            "first_name" => $name,
             "fields" => $mergeFields
         ];
 
@@ -150,7 +150,7 @@ class ConvertKitService extends Service
 
         $defaults = [
             new Field('Email', ServiceConstant::EMAIL_FIELD, true),
-            new Field('Name', 'Name', false),
+            new Field('Name', 'name', false),
         ];
 
         $response = array_merge($defaults, $response);
