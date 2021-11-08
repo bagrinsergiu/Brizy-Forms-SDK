@@ -41,21 +41,6 @@ var_dump($airtableService->authenticate());
 
 var_dump($airtableService->getAccount());
 
-$groupData = new \BrizyForms\Model\GroupData([
-    'name' => 'List'.rand(1,1000)
-]);
-
-
-$group = $airtableService->createGroup($groupData);
-
-$groups = $airtableService->getGroups();
-
-$active_group = null;
-foreach ($groups as $group) {
-    var_dump($group);
-    $active_group = $group->getId();
-}
-
 $fields = $airtableService->getFields();
 
 var_dump($fields);
