@@ -11,10 +11,11 @@
     "drewm/mailchimp-api": "~2.2",
     "sendinblue/api-v3-sdk": "~6.0",
     "campaignmonitor/createsend-php": "dev-master",
-    "guzzlehttp/guzzle": "6.3.*",
+    "guzzlehttp/guzzle": "^6.3",
     "activecampaign/api-php": "2.0.*",
     "psr/log": "^1.0.0",
-    "drewm/drip": "0.8.*"
+    "drewm/drip": "0.8.*",
+    "gmostafa/php-graphql-client": "^1.13"
   },
   "require-dev": {
     "ext-dom": "*",
