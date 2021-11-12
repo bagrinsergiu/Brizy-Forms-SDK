@@ -59,7 +59,7 @@ class ServiceFactory
             self::HUBSPOT => 'BrizyForms\Service\HubSpotService',
             self::MAILERLITE => 'BrizyForms\Service\MailerLiteService',
             self::DRIP => 'BrizyForms\Service\DripService',
-            self::BRIZYCOLLECTION => 'BrizyForms\Services\DripService',
+            self::BRIZYCOLLECTION => 'BrizyForms\Service\BrizyCollectionService',
         ];
     }
 

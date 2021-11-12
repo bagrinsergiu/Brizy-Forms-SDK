@@ -5,15 +5,21 @@ namespace BrizyForms\Service;
 use BrizyForms\Exception\ServiceException;
 use BrizyForms\FieldMap;
 use BrizyForms\Model\Account;
+use BrizyForms\Model\Field;
 use BrizyForms\Model\Folder;
 use BrizyForms\Model\Group;
 use BrizyForms\Model\GroupData;
 use BrizyForms\Model\RedirectResponse;
 use BrizyForms\Model\Response;
 use BrizyForms\ServiceConstant;
+use BrizyForms\NativeService\BrizyCollectionNativeService;
+use BrizyForms\Utils\StringUtils;
 
-class BrizyCollectionService extends Service
+final class BrizyCollectionService extends Service
 {
+    /** @var BrizyCollectionNativeService */
+    private $nativeService;
+
     /**
      * @param FieldMap $fieldMap
      * @param string $group_id
@@ -22,11 +28,26 @@ class BrizyCollectionService extends Service
      */
     protected function mapFields(FieldMap $fieldMap, $group_id = null)
     {
+        $existingCustomFields = $this->nativeService->getCollectionType($group_id)['fields'];
+
         foreach ($fieldMap->toArray() as $fieldLink) {
             if ($fieldLink->getTarget() == ServiceConstant::AUTO_GENERATE_FIELD) {
-                $fieldLink->setTarget($fieldLink->getSourceTitle());
+                $newCustomField = null;
+                $name = strip_tags($fieldLink->getSourceTitle());
+                $key_exist = array_search($name, array_column($existingCustomFields, 'title'));
+                if ($key_exist === false) {
+                    $payload = [
+
+                        'title' => $name,
+                        'type' => 'text'
+                    ];
+                    $newCustomField = $this->nativeService->createCollectionTypeField($group_id, $payload);
+                }
+                $tag = StringUtils::getSlug($newCustomField['title']);
+                $fieldLink->setTarget($tag);
             }
         }
+
         return $fieldMap;
     }
 
@@ -36,58 +57,64 @@ class BrizyCollectionService extends Service
      * @param array $data
      * @param bool $confirmation_email
      * @return mixed|void
-     * @throws ServiceException
-     * @throws \BrizyForms\Exception\FieldMapException
+     * @throws
      */
     protected function internalCreateMember(FieldMap $fieldMap, $group_id = null, array $data = [], $confirmation_email = false)
     {
         $data = $fieldMap->transform($data, false);
 
-        $email = [];
-        if ($data->getEmail()) {
-            $email = ['Email' => $data->getEmail()];
-        }
-
-        $data_json = json_encode(array_merge($email, $data->getFields()));
-        $auth_data = $this->authenticationData->getData();
-
-        $ch = curl_init($auth_data['webhook_url']);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                'Content-Type: application/json',
-                'Content-Length: ' . strlen($data_json))
-        );
-
-        $result = curl_exec($ch);
-
-        curl_close($ch);
-
-        if (!$result) {
-            throw new ServiceException('Can\'t send data to this webhook_url');
-        }
+        return $this->nativeService->createCollectionItem(
+            $group_id,
+            $data['slug'],
+            $data['title'],
+            $data['fields'],
+            $data['status']);
     }
 
     /**
      * @param Folder|null $folder
      * @return mixed|null
+     * @throws
      */
     protected function internalGetGroups(Folder $folder = null)
     {
-        return null;
+        $collectionTypes = $this->nativeService->getCollectionTypes();
+        $result = [];
+        foreach ($collectionTypes as $i => $row) {
+            $group = new Group();
+            $group
+                ->setId($row['id'])
+                ->setName($row['title']);
+
+            $result[$i] = $group;
+        }
+
+        return $result;
     }
 
     /**
      * @param Group $group
-     *
      * @return mixed
+     * @throws
      */
     protected function internalGetFields(Group $group = null)
     {
-        return null;
+        if (!$group) {
+            throw new ServiceException('Group must be defined');
+        }
+
+
+        $result = [];
+        $fields = $this->nativeService->getCollectionType($group->getId())['fields'];
+        foreach ($fields as $i => $customField) {
+            $result[$i] = new Field(
+                $customField['label'],
+                ($customField['slug'] ?? $customField['label']),
+                $customField['required']
+            );
+        }
+
+        return $result;
     }
 
     /**
@@ -112,6 +139,8 @@ class BrizyCollectionService extends Service
      */
     protected function initializeNativeService()
     {
+        $data = $this->authenticationData->getData();
+        $this->nativeService = new BrizyCollectionNativeService($data['api_key']);
     }
 
     /**
@@ -120,23 +149,43 @@ class BrizyCollectionService extends Service
      */
     public function authenticate(array $options = null)
     {
-        $data = $this->authenticationData->getData();
-
         if (!$this->hasValidAuthenticationData()
         ) {
             return new Response(400, 'Unauthenticated');
         }
 
-        return new Response(200, 'Successfully authenticated');
+        $response = $this->nativeService->checkAuthentication();
+        $statusCode = $response->getResponseObject()->getStatusCode();
+
+        if ($statusCode === 200) {
+            return new Response(200, 'Successfully authenticated');
+        } else {
+            return new Response($statusCode, $response->getResponseObject()->getReasonPhrase());
+        }
     }
 
     /**
      * @param GroupData $groupData
      * @return mixed
+     * @throws \Exception
      */
     protected function internalCreateGroup(GroupData $groupData)
     {
-        return null;
+        try {
+            $data = $groupData->getData();
+            $collectionType = $this->nativeService->createCollectionType(
+                $data['editor_id'],
+                $data['title'],
+                $data['slug'],
+                $data['fields'],
+                $data['settings'],
+                $data['priority']
+            );
+        } catch (\Exception $exception) {
+            throw new ServiceException('Group was not created');
+        }
+
+        return new Group($collectionType['id'], $collectionType['title']);
     }
 
     /**
