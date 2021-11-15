@@ -14,11 +14,20 @@
     "guzzlehttp/guzzle": "6.3.*",
     "activecampaign/api-php": "2.0.*",
     "psr/log": "^1.0.0",
-    "drewm/drip": "0.8.*"
+    "drewm/drip": "0.8.*",
+    "google/apiclient": "^2.11"
   },
   "require-dev": {
     "ext-dom": "*",
     "phpunit/phpunit": "^4.8"
+  },
+  "scripts": {
+    "pre-autoload-dump": "Google\\Task\\Composer::cleanup"
+  },
+  "extra": {
+    "google/apiclient-services": [
+      "Sheets"
+    ]
   },
   "autoload": {
     "psr-0": {
