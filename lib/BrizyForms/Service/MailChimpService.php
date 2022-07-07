@@ -286,8 +286,8 @@ class MailChimpService extends Service
 
         $result = $this->mailChimpSDK->post('lists', $payload);
 
-        if (!$this->mailChimpSDK->success()) {
-            throw new ServiceException('Group was not created' . $this->mailChimpSDK->getLastError());
+        if ( ! $this->mailChimpSDK->success()) {
+            $this->handleError('Group was not created.');
         }
 
         return new Group($result['id'], $result['name']);
@@ -318,8 +318,8 @@ class MailChimpService extends Service
     protected function internalGetAccount()
     {
         $account = $this->mailChimpSDK->get('');
-        if (!$this->mailChimpSDK->success()) {
-            throw new ServiceException('Invalid request');
+        if ( ! $this->mailChimpSDK->success()) {
+            $this->handleError('Invalid request.');
         }
 
         return new Account($account['account_name']);
@@ -385,5 +385,20 @@ class MailChimpService extends Service
     protected function internalHasConfirmation()
     {
         return true;
+    }
+
+    protected function handleError($prefix = '')
+    {
+        $lastError    = $this->mailChimpSDK->getLastError();
+        $errorPars    = explode(':', $lastError);
+        $errorMessage = isset($errorPars[1]) ? trim($errorPars[1]) : $lastError;
+
+        if (strpos($lastError, '403') !== false ||
+            strpos($lastError, '401') !== false ||
+            strpos($lastError, '429') !== false) {
+            throw new ServiceException(trim($prefix.' '.$errorMessage));
+        }
+
+        throw new ServiceException($errorMessage);
     }
 }
