@@ -287,7 +287,14 @@ class MailChimpService extends Service
         $result = $this->mailChimpSDK->post('lists', $payload);
 
         if (!$this->mailChimpSDK->success()) {
-            throw new ServiceException('Group was not created' . $this->mailChimpSDK->getLastError());
+
+            $lastError = $this->mailChimpSDK->getLastError();
+            if (strpos($lastError, '403') !== false) {
+                $errorPars = explode(':', $lastError);
+                throw new ServiceException('Group was not created. ' . isset($errorPars[1])?trim($errorPars[1]):$lastError);
+            }
+
+            throw new ServiceException('Group was not created. '.$lastError);
         }
 
         return new Group($result['id'], $result['name']);
