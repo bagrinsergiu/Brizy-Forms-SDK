@@ -12,26 +12,36 @@ use BrizyForms\Model\RedirectResponse;
 use BrizyForms\Model\Response;
 use BrizyForms\ServiceConstant;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 class WebHooksService extends Service
 {
 
-    private static function curlExec($value)
+    protected function urlExec($value)
     {
         $client = new Client();
 
-        $options = array();
-        if(array_key_exists('header', $value))
-        {
-            $options['headers'] = $value['header'] ;
-        }
+        $options = [];
 
         if(array_key_exists('message', $value)) {
             $options['form_params'] = $value['message'];
         }
+        if(array_key_exists('settings', $value)) {
+            foreach ($value['settings'] as  $key => $val) {
+                $options[$key] = $val;
+            }
+        }
 
-        $client->request($value['sendType'], $value['url'], $options);
+        try {
+            $client->request($value['method'], $value['url'], $options);
 
-        return true;
+            return true;
+        } catch (RequestException $e) {
+            if ($e->hasResponse()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
     /**
@@ -71,44 +81,11 @@ class WebHooksService extends Service
         $data_json = json_encode(array_merge($email, $data->getFields()));
         $auth_data = $this->authenticationData->getData();
 
-        $sends = ['url' => $auth_data['urlHooks'], 'sendType' => $auth_data['sendType'], 'message' => $email];
-        if (array_key_exists( 'header', $auth_data))
-        {
-            $sends['header'] = $auth_data['header'];
+        $sends = ['url' => $auth_data['urlHooks'], 'method' => $auth_data['method'], 'message' => $email];
+
+        if (!$this->urlExec($sends)) {
+            throw new ServiceException('Can\'t send data to this WebHooks');
         }
-
-        if (!self::curlExec($sends)) {
-            throw new ServiceException('Can\'t send data to this webhook_url');
-        }
-    }
-
-    protected function curlII($url)
-    {
-        $ch = curl_init($url);
-
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 3);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_HEADER, false);
-
-        $response = curl_exec($ch);
-
-        if (curl_errno($ch)) {
-            curl_close($ch);
-            return false;
-        }
-
-        $info = curl_getinfo($ch);
-
-        curl_close($ch);
-
-        if ($info['total_time'] >= 3) {
-            return false;
-        }
-        return true;
     }
 
     /**
@@ -140,7 +117,7 @@ class WebHooksService extends Service
         }
 
         $data = $this->authenticationData->getData();
-        if (!isset($data['urlHooks'])) {
+        if (!isset($data['urlHooks']) || !isset($data['method'])) {
             return false;
         }
 
@@ -161,9 +138,17 @@ class WebHooksService extends Service
     public function authenticate(array $options = null)
     {
         $data = $this->authenticationData->getData();
-        var_dump($this->curlII($data['urlHooks']));
 
-        if (!$this->hasValidAuthenticationData() || !$this->curlII($data['urlHooks']))
+        $sends = [
+            'method'=>'GET',
+            'url'=> $data['urlHooks'],
+            'settings' => [
+                'timeout' => 3,
+                'connect_timeout' => 1
+            ]
+        ];
+
+        if (!$this->hasValidAuthenticationData() || !$this->urlExec($sends))
         {
             return new Response(400, 'Unauthenticated');
         }
@@ -196,7 +181,7 @@ class WebHooksService extends Service
     {
         $data = $this->authenticationData->getData();
 
-        return new Account($data['webhook_url']);
+        return new Account($data['urlHooks']);
     }
 
     /**
@@ -222,8 +207,12 @@ class WebHooksService extends Service
     {
         return [
             [
-                'name' => 'webhook_url',
+                'name' => 'urlHooks',
                 'title' => 'Webhook URL'
+            ],
+            [
+                'name' => 'method',
+                'title' => 'Request method'
             ]
         ];
     }

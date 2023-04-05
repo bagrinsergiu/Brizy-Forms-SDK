@@ -28,10 +28,12 @@ $webHooksService = new \BrizyForms\Service\WebHooksService();
 
 $webHooksService->setAuthenticationData(new \BrizyForms\Model\AuthenticationData([
     'urlHooks' => 'https://webhook.site/6fc96a6c-d82d-47db-a7aa-d7d03b965ad5',
-    'sendType' => 'POST'
+    'method' => 'POST'
 ]));
 
-$webHooksService->authenticate();
-
-$webHooksService->createMember($fieldMap, null, $dataArray);
+if($webHooksService->authenticate()->getCode() == 200) {
+    $webHooksService->createMember($fieldMap, null, $dataArray);
+}
+else
+    echo 'Unauthenticated';
 
