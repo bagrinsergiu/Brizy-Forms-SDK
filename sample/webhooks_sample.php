@@ -24,23 +24,14 @@ foreach ($data as $row) {
 
 $webHooksService = \BrizyForms\ServiceFactory::getInstance(\BrizyForms\ServiceFactory::WEBHOOKS);
 
-$header = [
-    'content-type'=>' application/x-www-form-urlencoded',
-];
+$webHooksService = new \BrizyForms\Service\WebHooksService();
 
-$initParam = [
+$webHooksService->setAuthenticationData(new \BrizyForms\Model\AuthenticationData([
     'urlHooks' => 'https://webhook.site/6fc96a6c-d82d-47db-a7aa-d7d03b965ad5',
-    'sendType' => 'GET',
-    'header'   => $header
-];
+    'sendType' => 'POST'
+]));
 
-$webHooksService->init($initParam);
+$webHooksService->authenticate();
 
-//var_dump($webHooksService->getInitParametrs());
-
-var_dump($dataArray);
-
-$dataArray = ["email"=>"serghei@gmail.com"];
-
-$webHooksService::events($dataArray);
+$webHooksService->createMember($fieldMap, null, $dataArray);
 
