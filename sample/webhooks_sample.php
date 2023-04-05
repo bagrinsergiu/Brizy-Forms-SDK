@@ -22,20 +22,25 @@ foreach ($data as $row) {
     $dataArray[] = $data;
 }
 
-var_dump($dataArray);
-
 $webHooksService = \BrizyForms\ServiceFactory::getInstance(\BrizyForms\ServiceFactory::WEBHOOKS);
+
+$header = [
+    'content-type'=>' application/x-www-form-urlencoded',
+];
 
 $initParam = [
     'urlHooks' => 'https://webhook.site/6fc96a6c-d82d-47db-a7aa-d7d03b965ad5',
-    'sendType' => 'GET' //optional parameter, defoult send type POST
+    'sendType' => 'GET',
+    'header'   => $header
 ];
 
-var_dump($webHooksService->init($initParam));
+$webHooksService->init($initParam);
 
-// var_dump($webHooksService->getInitParametrs());
+//var_dump($webHooksService->getInitParametrs());
 
 var_dump($dataArray);
+
+$dataArray = ["email"=>"serghei@gmail.com"];
 
 $webHooksService::events($dataArray);
 
