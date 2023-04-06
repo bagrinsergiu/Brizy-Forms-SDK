@@ -15,34 +15,11 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 class WebHooksService extends Service
 {
+    /**
+     * @var Client
+     */
+    private $client;
 
-    protected function urlExec($value)
-    {
-        $client = new Client();
-
-        $options = [];
-
-        if(array_key_exists('message', $value)) {
-            $options['form_params'] = $value['message'];
-        }
-        if(array_key_exists('settings', $value)) {
-            foreach ($value['settings'] as  $key => $val) {
-                $options[$key] = $val;
-            }
-        }
-
-        try {
-            $client->request($value['method'], $value['url'], $options);
-
-            return true;
-        } catch (RequestException $e) {
-            if ($e->hasResponse()) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
 
     /**
      * @param FieldMap $fieldMap
@@ -72,19 +49,17 @@ class WebHooksService extends Service
     protected function internalCreateMember(FieldMap $fieldMap, $group_id = null, array $data = [], $confirmation_email = false)
     {
         $data = $fieldMap->transform($data, false);
-
         $email = [];
         if ($data->getEmail()) {
             $email = ['Email' => $data->getEmail()];
         }
-
-        $data_json = json_encode(array_merge($email, $data->getFields()));
         $auth_data = $this->authenticationData->getData();
-
-        $sends = ['url' => $auth_data['urlHooks'], 'method' => $auth_data['method'], 'message' => $email];
-
-        if (!$this->urlExec($sends)) {
-            throw new ServiceException('Can\'t send data to this WebHooks');
+        try {
+            $this->client->request($auth_data['request_method'], $auth_data['webhook_url'], [
+                'form_params' => $email
+            ]);
+        } catch (\Exception $e) {
+            throw new ServiceExcption('Invalid request');
         }
     }
 
@@ -112,15 +87,10 @@ class WebHooksService extends Service
      */
     protected function hasValidAuthenticationData()
     {
-        if (!$this->authenticationData) {
-            return false;
-        }
-
         $data = $this->authenticationData->getData();
-        if (!isset($data['urlHooks']) || !isset($data['method'])) {
+        if (!isset($data['webhook_url']) || !isset($data['request_method'])) {
             return false;
         }
-
         return true;
     }
 
@@ -139,21 +109,22 @@ class WebHooksService extends Service
     {
         $data = $this->authenticationData->getData();
 
-        $sends = [
-            'method'=>'GET',
-            'url'=> $data['urlHooks'],
-            'settings' => [
-                'timeout' => 3,
-                'connect_timeout' => 1
-            ]
-        ];
+        $this->client = new Client();
 
-        if (!$this->hasValidAuthenticationData() || !$this->urlExec($sends))
-        {
-            return new Response(400, 'Unauthenticated');
+        try {
+            $response = $this->client->request('GET', $data['webhook_url'], [
+                    'http_errors' => false,
+                    'timeout' => 3,
+                    'connect_timeout' => 1
+                ]);
+
+            if($response->getStatusCode() === 200)
+                return new Response(200, 'Successfully authenticated');
+        } catch (RequestException $e) {
+            return new Response(401, 'Unauthenticated');
         }
 
-        return new Response(200, 'Successfully authenticated');
+        return new Response(500, 'Internal server error');
     }
 
     /**
@@ -181,7 +152,7 @@ class WebHooksService extends Service
     {
         $data = $this->authenticationData->getData();
 
-        return new Account($data['urlHooks']);
+        return new Account($data['webhook_url']);
     }
 
     /**
@@ -207,11 +178,11 @@ class WebHooksService extends Service
     {
         return [
             [
-                'name' => 'urlHooks',
+                'name' => 'webhook_url',
                 'title' => 'Webhook URL'
             ],
             [
-                'name' => 'method',
+                'name' => 'request_method',
                 'title' => 'Request method'
             ]
         ];

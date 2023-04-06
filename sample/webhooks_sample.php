@@ -1,4 +1,5 @@
 <?php
+
 $composerAutoload = dirname(__DIR__) . '/vendor/autoload.php';
 if (!file_exists($composerAutoload)) {
     echo "The 'vendor' folder is missing. You must run 'composer update' to resolve application dependencies.\nPlease see the README for more information.\n";
@@ -24,16 +25,13 @@ foreach ($data as $row) {
 
 $webHooksService = \BrizyForms\ServiceFactory::getInstance(\BrizyForms\ServiceFactory::WEBHOOKS);
 
-$webHooksService = new \BrizyForms\Service\WebHooksService();
-
 $webHooksService->setAuthenticationData(new \BrizyForms\Model\AuthenticationData([
-    'urlHooks' => 'https://webhook.site/6fc96a6c-d82d-47db-a7aa-d7d03b965ad5',
-    'method' => 'POST'
+    'webhook_url' => 'https://webhook.site/22007660-30ca-41ee-a271-9dd60d72ed0e',
+    'request_method' => 'POST'
 ]));
 
-if($webHooksService->authenticate()->getCode() == 200) {
-    $webHooksService->createMember($fieldMap, null, $dataArray);
-}
-else
-    echo 'Unauthenticated';
+$webHooksService->authenticate();
+
+$webHooksService->createMember($fieldMap, null, $dataArray);
+
 
