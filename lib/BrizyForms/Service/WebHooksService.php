@@ -19,8 +19,6 @@ class WebHooksService extends Service
      * @var Client
      */
     private $client;
-
-
     /**
      * @param FieldMap $fieldMap
      * @param string $group_id
@@ -41,17 +39,17 @@ class WebHooksService extends Service
      * @param FieldMap $fieldMap
      * @param null $group_id
      * @param array $data
-     * @param bool $confirmation_email
+     * @param bool $confirmation_email$data
      * @return mixed|void
      * @throws ServiceException
      * @throws \BrizyForms\Exception\FieldMapException
      */
     protected function internalCreateMember(FieldMap $fieldMap, $group_id = null, array $data = [], $confirmation_email = false)
     {
-        $data = $fieldMap->transform($data, false);
+        $formFields = $fieldMap->transform($data, false);
         $email = [];
-        if ($data->getEmail()) {
-            $email = ['Email' => $data->getEmail()];
+        if ($formFields->getEmail()) {
+            $email = ['Email' => $formFields->getEmail()];
         }
         $auth_data = $this->authenticationData->getData();
         try {
@@ -59,7 +57,7 @@ class WebHooksService extends Service
                 'form_params' => $email
             ]);
         } catch (\Exception $e) {
-            throw new ServiceExcption('Invalid request');
+            throw new RequestException('Invalid request');
         }
     }
 
