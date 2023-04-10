@@ -13,12 +13,14 @@ use BrizyForms\Model\Response;
 use BrizyForms\ServiceConstant;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+
 class WebHooksService extends Service
 {
     /**
      * @var Client
      */
     private $client;
+
     /**
      * @param FieldMap $fieldMap
      * @param string $group_id
@@ -39,13 +41,17 @@ class WebHooksService extends Service
      * @param FieldMap $fieldMap
      * @param null $group_id
      * @param array $data
-     * @param bool $confirmation_email$data
+     * @param bool $confirmation_email $data
      * @return mixed|void
      * @throws ServiceException
      * @throws \BrizyForms\Exception\FieldMapException
      */
-    protected function internalCreateMember(FieldMap $fieldMap, $group_id = null, array $data = [], $confirmation_email = false)
-    {
+    protected function internalCreateMember(
+        FieldMap $fieldMap,
+        $group_id = null,
+        array $data = [],
+        $confirmation_email = false
+    ) {
         $formFields = $fieldMap->transform($data, false);
         $email = [];
         if ($formFields->getEmail()) {
@@ -53,9 +59,12 @@ class WebHooksService extends Service
         }
         $auth_data = $this->authenticationData->getData();
         try {
-            $this->client->request($auth_data['request_method'], $auth_data['webhook_url'], [
-                'form_params' => $email
+            $response = $this->client->request($auth_data['request_method'], $auth_data['webhook_url'], [
+                'form_params' => array_merge($email, $formFields->getFields())
             ]);
+            if ($response->getStatusCode() != 200) {
+                return new Response(400, 'Invalid response');
+            }
         } catch (\Exception $e) {
             throw new RequestException('Invalid request');
         }
@@ -65,10 +74,6 @@ class WebHooksService extends Service
      * @param Folder|null $folder
      * @return mixed|null
      */
-    protected function internalGetGroups(Folder $folder = null)
-    {
-        return null;
-    }
 
     /**
      * @param Group $group
@@ -111,18 +116,17 @@ class WebHooksService extends Service
 
         try {
             $response = $this->client->request('GET', $data['webhook_url'], [
-                    'http_errors' => false,
-                    'timeout' => 3,
-                    'connect_timeout' => 1
-                ]);
+                'http_errors' => false,
+                'timeout' => 3,
+                'connect_timeout' => 1
+            ]);
 
-            if($response->getStatusCode() === 200)
+            if (preg_match('/^(100|[1-5][0-9]{2})$/',  $response->getStatusCode())) {
                 return new Response(200, 'Successfully authenticated');
+            }
         } catch (RequestException $e) {
             return new Response(401, 'Unauthenticated');
         }
-
-        return new Response(500, 'Internal server error');
     }
 
     /**
