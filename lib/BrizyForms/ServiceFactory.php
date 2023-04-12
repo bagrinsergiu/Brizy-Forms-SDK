@@ -23,6 +23,7 @@ class ServiceFactory
     const HUBSPOT = 'hubspot';
     const MAILERLITE = 'mailerlite';
     const DRIP = 'drip';
+    const WEBHOOKS = 'webhooks';
 
     /**
      * @param $service_name
@@ -57,7 +58,8 @@ class ServiceFactory
             self::EGOI => 'BrizyForms\Service\EgoiService',
             self::HUBSPOT => 'BrizyForms\Service\HubSpotService',
             self::MAILERLITE => 'BrizyForms\Service\MailerLiteService',
-            self::DRIP => 'BrizyForms\Service\DripService'
+            self::DRIP => 'BrizyForms\Service\DripService',
+            self::WEBHOOKS => 'BrizyForms\Service\WebHooksService'
         ];
     }
 
@@ -78,7 +80,8 @@ class ServiceFactory
             self::EGOI,
             self::HUBSPOT,
             self::MAILERLITE,
-            self::DRIP
+            self::DRIP,
+            self::WEBHOOKS
         ];
     }
 }
