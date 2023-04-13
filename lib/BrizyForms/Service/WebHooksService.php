@@ -197,4 +197,13 @@ class WebHooksService extends Service
     {
         return false;
     }
+
+    /**
+     * @param Folder|null $folder
+     * @return mixed|null
+     */
+    protected function internalGetGroups(Folder $folder = null)
+    {
+        return null;
+    }
 }
