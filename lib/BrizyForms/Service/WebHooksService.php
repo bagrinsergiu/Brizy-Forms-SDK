@@ -5,6 +5,7 @@ namespace BrizyForms\Service;
 use BrizyForms\Exception\ServiceException;
 use BrizyForms\FieldMap;
 use BrizyForms\Model\Account;
+use BrizyForms\Model\AuthenticationData;
 use BrizyForms\Model\Folder;
 use BrizyForms\Model\Group;
 use BrizyForms\Model\GroupData;
@@ -20,6 +21,14 @@ class WebHooksService extends Service
      * @var Client
      */
     private $client;
+
+
+    public function __construct(AuthenticationData $authenticationData = null)
+    {
+        parent::__construct($authenticationData);
+
+        $this->client = new Client();
+    }
 
     /**
      * @param FieldMap $fieldMap
@@ -111,8 +120,6 @@ class WebHooksService extends Service
     public function authenticate(array $options = null)
     {
         $data = $this->authenticationData->getData();
-
-        $this->client = new Client();
 
         try {
             $response = $this->client->request('GET', $data['webhook_url'], [
