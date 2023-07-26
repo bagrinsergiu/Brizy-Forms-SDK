@@ -272,11 +272,13 @@ class ActiveCampaignService extends Service
         return [
             [
                 'name' => 'api_key',
-                'title' => 'Api Key'
+                'title' => 'Api Key',
+                'type' => FieldTypes::TYPE_TEXT
             ],
             [
                 'name' => 'api_url',
-                'title' => 'Api Url'
+                'title' => 'Api Url',
+                'type' => FieldTypes::TYPE_TEXT
             ]
         ];
     }

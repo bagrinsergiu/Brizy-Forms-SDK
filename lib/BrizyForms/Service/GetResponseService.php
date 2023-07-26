@@ -318,7 +318,7 @@ class GetResponseService extends Service
             [
                 'name' => 'name',
                 'title' => 'Name',
-                'type' => 'input',
+                'type' => FieldTypes::TYPE_TEXT,
                 'choices' => null
             ]
         ];
@@ -332,7 +332,8 @@ class GetResponseService extends Service
         return [
             [
                 'name' => 'api_key',
-                'title' => 'Api Key'
+                'title' => 'Api Key',
+                'type' => FieldTypes::TYPE_TEXT
             ]
         ];
     }

@@ -57,10 +57,11 @@ class WebHooksService extends Service
      */
     protected function internalCreateMember(
         FieldMap $fieldMap,
-        $group_id = null,
-        array $data = [],
-        $confirmation_email = false
-    ) {
+                 $group_id = null,
+        array    $data = [],
+                 $confirmation_email = false
+    )
+    {
         $formFields = $fieldMap->transform($data, false);
         $email = [];
         if ($formFields->getEmail()) {
@@ -128,7 +129,7 @@ class WebHooksService extends Service
                 'connect_timeout' => 1
             ]);
 
-            if (preg_match('/^(100|[1-5][0-9]{2})$/',  $response->getStatusCode())) {
+            if (preg_match('/^(100|[1-5][0-9]{2})$/', $response->getStatusCode())) {
                 return new Response(200, 'Successfully authenticated');
             }
         } catch (RequestException $e) {
@@ -188,11 +189,18 @@ class WebHooksService extends Service
         return [
             [
                 'name' => 'webhook_url',
-                'title' => 'Webhook URL'
+                'title' => 'Webhook URL',
+                'type' => FieldTypes::TYPE_TEXT
+
             ],
             [
                 'name' => 'request_method',
-                'title' => 'Request method'
+                'title' => 'Request method',
+                'type' => FieldTypes::TYPE_RADIO,
+                'choices' => [
+                    ['id' => 'GET', 'name' => 'GET'],
+                    ['id' => 'POST', 'name' => 'POST'],
+                ]
             ]
         ];
     }

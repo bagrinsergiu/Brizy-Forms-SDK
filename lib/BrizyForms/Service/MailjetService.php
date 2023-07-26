@@ -300,7 +300,7 @@ class MailjetService extends Service
             [
                 'name' => 'name',
                 'title' => 'Name',
-                'type' => 'input',
+                'type' => FieldTypes::TYPE_TEXT,
                 'choices' => null
             ]
         ];
@@ -315,10 +315,12 @@ class MailjetService extends Service
             [
                 'name' => 'api_key',
                 'title' => 'Api Key',
+                'type' => FieldTypes::TYPE_TEXT
             ],
             [
                 'name' => 'secret_key',
                 'title' => 'Secret Key',
+                'type' => FieldTypes::TYPE_TEXT
             ]
         ];
     }

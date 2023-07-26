@@ -215,11 +215,13 @@ class DripService extends Service
         return [
             [
                 'name' => 'api_key',
-                'title' => 'Api Key'
+                'title' => 'Api Key',
+                'type' => FieldTypes::TYPE_TEXT
             ],
             [
                 'name' => 'account_id',
-                'title' => 'Account ID'
+                'title' => 'Account ID',
+                'type' => FieldTypes::TYPE_TEXT
             ]
         ];
     }

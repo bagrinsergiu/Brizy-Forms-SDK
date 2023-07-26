@@ -271,7 +271,7 @@ class MailerLiteService extends Service
             [
                 'name' => 'name',
                 'title' => 'Name',
-                'type' => 'input',
+                'type' => FieldTypes::TYPE_TEXT,
                 'choices' => null
             ]
         ];
@@ -286,6 +286,7 @@ class MailerLiteService extends Service
             [
                 'name' => 'api_key',
                 'title' => 'Api Key',
+                'type' => FieldTypes::TYPE_TEXT
             ]
         ];
     }
