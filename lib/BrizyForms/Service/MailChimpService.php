@@ -342,25 +342,25 @@ class MailChimpService extends Service
             [
                 'name' => 'name',
                 'title' => 'Name',
-                'type' => 'input',
+                'type' => FieldTypes::TYPE_TEXT,
                 'choices' => null
             ],
             [
                 'name' => 'from_name',
                 'title' => 'From Name',
-                'type' => 'input',
+                'type' => FieldTypes::TYPE_TEXT,
                 'choices' => null
             ],
             [
                 'name' => 'from_email',
                 'title' => 'From Email',
-                'type' => 'input',
+                'type' => FieldTypes::TYPE_TEXT,
                 'choices' => null
             ],
             [
                 'name' => 'reminder_message',
                 'title' => 'Remind people how they signed up to your list',
-                'type' => 'textarea',
+                'type' => FieldTypes::TYPE_TEXTAREA,
                 'choices' => null
             ]
         ];
@@ -374,7 +374,8 @@ class MailChimpService extends Service
         return [
             [
                 'name' => 'api_key',
-                'title' => 'Api Key'
+                'title' => 'Api Key',
+                'type' => FieldTypes::TYPE_TEXT
             ]
         ];
     }

@@ -184,7 +184,8 @@ class ZapierService extends Service
         return [
             [
                 'name' => 'webhook_url',
-                'title' => 'Webhook URL'
+                'title' => 'Webhook URL',
+                'type' => FieldTypes::TYPE_TEXT
             ]
         ];
     }

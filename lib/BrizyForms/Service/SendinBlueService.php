@@ -295,13 +295,13 @@ class SendinBlueService extends Service
             [
                 'name' => 'name',
                 'title' => 'Name',
-                'type' => 'input',
+                'type' => FieldTypes::TYPE_TEXT,
                 'choices' => null
             ],
             [
                 'name' => 'folder',
                 'title' => 'Folder',
-                'type' => 'select',
+                'type' => FieldTypes::TYPE_SELECT,
                 'choices' => $this->internalGetFolders()
             ]
         ];
@@ -315,7 +315,8 @@ class SendinBlueService extends Service
         return [
             [
                 'name' => 'api_key',
-                'title' => 'Api Key'
+                'title' => 'Api Key',
+                'type' => FieldTypes::TYPE_TEXT
             ]
         ];
     }

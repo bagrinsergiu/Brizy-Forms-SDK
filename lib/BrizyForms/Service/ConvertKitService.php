@@ -279,11 +279,13 @@ class ConvertKitService extends Service
         return [
             [
                 'name' => 'api_key',
-                'title' => 'Api Key'
+                'title' => 'Api Key',
+                'type' => FieldTypes::TYPE_TEXT
             ],
             [
                 'name' => 'api_secret',
-                'title' => 'Api Secret'
+                'title' => 'Api Secret',
+                'type' => FieldTypes::TYPE_TEXT
             ]
         ];
     }
