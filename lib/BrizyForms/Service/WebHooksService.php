@@ -74,14 +74,11 @@ class WebHooksService extends Service
         isset($request_method_decode[1]) ? $format = $request_method_decode[1] : $format = 'json';
 
         try {
-            $response = $this->client->request($request_method, $auth_data['webhook_url'], [
+            $this->client->request($request_method, $auth_data['webhook_url'], [
                 $format => array_merge($email, $formFields->getFields())
             ]);
-            if ($response->getStatusCode() != 200) {
-                return new Response(400, 'Invalid response');
-            }
         } catch (\Exception $e) {
-            throw new RequestException('Invalid request');
+            throw new ServiceException($e->getMessage());
         }
     }
 
