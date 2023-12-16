@@ -224,8 +224,8 @@ class SendinBlueService extends Service
         $api_instance = new \SendinBlue\Client\Api\ListsApi(null, $this->config);
         try {
             $result = $api_instance->createList(new \SendinBlue\Client\Model\CreateList([
-                'name' => $data['name'],
-                'folderId' => $data['folder']
+                'name'     => $data['name'],
+                'folderId' => (int)$data['folder']
             ]));
         } catch (\Exception $e) {
             throw new ServiceException('Group was not created.');
