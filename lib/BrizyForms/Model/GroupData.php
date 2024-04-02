@@ -55,11 +55,18 @@ class GroupData implements \Serializable, \JsonSerializable
      * @return void
      * @since 5.1.0
      */
-    public function unserialize($serialized)
-    {
-        list(
-            $this->data
-            ) = unserialize($serialized);
+    public function unserialize( $data ) {
+        $this->__unserialize( unserialize( $data ) );
+    }
+
+    public function __serialize() {
+        return get_object_vars( $this );
+    }
+
+    public function __unserialize( $data ) {
+        foreach ( $data as $key => $value ) {
+            $this->$key = $value;
+        }
     }
 
     /**
@@ -69,6 +76,7 @@ class GroupData implements \Serializable, \JsonSerializable
      * which is a value of any type other than a resource.
      * @since 5.4.0
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [
