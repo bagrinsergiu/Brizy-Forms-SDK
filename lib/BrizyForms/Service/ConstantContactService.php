@@ -205,6 +205,8 @@ class ConstantContactService extends Service {
 			return new Response( 400, 'native service was not init' );
 		}
 		try {
+			//$this->client->acquireAccessToken()
+
 			$listEndPoint = new \PHPFUI\ConstantContact\V3\ContactLists( $this->client );
 			$listEndPoint->get();
 		} catch ( \Exception $e ) {
