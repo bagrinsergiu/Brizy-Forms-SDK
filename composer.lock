@@ -544,16 +544,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/alecszaharia/ConstantContact.git",
-                "reference": "b7e6fcd42d27757dc91746fcd6201ca47ecc0e89"
+                "reference": "61dde4f512042547d778e7af26dafd6639e6a883"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/alecszaharia/ConstantContact/zipball/b7e6fcd42d27757dc91746fcd6201ca47ecc0e89",
-                "reference": "b7e6fcd42d27757dc91746fcd6201ca47ecc0e89",
+                "url": "https://api.github.com/repos/alecszaharia/ConstantContact/zipball/61dde4f512042547d778e7af26dafd6639e6a883",
+                "reference": "61dde4f512042547d778e7af26dafd6639e6a883",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/guzzle": "^7.3",
+                "guzzlehttp/guzzle": "^7.0",
                 "php": ">=7.0 <8.4",
                 "spatie/guzzle-rate-limiter-middleware": "^2.0"
             },
@@ -600,7 +600,7 @@
             "support": {
                 "source": "https://github.com/alecszaharia/ConstantContact/tree/php7"
             },
-            "time": "2024-05-27T07:42:45+00:00"
+            "time": "2024-05-27T07:58:05+00:00"
         },
         {
             "name": "psr/http-client",
