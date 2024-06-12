@@ -41,6 +41,16 @@ abstract class Service implements ServiceInterface, LoggerAwareInterface
         $this->logger = new NullLogger();
     }
 
+    public function authorizationType()
+    {
+        return self::AUTH_TYPE_CREDENTIALS;
+    }
+
+    public function obtainAuthorizationToken(array $options = null)
+    {
+
+    }
+
     /**
      * @param AuthenticationData $authenticationData
      */
@@ -199,7 +209,12 @@ abstract class Service implements ServiceInterface, LoggerAwareInterface
      * @param bool $confirmation_email
      * @return mixed
      */
-    abstract protected function internalCreateMember(FieldMap $fieldMap, $group_id = null, array $data = [], $confirmation_email = false);
+    abstract protected function internalCreateMember(
+        FieldMap $fieldMap,
+        $group_id = null,
+        array $data = [],
+        $confirmation_email = false
+    );
 
     /**
      * @param Folder|null $folder

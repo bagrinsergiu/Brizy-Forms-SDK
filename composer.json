@@ -7,14 +7,14 @@
   ],
   "type": "library",
   "require": {
-    "php": ">=5.6",
+    "php": ">=7",
     "ext-curl": "*",
     "ext-json": "*",
     "ext-mbstring": "*",
     "drewm/mailchimp-api": "~2.2",
-    "sendinblue/api-v3-sdk": "^8.4",
+    "sendinblue/api-v3-sdk": "~6.0",
     "campaignmonitor/createsend-php": "dev-master",
-    "guzzlehttp/guzzle": "^6.5 || ^7.3",
+    "guzzlehttp/guzzle": "^6.5",
     "activecampaign/api-php": "2.0.*",
     "psr/log": "^1.0.0",
     "drewm/drip": "0.8.*",
@@ -29,6 +29,11 @@
       "BrizyForms": "lib/"
     }
   },
+  "config": {
+    "platform": {
+      "php": "7.2"
+    }
+  },
   "repositories": [
     {
       "type": "vcs",
@@ -36,3 +41,4 @@
     }
   ]
 }
+
