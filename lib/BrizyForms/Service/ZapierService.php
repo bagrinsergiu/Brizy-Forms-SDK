@@ -49,7 +49,10 @@ class ZapierService extends Service
             $email = ['Email' => $data->getEmail()];
         }
 
-        $data_json = json_encode(array_merge($email, $data->getFields()));
+        $fields = array_merge( $email, $data->getFields() );
+	    $fields = array_map( function( $key, $field ) { return [$key => $field]; }, array_keys( $fields ), array_values( $fields) );
+
+	    $data_json = json_encode( ['fields'=>$fields] );
         $auth_data = $this->authenticationData->getData();
 
         $ch = curl_init($auth_data['webhook_url']);
