@@ -10,4 +10,7 @@ interface FieldTypes
 
     const TYPE_TEXT = 'input';
     const TYPE_TEXTAREA = 'textarea';
+
+    # special type for services that have authorization code flow.
+    const TYPE_REDIRECT_URL = 'redirect_url';
 }

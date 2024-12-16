@@ -1,10 +1,13 @@
 {
   "name": "bagrinsergiu/brizy-forms-sdk",
   "description": "Brizy form's PHP SDK",
-  "keywords": ["brizy", "forms"],
+  "keywords": [
+    "brizy",
+    "forms"
+  ],
   "type": "library",
   "require": {
-    "php": ">=5.6",
+    "php": ">=7",
     "ext-curl": "*",
     "ext-json": "*",
     "ext-mbstring": "*",
@@ -14,7 +17,8 @@
     "guzzlehttp/guzzle": "^6.5",
     "activecampaign/api-php": "2.0.*",
     "psr/log": "^1.0.0",
-    "drewm/drip": "0.8.*"
+    "drewm/drip": "0.8.*",
+    "phpfui/constantcontact": "dev-php7"
   },
   "require-dev": {
     "ext-dom": "*",
@@ -24,5 +28,17 @@
     "psr-0": {
       "BrizyForms": "lib/"
     }
-  }
+  },
+  "config": {
+    "platform": {
+      "php": "7.2"
+    }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/alecszaharia/ConstantContact.git"
+    }
+  ]
 }
+

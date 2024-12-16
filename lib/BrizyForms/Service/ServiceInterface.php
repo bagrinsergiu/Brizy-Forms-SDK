@@ -12,6 +12,20 @@ use BrizyForms\Model\Response;
 
 interface ServiceInterface
 {
+    const AUTH_TYPE_CREDENTIALS = 'credentials';
+    const AUTH_TYPE_AUTHORIZATION_CODE = 'authorization_code';
+
+    /**
+     * @return string
+     */
+    public function authorizationType();
+
+    /**
+     * Use fot the case when the autorization type is AUTH_TYPE_AUTHORIZATION_CODE
+     * @return mixed
+     */
+    public function obtainAuthorizationToken(array $options = null);
+
     /**
      * @param array $options
      * @return RedirectResponse|Response|null
