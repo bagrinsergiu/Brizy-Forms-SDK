@@ -190,6 +190,11 @@ class WebHooksService extends Service
     {
         return [
             [
+                'name' => 'title',
+                'title' => 'title',
+                'type' => FieldTypes::TYPE_TEXT
+            ],
+            [
                 'name' => 'webhook_url',
                 'title' => 'Webhook URL',
                 'type' => FieldTypes::TYPE_TEXT
