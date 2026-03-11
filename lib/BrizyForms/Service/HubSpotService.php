@@ -314,7 +314,7 @@ class HubSpotService extends Service
         return [
             [
                 'name' => 'api_key',
-                'title' => 'Api Key',
+                'title' => 'Service Key',
                 'type' => FieldTypes::TYPE_TEXT
             ]
         ];
