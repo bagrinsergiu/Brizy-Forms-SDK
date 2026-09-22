@@ -2,6 +2,8 @@
 
 namespace Tests\BrizyForms;
 
+use PHPUnit\Framework\TestCase;
+
 use BrizyForms\FieldMap;
 use BrizyForms\Model\Data;
 use BrizyForms\Model\FieldLink;
@@ -9,32 +11,36 @@ use BrizyForms\Model\TransformedData;
 
 require __DIR__ . '/../../vendor/autoload.php';
 
-class FieldMapTest extends \PHPUnit_Framework_TestCase
+class FieldMapTest extends TestCase
 {
     public function testMap1()
     {
-        $this->setExpectedException('BrizyForms\Exception\FieldMapException', '"sourceId" && "sourceTitle" && "target" are required properties');
+        $this->expectException('BrizyForms\Exception\FieldMapException');
+        $this->expectExceptionMessage('"sourceId" && "sourceTitle" && "target" are required properties');
 
         new FieldMap([['test' => 'test']]);
     }
 
     public function testMap2()
     {
-        $this->setExpectedException('BrizyForms\Exception\FieldMapException', '"sourceId" && "sourceTitle" && "target" are required properties');
+        $this->expectException('BrizyForms\Exception\FieldMapException');
+        $this->expectExceptionMessage('"sourceId" && "sourceTitle" && "target" are required properties');
 
         new FieldMap([['source_id' => 'dfdfd']]);
     }
 
     public function testMap3()
     {
-        $this->setExpectedException('BrizyForms\Exception\FieldMapException', '"sourceId" && "sourceTitle" && "target" are required properties');
+        $this->expectException('BrizyForms\Exception\FieldMapException');
+        $this->expectExceptionMessage('"sourceId" && "sourceTitle" && "target" are required properties');
 
         new FieldMap([['source_id' => 'dfdfd', 'source_title' => 'dfdfd']]);
     }
 
     public function testMap4()
     {
-        $this->setExpectedException('BrizyForms\Exception\FieldMapException', '"sourceId" && "sourceTitle" && "target" are required properties');
+        $this->expectException('BrizyForms\Exception\FieldMapException');
+        $this->expectExceptionMessage('"sourceId" && "sourceTitle" && "target" are required properties');
 
         new FieldMap([['source_id' => 'dfdfd', 'target' => 'dfdfd']]);
     }
@@ -84,7 +90,8 @@ class FieldMapTest extends \PHPUnit_Framework_TestCase
 
     public function testTransformExpectedException()
     {
-        $this->setExpectedException('BrizyForms\Exception\FieldMapException', 'Not instanceof Data');
+        $this->expectException('BrizyForms\Exception\FieldMapException');
+        $this->expectExceptionMessage('Not instanceof Data');
 
         //data from editor integration setting
         $fieldMap = new FieldMap([
@@ -109,7 +116,8 @@ class FieldMapTest extends \PHPUnit_Framework_TestCase
 
     public function testTransformExpectedExceptionNotEmail()
     {
-        $this->setExpectedException('BrizyForms\Exception\FieldMapException', 'Email was not found.');
+        $this->expectException('BrizyForms\Exception\FieldMapException');
+        $this->expectExceptionMessage('Email was not found.');
 
         //data from editor integration setting
         $fieldMap = new FieldMap([

@@ -2,11 +2,13 @@
 
 namespace Tests\BrizyForms\Utils;
 
+use PHPUnit\Framework\TestCase;
+
 use BrizyForms\Utils\StringUtils;
 
 require __DIR__ . '/../../../vendor/autoload.php';
 
-class StringUtilsTTest extends \PHPUnit_Framework_TestCase
+class StringUtilsTTest extends TestCase
 {
     public function testGetSlug()
     {
